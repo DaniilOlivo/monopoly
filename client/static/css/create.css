@@ -1,0 +1,19 @@
+.form-create__input {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 0.5em;
+}
+
+.form-create__input input {
+    flex-grow: 1;
+}
+
+.form-create__desc {
+    padding: 0 10px;
+    margin-bottom: 1em;
+}
+
+.panel-control__sumbit {
+    border: none;
+    background-color: white;
+}
