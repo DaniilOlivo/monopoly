@@ -26,4 +26,25 @@ function openErrorWindow(error) {
     container.classList.remove("container-window_disable")
 }
 
+function openListRoom() {
+    const window = document.querySelector(".window_list-room")
+    const title = document.querySelector(".title_list-room")
+    const list = document.querySelector(".list_room")
+    const btn = document.querySelector(".btn_start-game")
+
+    window.classList.remove("window_disable")
+    title.textContent = `${titleRoom}. ${room.length}/8`
+    list.innerHTML = ""
+    for (const player of room) {
+        let h = document.createElement("h3")
+        h.classList.add("list__item")
+        h.textContent = player
+        list.appendChild(h)
+    }
+
+    btn.addEventListener("click", () => {
+        
+    })
+}
+
 initLoginUsername()

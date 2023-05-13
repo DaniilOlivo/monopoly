@@ -12,7 +12,10 @@ function register(username) {
 function dispatch(message) {
     const {event, options} = message
     if (event == "confirm_login") confirmUsername(options)
-    if (event == "data_room") initRoom(options)
+    if (event == "data_room") {
+        room = options
+        openListRoom()
+    }
 }
 
 ws.onmessage = (e) => {
