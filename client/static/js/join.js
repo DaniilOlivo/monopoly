@@ -12,7 +12,7 @@ async function getListRooms() {
         h.textContent = room
 
         let a = document.createElement("a")
-        a.setAttribute("href", `/game/${room}/`)
+        a.setAttribute("href", `/game/${room}`)
         a.appendChild(h)
 
         listRoomsDiv.appendChild(a)

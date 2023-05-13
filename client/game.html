@@ -5,9 +5,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/game.css">
     <title>Monopoly. Game</title>
 </head>
 <body>
+    <div class="container-window container-window_error container-window_disable">
+        <div class="window window_error">
+            <p class="special-text error_text"></p>
+        </div>
+    </div>
+
+    <div class="container-window container-window_register">
+        <div class="window window_register">
+            <div class="form__input">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username">
+            </div>
+
+            <p class="special-text form__desc text-error-username"></p>
+    
+            <div class="panel-control">
+                <button class="btn btn_username">Login</button>
+            </div>
+        </div>
+    </div>
+
     <h1>Game</h1>
 </body>
+<script src="/game/state.js"></script>
+<script src="/game/socket.js"></script>
+<script src="/game/init.js"></script>
 </html>
