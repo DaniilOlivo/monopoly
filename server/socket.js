@@ -9,7 +9,7 @@ function sendMessage(ws, event, options={}) {
 
 function broadcastRoom(titleRoom, event, options={}) {
     let room = rooms.rooms[titleRoom]
-    for (const { ws } of Object.values(room)) {
+    for (const ws of Object.values(room)) {
         sendMessage(ws, event, options)
     }
 }
@@ -19,25 +19,30 @@ function sendDataRoom(titleRoom) {
     if (players) broadcastRoom(titleRoom, "data_room", players)
 }
 
+function sendConfirmLogin(ws, confirm, info) {
+    sendMessage(ws, "confirm_login", {confirm, info})
+} 
+
 function removeWs(closedWs) {
-    let username = null
+    let removedUsername = null
 
     for (let [titleRoom, room] of Object.entries(rooms.rooms)) {
-        for (let [id, data] of Object.entries(room)) {
-            if (data.ws === closedWs) {
-                rooms.removePlayer(id, titleRoom)
+        for (let [username, ws] of Object.entries(room)) {
+            if (ws === closedWs) {
+                rooms.removePlayer(username, titleRoom)
                 sendDataRoom(titleRoom)
-                username = data.username
+                removedUsername = username
             }
         }
     }
 
     rooms.checkEmptyRooms()
-    return username
+    return removedUsername
 }
 
 function register(username, ws, titleRoom) {
-    let result = rooms.addPlayer(username, ws, titleRoom)
+    let [result, info] = rooms.addPlayer(username, ws, titleRoom)
+    sendConfirmLogin(ws, result, info)
     if (result) sendDataRoom(titleRoom)
 }
 

@@ -11,6 +11,7 @@ function register(username) {
 
 function dispatch(message) {
     const {event, options} = message
+    if (event == "confirm_login") confirmUsername(options)
     if (event == "data_room") initRoom(options)
 }
 
@@ -20,8 +21,4 @@ ws.onmessage = (e) => {
     dispatch(message)
 }
 
-// It is called in init.js, where as an argument it is given a function that will display the error to the client
-// This is done in order to separate the socket logic and the initialization logic of html elements
-function configureOutputError(funcOnError) {
-    ws.onerror = funcOnError
-}
+ws.onerror = (error) => openErrorWindow(error)
