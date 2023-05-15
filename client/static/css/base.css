@@ -46,6 +46,10 @@ a:visited {
     transform: scale(1.1, 1.1);
 }
 
+.btn_disable {
+    display: none;
+}
+
 .container-window {
     position: fixed;
     width: 100vw;

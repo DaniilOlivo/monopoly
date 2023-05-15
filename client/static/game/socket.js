@@ -13,7 +13,8 @@ function dispatch(message) {
     const {event, options} = message
     if (event == "confirm_login") confirmUsername(options)
     if (event == "data_room") {
-        room = options
+        room = options.players
+        host = options.host
         openListRoom()
     }
 }

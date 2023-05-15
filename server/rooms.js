@@ -1,47 +1,92 @@
-const rooms = {}
-
-function getRooms() {
-    return Object.keys(rooms)
-}
-
-// Getting players in a room without a web socket
-function getPlayers(titleRoom) {
-    if (!(titleRoom in rooms)) return false
-    let room = rooms[titleRoom]
-    return Object.keys(room)
-}
-
-function createRoom(titleRoom) {
-    if (titleRoom in rooms) return false
-    rooms[titleRoom] = {}
-    return true
-}
-
-function addPlayer(username, ws, titleRoom) {
-    let room = rooms[titleRoom]
-    let players = Object.keys(room)
-
-    if (players.length >= 8) return [false, "Room overflow"]
-    for (const player of players) {
-        if (player == username) return [false, "Such a player already exists"]
+class Room {
+    constructor(title) {
+        this.title = title
+        this.host = ""
+        this.players = {}
+        this.sockets = []
+        this.countPlayers = 0
     }
 
-    room[username] = ws
-    return [true, "Ok"]
-}
+    setHost() {
+        let sockets = this.sockets
+        if (sockets.length > 0)  {
+            let firstSocket = this.sockets[0]
+            for (const [username, ws] of Object.entries(this.players)) {
+                if (ws === firstSocket) {
+                    this.host = username
+                    break
+                }
+            }
+        }
+        else this.host = ""
+    }
 
-function removePlayer(username, titleRoom) {
-    let room = rooms[titleRoom]
-    delete room[username]
-}
+    // Getting players in a room without a web socket
+    getPlayers() {
+        return Object.keys(this.players)
+    }
 
-function checkEmptyRooms() {
-    for (let titleRoom of Object.keys(rooms)) {
-        let room = rooms[titleRoom]
-        if (Object.keys(room).length == 0) delete rooms[titleRoom]
+    addPlayer(username, ws) {
+        if (this.countPlayers >= 8) return [false, "Room overflow"]
+        if (username in this.players) return [false, "Such a player already exists"]
+
+        this.players[username] = ws
+        this.countPlayers++
+        this.sockets.push(ws)
+        this.setHost()
+
+        return [true, "Ok"]
+    }
+
+    removePlayer(username) {
+        let ws = this.players[username]
+        delete this.players[username]
+        this.countPlayers--
+        this.sockets.splice(this.sockets.indexOf(ws), 1)
+        this.setHost()
+    }
+
+    broadcast(event, options={}) {
+        for (const socket of this.sockets) {
+            socket.sendMessage(event, options)
+        }
     }
 }
 
-module.exports = {
-    rooms, createRoom, addPlayer, removePlayer, getRooms, getPlayers, checkEmptyRooms
+class RoomManager {
+    constructor() {
+        this.rooms = {}
+    }
+
+    getTitlesRooms() {
+        return Object.keys(this.rooms)
+    }
+
+    findWs(searchableWs) {
+        for (const room of Object.values(this.rooms)) {
+            for (const [username, ws] of Object.entries(room.players)) {
+                if (ws == searchableWs) {
+                    return {
+                        find: true,
+                        room,
+                        username
+                    }
+                }
+            }
+        }
+
+        return {find: false}
+    }
+
+    createRoom(title) {
+        if (title in this.rooms) return false
+        this.rooms[title] = new Room(title)
+        return true
+    }
+
+    deleteRoom(title) {
+        delete this.rooms[title]
+    }
 }
+
+module.exports = new RoomManager()

@@ -5,6 +5,7 @@ function initLoginUsername() {
 
     btn.addEventListener("click", () => {
         let result = input.value
+        username = result
         if (result) register(input.value)
         else textError.textContent = "Please write your username"
     })
@@ -42,8 +43,13 @@ function openListRoom() {
         list.appendChild(h)
     }
 
+    if (username == host) {
+        btn.classList.remove("btn_disable")
+    }
+
     btn.addEventListener("click", () => {
-        
+        window.classList.add("window_disable")
+        console.log("Start Game")
     })
 }
 

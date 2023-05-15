@@ -1,66 +1,50 @@
 const { WebSocket, WebSocketServer } = require("ws")
 
-const rooms = require("./rooms")
+const dispatchPregame = require("./dispatch/pregame")
 
-function sendMessage(ws, event, options={}) {
-    let message = { event, options }
-    ws.send(JSON.stringify(message))
-}
-
-function broadcastRoom(titleRoom, event, options={}) {
-    let room = rooms.rooms[titleRoom]
-    for (const ws of Object.values(room)) {
-        sendMessage(ws, event, options)
-    }
-}
-
-function sendDataRoom(titleRoom) {
-    let players = rooms.getPlayers(titleRoom)
-    if (players) broadcastRoom(titleRoom, "data_room", players)
-}
-
-function sendConfirmLogin(ws, confirm, info) {
-    sendMessage(ws, "confirm_login", {confirm, info})
-} 
+const roomManager = require("./rooms")
 
 function removeWs(closedWs) {
-    let removedUsername = null
+    let result = roomManager.findWs(closedWs)
 
-    for (let [titleRoom, room] of Object.entries(rooms.rooms)) {
-        for (let [username, ws] of Object.entries(room)) {
-            if (ws === closedWs) {
-                rooms.removePlayer(username, titleRoom)
-                sendDataRoom(titleRoom)
-                removedUsername = username
-            }
+    if (result.find) {
+        let { room, username } = result
+        room.removePlayer(username)
+        if (room.countPlayers == 0) roomManager.deleteRoom(room.title)
+        else {
+            let players = room.getPlayers()
+            let host = room.host
+            room.broadcast("data_room", {players, host})
         }
-    }
-
-    rooms.checkEmptyRooms()
-    return removedUsername
+        return username
+    } else return null
 }
 
-function register(username, ws, titleRoom) {
-    let [result, info] = rooms.addPlayer(username, ws, titleRoom)
-    sendConfirmLogin(ws, result, info)
-    if (result) sendDataRoom(titleRoom)
-}
 
 function createSocketHandler(wsServer = new WebSocketServer()) {
     return (ws = new WebSocket()) => {
         console.log("Connect WS")
-    
+
         ws.on('error', console.error)
+
+        // Creating a wrapper for the socket to make it easier to work with it
+        const socket = {
+            proto: ws,
+            sendMessage(event, options) {
+                let message = { event, options }
+                this.proto.send(JSON.stringify(message))
+            }
+        }
 
         ws.on("message", (message) => {
             let {event, options} = JSON.parse(message)
             console.log(`Event: ${event}`)
             console.log(options)
-            if (event == "register") register(options.username, ws, options.titleRoom)
+            dispatchPregame(socket, event, options)
         })
 
         ws.on('close', () => {
-            let username = removeWs(ws)
+            let username = removeWs(socket)
             if (username) console.log("Disconnect " + username)
             console.log("Socket close")
         })

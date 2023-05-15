@@ -1,7 +1,7 @@
 const express = require("express")
 const path = require("path")
 
-const rooms = require("./rooms")
+const roomManager = require("./rooms")
 
 
 function getHtml(nameFile) {
@@ -19,7 +19,7 @@ router.post("/create/", (req, res) => {
     if (!req.body || !req.body.room) sendCreate()
     else {
         let room = req.body.room
-        let result = rooms.createRoom(room)
+        let result = roomManager.createRoom(room)
         if (result) res.redirect(`/game/${room}`)
         else sendCreate()
     }
@@ -30,12 +30,12 @@ router.get("/join/", (req, res) => {
 })
 
 router.get("/listRooms/", (req, res) => {
-    res.send(JSON.stringify(rooms.getRooms()))
+    res.send(JSON.stringify(roomManager.getTitlesRooms()))
 })
 
 router.get("/game/:room", (req, res) => {
     let room = req.params["room"]
-    if (room in rooms.rooms) res.sendFile(getHtml("game.html"))
+    if (room in roomManager.rooms) res.sendFile(getHtml("game.html"))
     else res.redirect("/join/")
 })
 
