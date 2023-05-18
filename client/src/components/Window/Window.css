@@ -1,0 +1,23 @@
+.container-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(19, 30, 37, 0.8);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+}
+
+.container-window_overlap {
+    z-index: 100;
+}
+
+.window {
+    background-color: white;
+    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+
+    padding: 50px 80px;
+}

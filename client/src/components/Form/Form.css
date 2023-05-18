@@ -1,0 +1,30 @@
+.form {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 350px;
+}
+
+.form__input {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 0.5em;
+}
+
+.form__input input {
+    flex-grow: 1;
+}
+
+.form__info {
+    padding: 0 10px;
+    margin-bottom: 1em;
+}
+
+.panel-control {
+    display: flex;
+    justify-content: space-between;
+}
+
+.special-text {
+    font-size: 14px;
+}

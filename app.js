@@ -1,10 +1,9 @@
-const http = require("http")
 const express = require("express")
-const { WebSocketServer } = require("ws")
 const path = require("path")
+const expressWs = require("express-ws")
 
 const router = require("./server/router")
-const createSocketHandler = require("./server/socket")
+const handlerWs = require("./server/socket")
 
 require('dotenv').config()
 
@@ -12,15 +11,21 @@ const PORT = process.env.PORT
 const HOST = "127.0.0.1"
 
 const app = express()
-const server = http.createServer(app)
-const wsServer = new WebSocketServer({ server })
+expressWs(app)
 
-const FOLDER_CLIENT = path.join(__dirname, "client")
-const parser = express.urlencoded({extended: true})
+const FOLDER_CLIENT = path.join(__dirname, "client/build")
 
-app.use(parser)
-app.use(express.static(path.join(FOLDER_CLIENT, "static")))
-app.use(router)
-wsServer.on("connection", createSocketHandler(wsServer))
+app.use(express.json())
+app.use(express.static(path.resolve(FOLDER_CLIENT)))
+app.use((req, res, next) => {
+    res.on("finish", () => console.log(`HTTP | ${req.method} ${req.url} ${res.statusCode}`))
+    next()
+})
+app.use("/api", router)
+app.ws("/ws", handlerWs)
 
-server.listen(PORT, HOST, () => console.log(`Start server on http://127.0.0.1:${PORT}`))
+router.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, FOLDER_CLIENT, "index.html"))
+})
+
+app.listen(PORT, HOST, () => console.log(`Start server on http://127.0.0.1:${PORT}`))
