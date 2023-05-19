@@ -1,4 +1,5 @@
 const dispatchPregame = require("./dispatch/pregame")
+const dispatchGame = require("./dispatch/game")
 
 const roomManager = require("./rooms")
 
@@ -38,6 +39,7 @@ function handlerWs(ws, req) {
         console.log(`Event: ${event}`)
         console.log(options)
         dispatchPregame(socket, event, options)
+        dispatchGame(socket, event, options)
     })
 
     ws.on('close', () => {

@@ -1,7 +1,9 @@
 import { useState } from "react"
 
-import { ModalWindow } from "../../../components/Window";
+import { Window } from "../../../components/Window";
 import Form from "../../../components/Form";
+
+import { useSkipLoginRoom } from "../../../utils/skip";
 
 function LoginWindow(props) {
     const [value, setValue] = useState("")
@@ -18,13 +20,15 @@ function LoginWindow(props) {
         else error = mes.options.info
     }
 
+    // useSkipLoginRoom(setValue, register, mes)
+
     const mapBtns = {
         "Back": props.goBack,
         "Login": register
     }
 
     return (
-        <ModalWindow>
+        <Window>
             < Form
                 parameter="Username"
                 value={value}
@@ -32,7 +36,7 @@ function LoginWindow(props) {
                 btns={mapBtns}
                 error={error}
                  />
-        </ModalWindow>
+        </Window>
     )
 }
 

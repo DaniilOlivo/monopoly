@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import Menu from './Menu';
-import Game from "./Game";
+import GameManager from "./GameManager"
 
 import './App.css';
+
+import { useSkipCreateRoom } from "./utils/skip";
 
 function App() {
   const [idModule, setIdModule] = useState("menu")
@@ -20,24 +22,11 @@ function App() {
   }
 
   // Temporary code to go directly to the game module
-  useEffect(() => {
-    async function createRoom() {
-      const response = await fetch("/api/create", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({room: "Room"})
-      })
-
-      startGameModule("Room")
-    }
-    createRoom()
-  }, [])
+  // useSkipCreateRoom(startGameModule)
 
   const modules = {
     "menu": < Menu startGameModule={startGameModule} />,
-    "game": < Game room={room} goBack={startMenuModule} />
+    "game": < GameManager room={room} goBack={startMenuModule} />
   }
 
   return (

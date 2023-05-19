@@ -4,6 +4,8 @@ import MainMenu from "./MainMenu"
 import CreateRoom from "./CreateRoom"
 import JoinList from "./JoinList"
 
+import "./Menu.css"
+
 function Menu(props) {
     const [id, setId] = useState("mainMenu")
 

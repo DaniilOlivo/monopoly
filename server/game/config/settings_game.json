@@ -1,0 +1,7 @@
+{
+    "colors": [
+        "red", "orange", "yellow", "green", "blue", "violet", "white", "black"
+    ],
+
+    "startMoney": 1500
+}

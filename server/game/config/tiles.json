@@ -1,0 +1,383 @@
+{
+    "price_building": {
+        "brown": 50,
+        "cyan": 50,
+        "violet": 100,
+        "orange": 100,
+        "red": 150,
+        "yellow": 150,
+        "green": 200,
+        "blue": 200
+    },
+
+    "tiles": [
+        {"id": "start"},
+        {
+            "type": "standard",
+            "color": "brown",
+            "title": "Old Kent Road",
+            "price": 60,
+            "rent_basic": 2,
+            "rent_1_house": 10,
+            "rent_2_house": 30,
+            "rent_3_house": 90,
+            "rent_4_house": 160,
+            "rent_hotel": 250
+        },
+
+        {"type": "community_chest"},
+
+        {   
+            "type": "standard",
+            "color": "brown",
+            "title": "Whitechapel Road",
+            "price": 60,
+            "rent_basic": 4,
+            "rent_1_house": 20,
+            "rent_2_house": 60,
+            "rent_3_house": 180,
+            "rent_4_house": 320,
+            "rent_hotel": 450
+        },
+
+        {   
+            "id": "income_tax",
+            "title": "Income Tax",
+            "type": "tax",
+            "cost": 200
+        },
+        
+        {   
+            "type": "station",
+            "title": "Kings Cross Station",
+            "price": 200
+        },
+        
+        {   
+            "type": "standard",
+            "color": "cyan",
+            "title": "The Angel, Islington",
+            "price": 100,
+            "rent_basic": 6,
+            "rent_1_house": 30,
+            "rent_2_house": 90,
+            "rent_3_house": 270,
+            "rent_4_house": 400,
+            "rent_hotel": 550
+        },
+
+        {"type": "chance"},
+
+        {   
+            "type": "standard",
+            "color": "cyan",
+            "title": "Euston Road",
+            "price": 100,
+            "rent_basic": 6,
+            "rent_1_house": 30,
+            "rent_2_house": 90,
+            "rent_3_house": 270,
+            "rent_4_house": 400,
+            "rent_hotel": 550
+        },
+
+        {   
+            "type": "standard",
+            "color": "cyan",
+            "title": "Pentonville Road",
+            "price": 120,
+            "rent_basic": 8,
+            "rent_1_house": 40,
+            "rent_2_house": 100,
+            "rent_3_house": 300,
+            "rent_4_house": 450,
+            "rent_hotel": 600
+        },
+
+        {"id": "jail", "prisoners": {}},
+
+        {   
+            "type": "standard",
+            "color": "violet",
+            "title": "Pall Mall",
+            "price": 140,
+            "rent_basic": 10,
+            "rent_1_house": 50,
+            "rent_2_house": 150,
+            "rent_3_house": 450,
+            "rent_4_house": 625,
+            "rent_hotel": 750
+        },
+
+        {   
+            "id": "electric_compamy",
+            "title": "Electric Company",
+            "type": "communal",
+            "price": 150
+        },
+
+        {   
+            "type": "standard",
+            "color": "violet",
+            "title": "Whitehall",
+            "price": 140,
+            "rent_basic": 10,
+            "rent_1_house": 50,
+            "rent_2_house": 150,
+            "rent_3_house": 450,
+            "rent_4_house": 625,
+            "rent_hotel": 750
+        },
+
+        {   
+            "type": "standard",
+            "color": "violet",
+            "title": "Northumrl'd Avenue",
+            "price": 160,
+            "rent_basic": 12,
+            "rent_1_house": 60,
+            "rent_2_house": 180,
+            "rent_3_house": 500,
+            "rent_4_house": 700,
+            "rent_hotel": 900
+        },
+         
+        {
+            "type": "station",
+            "title": "Marylebone Station",
+            "price": 200
+        },
+
+        {   
+            "type": "standard",
+            "color": "orange",
+            "title": "Bow Street",
+            "price": 180,
+            "rent_basic": 14,
+            "rent_1_house": 70,
+            "rent_2_house": 200,
+            "rent_3_house": 550,
+            "rent_4_house": 750,
+            "rent_hotel": 950
+        },
+
+        {
+            "type": "community_chest"
+        },
+
+        {   
+            "type": "standard",
+            "color": "orange",
+            "title": "Marlborough Street",
+            "price": 180,
+            "rent_basic": 14,
+            "rent_1_house": 70,
+            "rent_2_house": 200,
+            "rent_3_house": 550,
+            "rent_4_house": 750,
+            "rent_hotel": 950
+        },
+
+        {   
+            "type": "standard",
+            "color": "orange",
+            "title": "Vine Street",
+            "price": 200,
+            "rent_basic": 16,
+            "rent_1_house": 80,
+            "rent_2_house": 220,
+            "rent_3_house": 600,
+            "rent_4_house": 800,
+            "rent_hotel": 1000
+        },
+
+        {
+            "id": "parking"
+        },
+
+        {   
+            "type": "standard",
+            "color": "red",
+            "title": "Strand",
+            "price": 220,
+            "rent_basic": 18,
+            "rent_1_house": 90,
+            "rent_2_house": 250,
+            "rent_3_house": 700,
+            "rent_4_house": 875,
+            "rent_hotel": 1050
+        },
+
+        {
+            "type": "chance"
+        },
+
+        {   
+            "type": "standard",
+            "color": "red",
+            "title": "Fleet Street",
+            "price": 220,
+            "rent_basic": 18,
+            "rent_1_house": 90,
+            "rent_2_house": 250,
+            "rent_3_house": 700,
+            "rent_4_house": 875,
+            "rent_hotel": 1050
+        },
+
+        {   
+            "type": "standard",
+            "color": "red",
+            "title": "Trafalgar Square",
+            "price": 240,
+            "rent_basic": 20,
+            "rent_1_house": 100,
+            "rent_2_house": 300,
+            "rent_3_house": 750,
+            "rent_4_house": 925,
+            "rent_hotel": 1100
+        },
+
+        {
+            "type": "station",
+            "title": "Fenchurch St. Station",
+            "price": 200
+        },
+
+        {   
+            "type": "standard",
+            "color": "yellow",
+            "title": "Leicester Square",
+            "price": 260,
+            "rent_basic": 22,
+            "rent_1_house": 110,
+            "rent_2_house": 330,
+            "rent_3_house": 800,
+            "rent_4_house": 975,
+            "rent_hotel": 1150
+        },
+
+        {   
+            "type": "standard",
+            "color": "yellow",
+            "title": "Coventry Street",
+            "price": 260,
+            "rent_basic": 22,
+            "rent_1_house": 110,
+            "rent_2_house": 330,
+            "rent_3_house": 800,
+            "rent_4_house": 975,
+            "rent_hotel": 1150
+        },
+
+        {
+            "id": "water_company",
+            "title": "Water Works",
+            "type": "communal",
+            "price": 150
+        },
+
+        {   
+            "type": "standard",
+            "color": "yellow",
+            "title": "Piccadilly",
+            "price": 280,
+            "rent_basic": 24,
+            "rent_1_house": 120,
+            "rent_2_house": 360,
+            "rent_3_house": 850,
+            "rent_4_house": 1025,
+            "rent_hotel": 1200
+        },
+
+        {
+            "id": "cops"
+        },
+
+        {   
+            "type": "standard",
+            "color": "green",
+            "title": "Regent Street",
+            "price": 300,
+            "rent_basic": 26,
+            "rent_1_house": 130,
+            "rent_2_house": 390,
+            "rent_3_house": 900,
+            "rent_4_house": 1100,
+            "rent_hotel": 1275
+        },
+
+        {   
+            "type": "standard",
+            "color": "green",
+            "title": "Oxford Street",
+            "price": 300,
+            "rent_basic": 26,
+            "rent_1_house": 130,
+            "rent_2_house": 390,
+            "rent_3_house": 900,
+            "rent_4_house": 1100,
+            "rent_hotel": 1275
+        },
+
+        {
+            "type": "community_chest"
+        },
+
+        {   
+            "type": "standard",
+            "color": "green",
+            "title": "Bond Street",
+            "price": 320,
+            "rent_basic": 28,
+            "rent_1_house": 150,
+            "rent_2_house": 450,
+            "rent_3_house": 1000,
+            "rent_4_house": 1200,
+            "rent_hotel": 1400
+        },
+
+        {
+            "type": "station",
+            "title": "Liverpool St. Station",
+            "price": 200
+        },
+
+        {
+            "type": "chance"
+        },
+
+        {   
+            "type": "standard",
+            "color": "blue",
+            "title": "Park Lane",
+            "price": 350,
+            "rent_basic": 35,
+            "rent_1_house": 175,
+            "rent_2_house": 500,
+            "rent_3_house": 1100,
+            "rent_4_house": 1300,
+            "rent_hotel": 1500
+        },
+
+        {
+            "id": "super_tax",
+            "title": "Super tax",
+            "type": "tax",
+            "cost": 100
+        },
+
+        {   
+            "type": "standard",
+            "color": "blue",
+            "title": "Mayfajr",
+            "price": 400,
+            "rent_basic": 50,
+            "rent_1_house": 200,
+            "rent_2_house": 600,
+            "rent_3_house": 1400,
+            "rent_4_house": 1700,
+            "rent_hotel": 2000
+        }
+    ]
+}

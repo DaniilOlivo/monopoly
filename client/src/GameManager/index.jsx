@@ -4,9 +4,10 @@ import useWebSocket from "react-use-websocket"
 import ErrorWindow from "../components/ErrorWindow"
 import LoginWindow from "./Service/LoginWindow"
 import ListPlayers from "./Service/ListPlayers"
+import Game from "./Game"
 
-function Game(props) {
-    const wsUrl = `ws://${document.location.host}/ws`
+function GameManager(props) {
+    const wsUrl = `ws://${document.location.host}/socket`
 
     const room = props.room
 
@@ -23,7 +24,11 @@ function Game(props) {
     const [username, setUsername] = useState("")
     const [host, setHost] = useState("")
     const [players, setPlayers] = useState([])
-    const [startGame, setStartGame] = useState(false)
+    const [boolStartGame, setBoolStartGame] = useState(false)
+
+    function startGame() {
+        sendMes("start_game", {roomTilte: room})
+    }
 
     useEffect(() => {
         const mes = lastJsonMessage
@@ -33,6 +38,7 @@ function Game(props) {
             setHost(options.host)
             setPlayers(options.players)
         }
+        if (event === "game_init") setBoolStartGame(true)
     }, [lastJsonMessage])
 
     const windows = []
@@ -44,15 +50,21 @@ function Game(props) {
             mes={lastJsonMessage}
             login={setUsername} />)
     }
-    if (players.length > 0 && host && !startGame) {
+    if (players.length > 0 && host && !boolStartGame) {
         windows.push(< ListPlayers
             host={host === username}
             players={players}
-            startGame={() => console.log("Start Gamee")} />)
+            startGame={startGame} />)
+    }
+
+    let game = null
+    if (boolStartGame) {
+        game = < Game sendMes={sendMes} mes={lastJsonMessage} />
     }
 
     return (
         <div className="game">
+            {game}
             <div className="windows">
                 {windows}
             </div>
@@ -63,4 +75,4 @@ function Game(props) {
     )
 }
 
-export default Game
+export default GameManager
