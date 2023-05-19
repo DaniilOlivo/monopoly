@@ -1,4 +1,4 @@
-import { Window } from "../../../components/Window"
+import Window from "../../../components/Window"
 import List from "../../../components/List"
 import Button from "../../../components/Button"
 

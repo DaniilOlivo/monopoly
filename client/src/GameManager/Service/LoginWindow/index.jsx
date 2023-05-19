@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { Window } from "../../../components/Window";
+import Window from "../../../components/Window";
 import Form from "../../../components/Form";
 
 import { useSkipLoginRoom } from "../../../utils/skip";

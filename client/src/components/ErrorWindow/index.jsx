@@ -1,4 +1,4 @@
-import { ModalWindow } from "../Window"
+import Window from "../Window"
 
 function ErrorWindow(props) {
     let mes = "Sorry, something broke. We are already fixing (no). Try to reload the page"
@@ -6,9 +6,9 @@ function ErrorWindow(props) {
     if (props.error.message !== undefined) mes = props.error.message
 
     return (
-        <ModalWindow overlap={true}>
+        <Window overlap={true}>
             <p class="special-text text-error">{mes}</p>
-        </ModalWindow>
+        </Window>
     )
 }
 

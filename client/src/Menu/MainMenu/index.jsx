@@ -1,5 +1,5 @@
 import Button from "../../components/Button"
-import { Window } from "../../components/Window"
+import Window from "../../components/Window"
 
 import "./MainMenu.css"
 
