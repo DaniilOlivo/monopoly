@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     next()
 })
 app.use("/api", router)
-app.ws("/ws", handlerWs)
+app.ws("/socket", handlerWs)
 
 router.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, FOLDER_CLIENT, "index.html"))
