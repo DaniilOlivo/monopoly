@@ -1,5 +1,5 @@
 import Window from "../../../components/Window"
-import List from "../../../components/List"
+import { ListSimple } from "../../../components/List"
 import Button from "../../../components/Button"
 
 import { useSkipStartGame } from "../../../utils/skip"
@@ -17,7 +17,7 @@ function ListPlayers(props) {
 
     return (
         <Window>
-            < List title={`Players ${lenPlayers}/8`} items={props.players}/>
+            < ListSimple title={`Players ${lenPlayers}/8`} items={props.players}/>
             {btnStartGame}
         </Window>
     )

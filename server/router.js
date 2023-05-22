@@ -16,7 +16,7 @@ router.post("/create", (req, res) => {
 })
 
 router.get("/listRooms", (req, res) => {
-    res.send(JSON.stringify(roomManager.getTitlesRooms()))
+    res.send(JSON.stringify(roomManager.getDataRooms()))
 })
 
 module.exports = router

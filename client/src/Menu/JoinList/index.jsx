@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 
 import Window from "../../components/Window"
-import List from "../../components/List"
+import { ListExtend } from "../../components/List"
 import Button from "../../components/Button"
 
 function JoinList(props) {
@@ -10,10 +10,16 @@ function JoinList(props) {
     useEffect(() => {
         async function getRooms() {
             const response = await fetch("/api/listRooms")
-            const listRooms = await response.json()
+            const dataRooms = await response.json()
+            console.log(dataRooms)
             const objRooms = {}
-            for (const room of listRooms) {
-                objRooms[room] = () => props.startGameModule(room)
+            for (const [title, data] of Object.entries(dataRooms)) {
+                const { countPlayers } = data
+
+                objRooms[title] = {
+                    additionalTitle: `${countPlayers}/8`,
+                    handler: () => props.startGameModule(title)
+                }
             }
             setRooms(objRooms)
         }
@@ -23,7 +29,7 @@ function JoinList(props) {
     return (
         <Window>
             <div className="join-list">
-                < List title="Rooms" items={rooms} clickable={true}/>
+                < ListExtend title="Rooms" items={rooms} />
                 < Button title="Back" onClick={() => props.go("mainMenu")} />
             </div>
         </Window>

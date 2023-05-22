@@ -23,6 +23,9 @@
 .container-list__item {
     padding: 0.5em 1em;
     transition: 200ms;
+
+    display: flex;
+    justify-content: space-between;
 }
 
 .container-list__item:nth-child(odd) {

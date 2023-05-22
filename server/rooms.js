@@ -58,6 +58,14 @@ class RoomManager {
         this.rooms = {}
     }
 
+    getDataRooms() {
+        const resultObject = {}
+        for (const [title, room] of Object.entries(this.rooms)) {
+            resultObject[title] = {countPlayers: room.countPlayers}
+        }
+        return resultObject
+    }
+
     getTitlesRooms() {
         return Object.keys(this.rooms)
     }
