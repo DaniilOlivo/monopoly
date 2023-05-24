@@ -1,13 +1,8 @@
 import "./Button.css"
 
-function Button(props) {
-    let classList = ["button"]
-    if (props.disable) {
-        classList.push("button_disable")
-    }
-    
+function Button(props) {    
     return (
-        <button className={classList.join(" ")} onClick={props.onClick}>
+        <button className="button" disabled={props.disable} onClick={props.onClick}>
             {props.title}
         </button>
     )

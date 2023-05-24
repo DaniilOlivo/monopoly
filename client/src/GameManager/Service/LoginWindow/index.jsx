@@ -20,7 +20,7 @@ function LoginWindow(props) {
         else error = mes.options.info
     }
 
-    // useSkipLoginRoom(setValue, register, mes)
+    useSkipLoginRoom(setValue, register, mes)
 
     const mapBtns = {
         "Back": props.goBack,

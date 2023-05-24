@@ -4,15 +4,30 @@ const MAX_PLAYERS = 8
 const COLORS = settings["colors"]
 
 function initState(usernames) {
+    let stage = {
+        stages: [
+            "prioritization", // determining the order of players
+            "main"
+        ]
+    }
+    stage.current = stage.stages[0]
+
     let players = {}
 
-    for (let i = 0; i < players.length; i++) {
+    for (let i = 0; i < usernames.length; i++) {
         let username = usernames[i]
         players[username] = {
             color: COLORS[i],
             money: settings["startMoney"]
         }
     }
+
+    let moves = {
+        currentMove: null,
+        order: [],
+        valuesPlayers: {}
+    }
+
 
     let {price_building, tiles} = getConfig("tiles.json")
 
@@ -45,12 +60,21 @@ function initState(usernames) {
         if (type == "standard") {
             tile.price_building = price_building[tile.color]
         }
+
+        tile.players = []
+        if (tile.id === "start") {
+            tile.players = Object.keys(players)
+        }
     }
 
+    let roller = [4, 2]
+
     return {
+        stage,
         players,
-        orderMoves: [],
-        tiles
+        moves,
+        tiles,
+        roller
     }
 }
 

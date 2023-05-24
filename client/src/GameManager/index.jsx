@@ -17,6 +17,8 @@ function GameManager(props) {
         onError: (error) => setWindowError(< ErrorWindow error={error} />)
     })
 
+    useEffect(() => console.log(lastJsonMessage), [lastJsonMessage])
+
     function sendMes(event, options) {
         sendJsonMessage({event, options})
     }
@@ -63,7 +65,7 @@ function GameManager(props) {
     }
 
     return (
-        <div className="game">
+        <div className="game-manager">
             {game}
             <div className="windows">
                 {windows}

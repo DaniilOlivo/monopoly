@@ -22,7 +22,7 @@ function App() {
   }
 
   // Temporary code to go directly to the game module
-  // useSkipCreateRoom(startGameModule)
+  useSkipCreateRoom(startGameModule)
 
   const modules = {
     "menu": < Menu startGameModule={startGameModule} />,

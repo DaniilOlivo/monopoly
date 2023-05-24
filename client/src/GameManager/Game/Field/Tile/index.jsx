@@ -17,6 +17,15 @@ export function Tile(props) {
 
     if (props.price) content.push(<h4 className="tile_price">{props.price} M</h4>)
 
+    const players = []
+    if (props.players) {
+        for (const color of props.players) {
+            players.push(<div className="player-chip" style={{backgroundColor: color}}></div>)
+        }
+    }
+
+    content.push(<div className="tile-layout">{players}</div>)
+
     return (
         <div className={classList.join(" ")}>
             {content}

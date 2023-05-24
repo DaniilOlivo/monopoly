@@ -17,6 +17,8 @@
     transform: scale(1.1, 1.1);
 }
 
-.button_disable {
-    display: none;
+.button:disabled {
+    color: gray;
+    box-shadow: none;
+    transform: none;
 }

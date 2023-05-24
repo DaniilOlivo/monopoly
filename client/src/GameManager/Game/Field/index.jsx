@@ -12,22 +12,27 @@ function Field(props) {
 
     const tiles = []
     const pushTile = (options) => tiles.push(< Tile {...options} />)
+    const getPlayers = (tile) => {
+        let listColors = []
+        for (const username of tile.players) {
+            listColors.push(props.players[username].color)
+        }
+        return listColors
+    }
 
     for (const tile of props.tiles) {
         if (tile.id in specailTiles) {
             const id = tile.id
             const title = specailTiles[id]
-            specailTiles[id] = < Tile title={title} size="square" className={id} />
+            specailTiles[id] = < Tile title={title} size="square" className={id} players={getPlayers(tile)} />
         }
         else {
-            let options = tile
+            let options = {}
+            Object.assign(options, tile)
+            options.players = getPlayers(tile)
             if (tile.type === "community_chest") options = {title: "Community chest"}
             if (tile.type === "chance") options = {title: "Chance"}
-            if (tile.type === "tax") {
-                options = {}
-                Object.assign(options, tile)
-                options.price = tile.cost
-            } 
+            if (tile.type === "tax") options.price = tile.cost
             pushTile(options)
         }
     }
