@@ -21,7 +21,7 @@ function GamePanel(props) {
     const [localRoller, setLocalRoller] = useState([1, 1])
 
     useEffect(() => {
-        if (state.stage.current === "main") setCurrentStatus("waitMove")
+        if (state.stage === "main") setCurrentStatus("waitMove")
         
     }, [state])
 
@@ -29,9 +29,9 @@ function GamePanel(props) {
         props.sendMes("set_order_player", {valueDice})
     }
     
-    let roller = state.roller
-    let clickRoll = (arrValue) => updateGame("roller", arrValue)
-    if (state.stage.current === "prioritization") {
+    let roller = state.dices
+    let clickRoll = (arrValue) => updateGame("dices", arrValue)
+    if (state.stage === "start") {
         roller = localRoller
         clickRoll = (arrValues) => {
             setLocalRoller(arrValues)
@@ -45,7 +45,7 @@ function GamePanel(props) {
     if (currentStatus === "firstRoll" ||  currentStatus === "waitPlayers") playerWidget = null
 
     let textStatus = mapStatus[currentStatus]
-    if (currentStatus === "waitMove") textStatus += state.moves.currentMove
+    if (currentStatus === "waitMove") textStatus += state.moves.current
 
     return (
         <div className="game-panel">

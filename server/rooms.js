@@ -1,3 +1,5 @@
+const Game = require("./game/state")
+
 class Room {
     constructor(title) {
         this.title = title
@@ -5,6 +7,7 @@ class Room {
         this.players = {}
         this.sockets = []
         this.countPlayers = 0
+        this.game = null
     }
 
     setHost() {
@@ -50,6 +53,11 @@ class Room {
         for (const socket of this.sockets) {
             socket.sendMessage(event, options)
         }
+    }
+
+    startGame() {
+        this.game = new Game(this.getPlayers())
+        return this.game
     }
 }
 

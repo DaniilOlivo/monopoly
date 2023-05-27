@@ -10,8 +10,8 @@ function Game(props) {
         tiles: [],
         players: {},
         moves: {},
-        roller: [1, 1],
-        stage: {}
+        dices: [1, 1],
+        stage: ""
     })
 
     function updateGame(titleModuleGame, stateModuleGame) {
