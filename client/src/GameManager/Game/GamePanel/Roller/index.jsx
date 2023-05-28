@@ -10,6 +10,11 @@ import imgDice6 from "./img/dice_6.png"
 import "./Roller.css"
 
 function Roller(props) {
+    // props
+    // values - array of lenght 2
+    // disable - bool
+    // roll - func(arrValues)
+    
     function randomInt() {
         return Math.ceil(Math.random() * 6)
     }

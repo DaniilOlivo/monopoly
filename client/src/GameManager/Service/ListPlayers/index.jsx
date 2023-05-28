@@ -5,6 +5,10 @@ import Button from "../../../components/Button"
 import { useSkipStartGame } from "../../../utils/skip"
 
 function ListPlayers(props) {
+    // props
+    // players - list of str
+    // startGame - func
+    // host - bool
     const lenPlayers = props.players.length
 
     let btnStartGame = <p>We are waiting for the host to start the game</p>

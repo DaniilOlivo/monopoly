@@ -4,6 +4,8 @@ import Window from "../../components/Window"
 import "./MainMenu.css"
 
 function MainMenu(props) {
+    // props
+    // go - func transition between pages menu
     return (
         <Window>
             <nav className="main-menu">

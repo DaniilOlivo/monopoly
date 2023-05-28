@@ -1,6 +1,10 @@
 import "./List.css"
 
 function BaseList(props) {
+    // props
+    // title - str
+    // containerClassName - additional class, str
+    // items - list JSX elements
     let className = "container-list"
     if (props.containerClassName) className += " " + props.containerClassName
 
@@ -16,6 +20,9 @@ function BaseList(props) {
 }
 
 export function ListSimple(props) {
+    // props
+    // title - str
+    // items - list of str
     let items = []
 
     for (const title of props.items) {
@@ -26,6 +33,11 @@ export function ListSimple(props) {
 }
 
 export function ListExtend(props) {
+    // props
+    // title - str
+    // items - obj with properties:
+    //      handler - func of click
+    //      additionalTitle - str
     let items = []
     let clickable = false
 

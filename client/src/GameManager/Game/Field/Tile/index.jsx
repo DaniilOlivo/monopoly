@@ -1,6 +1,13 @@
 import "./Tile.css"
 
 export function Tile(props) {
+    // props
+    // size - "square" or "rectangle" (default)
+    // className - str
+    // color - str
+    // title - str
+    // price - int
+    // players - list of str colors
     const classList = ["tile", "tile_rectangle"]
     if (props.size === "square") classList.push("tile_square")
     if (props.className) classList.push(props.className)

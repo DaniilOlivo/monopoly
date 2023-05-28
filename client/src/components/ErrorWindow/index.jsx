@@ -1,6 +1,8 @@
 import Window from "../Window"
 
 function ErrorWindow(props) {
+    // props
+    // error - object error
     let mes = "Sorry, something broke. We are already fixing (no). Try to reload the page"
 
     if (props.error.message !== undefined) mes = props.error.message

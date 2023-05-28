@@ -5,6 +5,9 @@ import { ListExtend } from "../../components/List"
 import Button from "../../components/Button"
 
 function JoinList(props) {
+    // props
+    // go - func transition between pages menu
+    // startGameModule - func(room)
     let [rooms, setRooms] = useState({})
 
     useEffect(() => {

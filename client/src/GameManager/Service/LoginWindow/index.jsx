@@ -6,6 +6,13 @@ import Form from "../../../components/Form";
 import { useSkipLoginRoom } from "../../../utils/skip";
 
 function LoginWindow(props) {
+    // props
+    // room - str
+    // sendMes - func(event, options)
+    // mes - obj
+    // login - func(username)
+    // goBack - func start menu module
+
     const [value, setValue] = useState("")
 
     function register() {

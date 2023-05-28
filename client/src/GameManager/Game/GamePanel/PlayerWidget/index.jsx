@@ -1,6 +1,12 @@
 import "./PlayerWidget.css"
 
 function PlayerCard(props) {
+    // props
+    // select - bool
+    // color - str
+    // username - str
+    // money - int
+
     let className = "player-card"
     if (props.select) className += " player-card_select"
     return (
@@ -13,6 +19,9 @@ function PlayerCard(props) {
 }
 
 function PlayerWidget(props) {
+    // props
+    // moves and players - modules core game
+
     const {moves, players} = props
 
     const listCards = []

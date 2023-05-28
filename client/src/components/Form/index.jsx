@@ -3,6 +3,13 @@ import Button from "../Button"
 import "./Form.css"
 
 function Form(props) {
+    // props
+    // parameter - label input, str
+    // btns - title btn and handler, obj
+    // value - str or number
+    // onChange - func change value
+    // desc - description, str
+    // error - str
     const param = props.parameter
     const idInput = param.toLowerCase()
 

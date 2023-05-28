@@ -7,6 +7,8 @@ import JoinList from "./JoinList"
 import "./Menu.css"
 
 function Menu(props) {
+    // props
+    // startGameModule - func(room)
     const [id, setId] = useState("mainMenu")
 
     const mapMenu = {

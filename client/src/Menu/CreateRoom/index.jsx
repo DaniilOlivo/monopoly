@@ -5,6 +5,9 @@ import Form from "../../components/Form";
 
 
 function CreateRoom(props) {
+    // props
+    // go - func transition between pages menu
+    // startGameModule - func(room)
     const [value, setValue] = useState("")
     const [error, setError] = useState("")
 

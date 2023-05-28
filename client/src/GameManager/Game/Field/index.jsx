@@ -3,6 +3,8 @@ import { Tile } from "./Tile"
 import "./Field.css"
 
 function Field(props) {
+    // props
+    // players and tiles - modules core game
     const specailTiles = {
         start: "Go",
         jail: "Jail",
