@@ -24,7 +24,7 @@ function useRoller(state, sendFunc, localFunc) {
         clickRoll = (arrValues) => {
             setLocalRoller(arrValues)
             const totalValueDices = arrValues.reduce((sum, num) => sum + num, 0)
-            localFunc(totalValueDices)
+            setTimeout(() => localFunc(totalValueDices), 2000)       
         }
     }
 
