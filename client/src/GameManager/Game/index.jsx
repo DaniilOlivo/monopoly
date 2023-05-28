@@ -6,6 +6,9 @@ import GamePanel from "./GamePanel"
 import "./Game.css"
 
 function Game(props) {
+    // props
+    // sendMes - func(event: str, options: obj)
+    // mes - last message, obj
     const [stateGame, setStateGame] = useState({
         tiles: [],
         players: {},
@@ -13,13 +16,6 @@ function Game(props) {
         dices: [1, 1],
         stage: ""
     })
-
-    function updateGame(titleModuleGame, stateModuleGame) {
-        let newState = {}
-        Object.assign(newState, stateGame)
-        newState[titleModuleGame] = stateModuleGame
-        props.sendMes("set_new_state_game", {state: newState})   
-    }
 
     useEffect(() => {
         const mes = props.mes
@@ -33,7 +29,7 @@ function Game(props) {
     return (
         <div className="game">
             < Field tiles={stateGame.tiles} players={stateGame.players} />
-            < GamePanel state={stateGame} sendMes={props.sendMes} updateGame={updateGame} />
+            < GamePanel state={stateGame} sendMes={props.sendMes} />
         </div>
     )
 }

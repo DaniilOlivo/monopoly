@@ -7,6 +7,8 @@ import ListPlayers from "./Service/ListPlayers"
 import Game from "./Game"
 
 function GameManager(props) {
+    // props
+    // room - title room, str
     const wsUrl = `ws://${document.location.host}/socket`
 
     const room = props.room
