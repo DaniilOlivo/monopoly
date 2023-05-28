@@ -1,0 +1,4 @@
+.join-list__panel-btns {
+    display: flex;
+    gap: 30px;
+}
