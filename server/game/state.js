@@ -32,10 +32,14 @@ class Game {
     }
 
     rollDices(dices) {
+        const currentPlayer = this.tracker.current
         this.dices = dices
         const [val1, val2] = dices 
-        this.field.move(this.tracker.current, val1 + val2)
-        if (val1 != val2) this.tracker.next()
+        const [ok, circle] = this.field.move(currentPlayer, val1 + val2)
+        if (ok) {
+            if (circle) this.players[currentPlayer].money += 200
+            if (val1 != val2) this.tracker.next()
+        }
     }
 }
 
