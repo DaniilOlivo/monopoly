@@ -11,9 +11,9 @@ function Game(props) {
     // mes - last message, obj
     // thisUsername - str
     const [stateGame, setStateGame] = useState({
-        tiles: [],
+        field: {tiles: []},
         players: {},
-        moves: {},
+        tracker: {},
         dices: [1, 1],
         stage: ""
     })
@@ -29,7 +29,7 @@ function Game(props) {
 
     return (
         <div className="game">
-            < Field tiles={stateGame.tiles} players={stateGame.players} />
+            < Field tiles={stateGame.field.tiles} players={stateGame.players} />
             < GamePanel state={stateGame} sendMes={props.sendMes} thisPlayer={props.thisUsername} />
         </div>
     )

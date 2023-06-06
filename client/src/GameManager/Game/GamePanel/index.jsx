@@ -59,11 +59,11 @@ function GamePanel(props) {
     if (state.stage === "main") playerWidget = < PlayerWidget {...state} />
 
     let textStatus = mapStatus[currentStatus]
-    if (currentStatus === "waitMove") textStatus += state.moves.current
+    if (currentStatus === "waitMove") textStatus += state.tracker.current
 
     let boolDisableRoller = true
     if (currentStatus === "firstRoll") boolDisableRoller = false
-    else if (currentStatus === "waitMove" && state.moves.current === props.thisPlayer) boolDisableRoller = false 
+    else if (currentStatus === "waitMove" && state.tracker.current === props.thisPlayer) boolDisableRoller = false 
 
     return (
         <div className="game-panel">

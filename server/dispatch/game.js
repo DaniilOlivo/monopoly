@@ -11,7 +11,8 @@ function setOrderPlayer(socket, valueDice) {
     const { find, username, room }  = roomManager.findWs(socket)
     if (!find) return
 
-    const game = room.game.setOrderPlayer(username, valueDice)
+    const game = room.game
+    game.setOrderPlayer(username, valueDice)
     room.broadcast("game_update", {game})
 }
 

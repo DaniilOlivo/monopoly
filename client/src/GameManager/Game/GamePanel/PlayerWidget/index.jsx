@@ -20,14 +20,14 @@ function PlayerCard(props) {
 
 function PlayerWidget(props) {
     // props
-    // moves and players - modules core game
+    // tracker and players - modules core game
 
-    const {moves, players} = props
+    const {tracker, players} = props
 
     const listCards = []
-    for (const username of moves.order) {
+    for (const username of tracker.order) {
         let select = false
-        if (moves.currentMove === username) select= true 
+        if (tracker.current === username) select= true 
         listCards.push(< PlayerCard username={username} {...players[username]} select={select} />)
     }
 
