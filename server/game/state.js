@@ -75,6 +75,58 @@ class Game {
 
         return this
     }
+
+    moveField(username, value) {
+        const getNewIndex = (currentIndex, addedValue) => {
+            let newIndex = currentIndex + addedValue
+            if (newIndex == 40) newIndex = 0
+            if (newIndex > 40) {
+                let remains = newIndex - 40
+                newIndex = getNewIndex(0, remains)
+            }
+            return newIndex
+        }
+
+        let indexTile = -1
+        for (let i = 0; i < this.tiles.length; i++) {
+            const tile = this.tiles[i]
+            let flagFind = false
+            for (const usernameTile of tile.players) {
+                if (usernameTile == username) flagFind = true
+            }
+
+            if (flagFind) {
+                let indexPlayer = tile.players.indexOf(username)
+                tile.players.splice(indexPlayer, 1)
+                indexTile = getNewIndex(i, value)
+                if (i > indexTile) this.players[username].money += 200
+                break
+            }
+        }
+
+        if (indexTile == -1) return
+
+        const newTile = this.tiles[indexTile]
+        newTile.players.push(username)
+    }
+
+    nextMovePlayer() {
+        const moves = this.moves
+        const indexPlayer = moves.order.indexOf(moves.current)
+        const lenPlayers = moves.order.length
+
+        let newIndexPlayer = indexPlayer + 1
+        if (lenPlayers == newIndexPlayer) newIndexPlayer = 0
+
+        moves.current = moves.order[newIndexPlayer]
+    }
+
+    rollDices(dices) {
+        this.dices = dices
+        const [val1, val2] = dices 
+        this.moveField(this.moves.current, val1 + val2)
+        if (val1 != val2) this.nextMovePlayer()
+    }
 }
 
 module.exports = Game

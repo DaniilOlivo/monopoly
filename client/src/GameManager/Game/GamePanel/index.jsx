@@ -35,6 +35,7 @@ function GamePanel(props) {
     // props
     // state - global state game, obj
     // sendMes - func(event: str, options: obj)
+    // thisPlayer - str
     const state = props.state
 
     const [currentStatus, setCurrentStatus] = useState("firstRoll")
@@ -60,11 +61,15 @@ function GamePanel(props) {
     let textStatus = mapStatus[currentStatus]
     if (currentStatus === "waitMove") textStatus += state.moves.current
 
+    let boolDisableRoller = true
+    if (currentStatus === "firstRoll") boolDisableRoller = false
+    else if (currentStatus === "waitMove" && state.moves.current === props.thisPlayer) boolDisableRoller = false 
+
     return (
         <div className="game-panel">
             <p className="status-bar">{textStatus}</p>
             {playerWidget}
-            < Roller values={dices} disable={currentStatus === "waitPlayers"} roll={clickRoll} />
+            < Roller values={dices} disable={boolDisableRoller} roll={clickRoll} />
         </div>
     )
 }

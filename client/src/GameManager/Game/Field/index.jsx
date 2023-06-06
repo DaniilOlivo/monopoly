@@ -32,8 +32,8 @@ function Field(props) {
             let options = {}
             Object.assign(options, tile)
             options.players = getPlayers(tile)
-            if (tile.type === "community_chest") options = {title: "Community chest"}
-            if (tile.type === "chance") options = {title: "Chance"}
+            if (tile.type === "community_chest") options.title = "Community chest"
+            if (tile.type === "chance") options.title = "Chance"
             if (tile.type === "tax") options.price = tile.cost
             pushTile(options)
         }

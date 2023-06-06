@@ -64,7 +64,7 @@ function GameManager(props) {
 
     let game = null
     if (boolStartGame) {
-        game = < Game sendMes={sendMes} mes={lastJsonMessage} />
+        game = < Game sendMes={sendMes} mes={lastJsonMessage} thisUsername={username} />
     }
 
     return (

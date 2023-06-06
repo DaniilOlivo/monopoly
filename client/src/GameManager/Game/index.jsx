@@ -9,6 +9,7 @@ function Game(props) {
     // props
     // sendMes - func(event: str, options: obj)
     // mes - last message, obj
+    // thisUsername - str
     const [stateGame, setStateGame] = useState({
         tiles: [],
         players: {},
@@ -29,7 +30,7 @@ function Game(props) {
     return (
         <div className="game">
             < Field tiles={stateGame.tiles} players={stateGame.players} />
-            < GamePanel state={stateGame} sendMes={props.sendMes} />
+            < GamePanel state={stateGame} sendMes={props.sendMes} thisPlayer={props.thisUsername} />
         </div>
     )
 }
