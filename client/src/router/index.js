@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import MenuStart from "../views/MenuStart.vue"
 import ListRooms from "../views/ListRooms.vue"
 import CreateRoom from "../views/CreateRoom.vue"
+import RoomGame from "../views/RoomGame.vue"
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
     path: '/create',
     name: 'create',
     component: CreateRoom
+  },
+
+  {
+    path: "/game/:room",
+    name: "game",
+    component: RoomGame
   }
 ]
 

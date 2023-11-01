@@ -34,6 +34,13 @@ export default {
         async updateList() {
             const list = await this.getListRooms()
             this.list = list
+        },
+
+        selectRoom(title) {
+            this.$router.push({
+                name: "game",
+                params: {room: title}
+            })
         }
     }
 }

@@ -30,7 +30,12 @@ export default {
     methods: {
         async clickCreate(title) {
             const {ok, desc} = await this.createRoom(title)
-            if (ok) console.log("Win")
+            if (ok) {
+                this.$router.push({
+                    name: "game",
+                    params: {room: title}
+                })
+            }
             else this.warning = desc
         }
     }
