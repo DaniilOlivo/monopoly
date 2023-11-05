@@ -6,14 +6,16 @@
   "scripts": {
     "server-dev": "node index.js",
     "client-dev": "cd client && npm run serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha server/tests"
   },
   "keywords": [],
   "author": "DaniilOlivo",
   "license": "MIT",
   "dependencies": {
+    "chai": "^4.3.10",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "mocha": "^10.2.0",
     "morgan": "^1.10.0",
     "socket.io": "^4.7.2"
   }
