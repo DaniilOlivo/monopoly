@@ -64,6 +64,18 @@ class RoomManager {
         return resultObject
     }
 
+    findPlayer(id) {
+        for (const room of Object.values(this.rooms)) {
+            for (const [username, data] of Object.entries(room.players)) {
+                if (data.idSocket === id) {
+                    return [true, room, username]
+                }
+            }
+        }
+
+        return [false, null, ""]
+    }
+
     createRoom(title) {
         if (this.getTitles().indexOf(title) != -1) return false
         this.rooms[title] = new Room(title)

@@ -113,6 +113,30 @@ describe("Rooms logic", () => {
             })
         })
 
+        describe("find player", () => {
+            before(() => {
+                manager = new RoomManager()
+                manager.createRoom("Room test")
+                let room = manager.rooms["Room test"]
+                room.addPlayer("Scorpion", "123")
+                room.addPlayer("Sub Zero", "345")
+            })
+
+            it("succesful find", () => {
+                let [status, room, username] = manager.findPlayer("123")
+                assert.isTrue(status)
+                assert.equal(room.title, "Room test")
+                assert.equal(username, "Scorpion")
+            })
+
+            it("fail find", () => {
+                let [status, room, username] = manager.findPlayer("666")
+                assert.isFalse(status)
+                assert.isNull(room)
+                assert.equal(username, "")
+            })
+        })
+
         describe("delete room", () => {
             before(() => {
                 manager = new RoomManager()
