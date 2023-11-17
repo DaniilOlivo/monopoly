@@ -1,9 +1,12 @@
 <template>
-    <WindowComponent>
+    <WindowComponent title="List room">
         <ListComponent :elements="list" :clickable="true">
         </ListComponent>
 
-        <ButtonMain title="Обновить" @click="updateList"></ButtonMain>
+        <template v-slot:btns>
+            <ButtonMain title="Back" @click="clickBack"></ButtonMain>
+            <ButtonMain title="Update" @click="updateList"></ButtonMain>
+        </template>
     </WindowComponent>
     
 </template>
@@ -45,6 +48,10 @@ export default {
                 name: "game",
                 params: {room: title}
             })
+        },
+
+        clickBack() {
+            this.$router.push("/")
         }
     }
 }

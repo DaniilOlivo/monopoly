@@ -1,11 +1,14 @@
 <template>
-    <WindowComponent>
+    <WindowComponent title="Come up with username">
         <div class="input-line">
             <label>Username:</label>
             <input type="text" v-model="username">
         </div>
         <p class="warning" v-show="warning">{{ warning }}</p>
-        <ButtonMain title="Join room" @click="clickRegister()"></ButtonMain>
+
+        <template v-slot:btns>
+            <ButtonMain title="Join room" @click="clickRegister"></ButtonMain>
+        </template>
     </WindowComponent>
 </template>
 

@@ -13,6 +13,7 @@
 export default {
     name: "ListComponent",
     props: {
+        title: String,
         elements: {
             type: Array,
             default: function() {
@@ -26,7 +27,6 @@ export default {
     },
     computed: {
         list() {
-            console.log(this.elements)
             if (this.clickable) return this.elements
             else {
                 return this.elements.map(title => {
@@ -38,11 +38,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
 .list {
     list-style-type: none;
     padding: 0px;
     position: relative;
+    min-width: 200px;
+    min-height: 100px;
+    margin: 0;
 }
 
 .list::before {
@@ -57,6 +61,7 @@ export default {
 
 .list__el {
     padding: 0.8em 3em;
+    text-align: center;
 }
 
 .list__el_clickable {

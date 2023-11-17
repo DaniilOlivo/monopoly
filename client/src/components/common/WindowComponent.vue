@@ -1,7 +1,12 @@
 <template>
     <div class="bg">
         <div class="window">
+            <h2 class="window__title" v-if="title">{{ title }}</h2>
             <slot></slot>
+
+            <div class="panel-btns">
+                <slot name="btns"></slot>
+            </div>
         </div>
     </div>
 </template>
@@ -9,7 +14,9 @@
 <script>
 export default {
     name: "WindowComponent",
-
+    props: {
+        title: String
+    }
 }
 </script>
 
@@ -38,6 +45,16 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 30px;
+}
+
+.window__title {
+    margin: 0;
+}
+
+.panel-btns {
+    display: flex;
+    justify-content: center;
     gap: 30px;
 }
 </style>

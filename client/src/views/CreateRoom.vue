@@ -1,12 +1,15 @@
 <template>
-    <WindowComponent>
+    <WindowComponent title="Create Room">
         <div class="input-line">
             <label>Title room:</label>
             <input type="text" v-model="title">
         </div>
         <p class="warning" v-show="warning">{{ warning }}</p>
-        <ButtonMain title="Create room" @click="clickCreate(title)"></ButtonMain>
 
+        <template v-slot:btns>
+            <ButtonMain title="Back" @click="clickBack"></ButtonMain>
+            <ButtonMain title="Create room" @click="clickCreate(title)"></ButtonMain>
+        </template>
     </WindowComponent>
 </template>
 
@@ -37,6 +40,10 @@ export default {
                 })
             }
             else this.warning = desc
+        },
+
+        clickBack() {
+            this.$router.push("/")
         }
     }
 }

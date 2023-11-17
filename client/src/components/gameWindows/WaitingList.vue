@@ -1,9 +1,12 @@
 <template>
-    <WindowComponent>
+    <WindowComponent title="Lobby">
         <ListComponent :elements="list">
         </ListComponent>
 
-        <ButtonMain title="Start game" @click="console.log('Start game')" v-show="activeButton"></ButtonMain>
+        <template v-slot:btns>
+            <ButtonMain title="Leave" @click="clickLeave"></ButtonMain>
+            <ButtonMain title="Start game" @click="console.log('Start game')" v-show="activeButton"></ButtonMain>
+        </template>
     </WindowComponent>
 </template>
 
@@ -11,7 +14,7 @@
 import WindowComponent from '../common/WindowComponent.vue';
 import ButtonMain from '../common/ButtonMain.vue';
 import ListComponent from '../common/ListComponent.vue';
-import { state } from "@/socket"
+import { state, socket } from "@/socket"
 
 export default {
     name: "WaitingList",
@@ -39,6 +42,13 @@ export default {
             }
             
             return false
+        }
+    },
+
+    methods: {
+        clickLeave() {
+            socket.disconnect()
+            this.$router.push("/")
         }
     }
 }
