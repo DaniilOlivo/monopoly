@@ -41,22 +41,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.input-line {
-    display: flex;
-    gap: 1em;
-}
-
-input {
-    border: brown 2px solid;
-    border-radius: 5px;
-    padding: 0.5em 1em;
-    transition: 200ms;
-}
-
-.warning {
-    color: brown;
-}
-
-</style>
