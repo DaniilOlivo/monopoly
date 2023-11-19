@@ -2,12 +2,14 @@
     <StatusConnection></StatusConnection>
     <PlayerRegister v-if="stage == 'register'"></PlayerRegister>
     <WaitingList v-if="stage == 'waiting'"></WaitingList>
+    <GameCore v-if="stage == 'main'"></GameCore>
 </template>
 
 __<script>
 import StatusConnection from '@/components/devComponents/StatusConnection.vue';
 import PlayerRegister from '@/components/gameWindows/PlayerRegister.vue';
 import WaitingList from '@/components/gameWindows/WaitingList.vue';
+import GameCore from "@/components/game/GameCore.vue"
 import { socket, state } from "@/socket"
 
 export default {
@@ -15,7 +17,8 @@ export default {
     components: {
         StatusConnection,
         PlayerRegister,
-        WaitingList
+        WaitingList,
+        GameCore
     },
 
     mounted() {

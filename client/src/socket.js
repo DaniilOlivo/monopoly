@@ -8,6 +8,7 @@ export const state = reactive({
     messages: {
         "PlayerRegister": "",
         "WaitingList": null,
+        "GameCore": null
     }
 })
 
@@ -29,6 +30,14 @@ socket.on("registerResponse", (username, status, desc) => {
 socket.on("dataRoom", (players) => {
     console.log(players)
     state.messages.WaitingList = players
+})
+
+socket.on("initGame", () => {
+    state.stage = "main"
+})
+
+socket.on("updateGame", (game) => {
+    state.messages.GameCore = game 
 })
 
 socket.on("connect", () => {

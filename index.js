@@ -10,7 +10,9 @@ dotenv.config()
 const server = http.createServer(app)
 const io = new Server(server)
 
-io.on("connection", connectSocket)
+io.on("connection", (socket) => connectSocket(socket, io))
 
 const PORT = process.env.PORT ?? 5500
 server.listen(PORT, () => console.log("Server start http://127.0.0.1:" + PORT))
+
+module.exports = server

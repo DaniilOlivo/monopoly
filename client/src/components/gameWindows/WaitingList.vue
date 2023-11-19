@@ -5,7 +5,7 @@
 
         <template v-slot:btns>
             <ButtonMain title="Leave" @click="clickLeave"></ButtonMain>
-            <ButtonMain title="Start game" @click="console.log('Start game')" v-show="activeButton"></ButtonMain>
+            <ButtonMain title="Start game" @click="clickStartGame" v-show="activeButton"></ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -49,7 +49,11 @@ export default {
         clickLeave() {
             socket.disconnect()
             this.$router.push("/")
-        }
+        },
+
+        clickStartGame() {
+            socket.emit("startGame")
+        },
     }
 }
 </script>

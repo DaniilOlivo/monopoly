@@ -1,3 +1,5 @@
+const Game = require("./game")
+
 class Room {
     constructor(title) {
         this.title = title
@@ -42,7 +44,10 @@ class Room {
         } 
     }
 
-    // Start Game
+    startGame() {
+        this.game = new Game(Object.keys(this.players))
+        return this.game
+    }
 }
 
 class RoomManager {
