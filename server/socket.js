@@ -15,7 +15,7 @@ module.exports = function connect(socket, serverSockets) {
         socket.emit("registerResponse", username, status, desc)
 
         if (status) {
-            socket.data = {username, room}
+            socket.connectData = {username, room}
             socket.join(title)
             serverSockets.to(title).emit("dataRoom", room.players)
         }
@@ -23,16 +23,16 @@ module.exports = function connect(socket, serverSockets) {
     })
 
     socket.on("startGame", () => {
-        const {room} = socket.data
+        const {room} = socket.connectData
         const game = room.startGame()
-        socket.data.game = game
+        socket.connectData.game = game
         serverSockets.to(room.title).emit("initGame")
         serverSockets.to(room.title).emit("updateGame", game)
     })
 
     socket.on('disconnecting', () => {
-        if (socket.data) {
-            const {username, room} = socket.data
+        if (socket.connectData) {
+            const {username, room} = socket.connectData
             const titleRoom = room.title
 
             room.removePlayerByName(username)
