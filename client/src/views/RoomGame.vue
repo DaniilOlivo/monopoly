@@ -2,7 +2,7 @@
     <StatusConnection></StatusConnection>
     <PlayerRegister v-if="stage == 'register'"></PlayerRegister>
     <WaitingList v-if="stage == 'waiting'"></WaitingList>
-    <GameCore v-if="stage == 'main'"></GameCore>
+    <GameCore v-if="stage == 'main' && game"></GameCore>
 </template>
 
 __<script>
@@ -28,6 +28,10 @@ export default {
     computed: {
         stage() {
             return state.stage
+        },
+
+        game() {
+            return state.messages.GameCore
         }
     }
 }

@@ -1,14 +1,14 @@
 <template>
-    <h1>Start game</h1>
+    <FieldMain></FieldMain>
 </template>
 
 <script>
-import { state } from "@/socket"
+import FieldMain from "./Field/FieldMain.vue";
 
 export default {
     name: "GameCore",
-    mounted() {
-        console.log(state.messages.GameCore)
+    components: {
+        FieldMain
     }
 }
 </script>
