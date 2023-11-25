@@ -16,6 +16,8 @@ import ButtonMain from '../common/ButtonMain.vue';
 import ListComponent from '../common/ListComponent.vue';
 import { state, socket } from "@/socket"
 
+import { skipStartGame } from "@/components/devComponents/skip"
+
 export default {
     name: "WaitingList",
     components: {
@@ -54,6 +56,12 @@ export default {
         clickStartGame() {
             socket.emit("startGame")
         },
+    },
+
+    watch: {
+        list(value) {
+            skipStartGame(value)
+        }
     }
 }
 </script>

@@ -9,11 +9,17 @@
 import WindowComponent from '../components/common/WindowComponent.vue';
 import ButtonMain from '../components/common/ButtonMain.vue';
 
+import { skipCreate } from "@/components/devComponents/skip"
+
 export default {
     name: "MenuStart",
     components: {
         WindowComponent,
         ButtonMain
+    },
+
+    mounted() {
+        skipCreate(this.$router)
     }
 }
 </script>
