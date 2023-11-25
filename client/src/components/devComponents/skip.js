@@ -6,7 +6,10 @@ const titleRoom = "Hell"
 const player1 = "Scorpion"
 const player2 = "Sub Zero"
 
+const skipOn = false
+
 export async function skipCreate(router) {
+    if (!skipOn) return
     const {ok, desc} = await createRoom(titleRoom)
     if (ok) {
         router.push({
@@ -24,6 +27,7 @@ export async function skipCreate(router) {
 }
 
 export function skipRegister(player=player1) {
+    if (!skipOn) return
     socket.emit("register", player, titleRoom)
     socket.once("registerResponse", (username, status, desc) => {
         if (!status && username == player1 && desc == "Such a player already exists") {
@@ -33,6 +37,7 @@ export function skipRegister(player=player1) {
 }
 
 export function skipStartGame(listPlayers) {
+    if (!skipOn) return
     if (listPlayers.length >= 2) {
         socket.emit("startGame")
     }
