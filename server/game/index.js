@@ -31,7 +31,7 @@ class Game {
         if (result) this.stage = "main"
     }
 
-    rollDices(dices) {
+    rollStandard(dices) {
         const currentPlayer = this.tracker.current
         this.dices = dices
         const [val1, val2] = dices 
@@ -40,6 +40,13 @@ class Game {
             if (circle) this.players[currentPlayer].money += 200
             if (val1 != val2) this.tracker.next()
         }
+    }
+
+    roll(dices, username) {
+        if (this.stage == "start") {
+            const [val1, val2] = dices
+            this.setOrderPlayer(username, val1 + val2)
+        } else this.rollStandard(dices)
     }
 }
 
