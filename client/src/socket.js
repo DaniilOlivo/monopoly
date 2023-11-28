@@ -5,10 +5,10 @@ export const state = reactive({
     connection: false,
     username: "",
     stage: "register",
+    game: null,
     messages: {
         "PlayerRegister": "",
         "WaitingList": null,
-        "GameCore": null
     }
 })
 
@@ -37,7 +37,7 @@ socket.on("initGame", () => {
 })
 
 socket.on("updateGame", (game) => {
-    state.messages.GameCore = game 
+    state.game = game 
 })
 
 socket.on("connect", () => {

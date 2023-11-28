@@ -31,7 +31,7 @@ export default {
         },
 
         game() {
-            return state.messages.GameCore
+            return state.game
         }
     }
 }

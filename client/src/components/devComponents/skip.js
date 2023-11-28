@@ -6,7 +6,7 @@ const titleRoom = "Hell"
 const player1 = "Scorpion"
 const player2 = "Sub Zero"
 
-const skipOn = false
+const skipOn = true
 
 export async function skipCreate(router) {
     if (!skipOn) return

@@ -44,16 +44,12 @@ export default {
         FieldTile
     },
     computed: {
-        game() {
-            return state.messages.GameCore
-        },
-
         tiles() {
             const resultObj = {special: specialTilesMap, lines: {}}
             
             const tiles = []
 
-            for (const srcTile of this.game.field.tiles) {
+            for (const srcTile of state.game.field.tiles) {
 
                 // copy each tile to avoid mutation of the global state
                 const tile = Object.assign({}, srcTile)
@@ -76,7 +72,7 @@ export default {
                 
                 const listColors = []
                 for (const username of tile.players) {
-                    listColors.push(this.game.players[username].color)
+                    listColors.push(state.game.players[username].color)
                 }
                 
                 tile.players = listColors
