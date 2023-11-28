@@ -1,7 +1,13 @@
 const { roomManager } = require("./rooms")
 
+const mapSockets = {}
+
 module.exports = function connect(socket, serverSockets) {
     console.log("Connect socket")
+
+    // socket.onAny((eventName, ...args) => {
+        
+    // })
 
     socket.on("register", (username, title) => {
         const room = roomManager.rooms[title]
@@ -15,7 +21,7 @@ module.exports = function connect(socket, serverSockets) {
         socket.emit("registerResponse", username, status, desc)
 
         if (status) {
-            socket.connectData = {username, room}
+            mapSockets[socket.id] = {username, room}
             socket.join(title)
             serverSockets.to(title).emit("dataRoom", room.players)
         }
@@ -23,16 +29,21 @@ module.exports = function connect(socket, serverSockets) {
     })
 
     socket.on("startGame", () => {
-        const {room} = socket.connectData
+        const {room} = mapSockets[socket.id]
         const game = room.startGame()
-        socket.connectData.game = game
         serverSockets.to(room.title).emit("initGame")
         serverSockets.to(room.title).emit("updateGame", game)
     })
 
+    socket.on("roll", (valuesDices) => {
+        const {username, room} = mapSockets[socket.id]
+        room.game.roll(valuesDices, username)
+        serverSockets.to(room.title).emit("updateGame", room.game)
+    })
+
     socket.on('disconnecting', () => {
-        if (socket.connectData) {
-            const {username, room} = socket.connectData
+        if (mapSockets[socket.id]) {
+            const {username, room} = mapSockets[socket.id]
             const titleRoom = room.title
 
             room.removePlayerByName(username)
