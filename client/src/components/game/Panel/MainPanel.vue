@@ -2,6 +2,7 @@
     <div class="container-game-panel">
         <div class="game-panel">
             <p class="status-text">{{ status }}</p>
+            <PanelPlayersList v-show="stage == 'main'"></PanelPlayersList>
             <PanelRoller></PanelRoller>
         </div>
     </div>
@@ -9,6 +10,7 @@
 </template>
 
 <script>
+import PanelPlayersList from './PanelPlayersList.vue';
 import PanelRoller from './PanelRoller.vue';
 
 import { state } from "@/socket"
@@ -22,6 +24,7 @@ const mapStatus = {
 export default {
     name: "MainPanel",
     components: {
+        PanelPlayersList,
         PanelRoller
     },
 
@@ -39,6 +42,10 @@ export default {
             if (keyStatus == "waitMove") textStatus += tracker.current
 
             return textStatus
+        },
+
+        stage() {
+            return state.game.stage
         }
     }
 }
