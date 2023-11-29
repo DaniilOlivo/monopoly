@@ -26,8 +26,8 @@ class Game {
         this.dices = [4, 2]
     }
 
-    setOrderPlayer(username, value) {
-        const result = this.tracker.setOrder(username, value)
+    setOrderPlayer(username, dices) {
+        const result = this.tracker.setOrder(username, dices)
         if (result) this.stage = "main"
     }
 
@@ -43,10 +43,8 @@ class Game {
     }
 
     roll(dices, username) {
-        if (this.stage == "start") {
-            const [val1, val2] = dices
-            this.setOrderPlayer(username, val1 + val2)
-        } else this.rollStandard(dices)
+        if (this.stage == "start") this.setOrderPlayer(username, dices)
+        else this.rollStandard(dices)
     }
 }
 

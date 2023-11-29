@@ -6,6 +6,7 @@ export const state = reactive({
     username: "",
     stage: "register",
     game: null,
+    previousVerGame: null,
     messages: {
         "PlayerRegister": "",
         "WaitingList": null,
@@ -37,6 +38,7 @@ socket.on("initGame", () => {
 })
 
 socket.on("updateGame", (game) => {
+    state.previousVerGame = state.game
     state.game = game 
 })
 
