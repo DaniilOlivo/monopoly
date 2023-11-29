@@ -41,6 +41,12 @@ module.exports = function connect(socket, serverSockets) {
         serverSockets.to(room.title).emit("updateGame", room.game)
     })
 
+    socket.on("sendMes", (mes) => {
+        const {username, room} = mapSockets[socket.id]
+        room.game.pushLog(mes, username)
+        serverSockets.to(room.title).emit("updateGame", room.game)
+    })
+
     socket.on('disconnecting', () => {
         if (mapSockets[socket.id]) {
             const {username, room} = mapSockets[socket.id]

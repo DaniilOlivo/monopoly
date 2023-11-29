@@ -165,6 +165,17 @@ describe("Socket", () => {
         })
     })
 
+    describe("send messages", () => {
+        it("push mes", () => {
+            socketScorpion.emit("sendMes", "Get over here!")
+            socketScorpion.once("updateGame", (game) => {
+                const mes = game.logs[3]
+                assert.equal(mes.sender, usernameExpect)
+                assert.equal(mes.mes, "Get over here!")
+            })
+        })
+    })
+
     after(() => {
         if (socketScorpion) socketScorpion.disconnect()
         if (socketSubZero) socketSubZero.disconnect()

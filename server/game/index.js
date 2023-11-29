@@ -24,6 +24,8 @@ class Game {
         this.field = new Field(listPlayers)
 
         this.dices = [4, 2]
+
+        this.logs = []
     }
 
     setOrderPlayer(username, dices) {
@@ -43,8 +45,13 @@ class Game {
     }
 
     roll(dices, username) {
+        this.pushLog("roll dices with meaning", username, dices.toString())
         if (this.stage == "start") this.setOrderPlayer(username, dices)
         else this.rollStandard(dices)
+    }
+
+    pushLog(mes, sender="system", bold=null) {
+        this.logs.push({sender, mes, bold}) 
     }
 }
 
