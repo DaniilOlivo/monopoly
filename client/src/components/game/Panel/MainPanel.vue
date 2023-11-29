@@ -4,6 +4,7 @@
             <p class="status-text">{{ status }}</p>
             <PanelPlayersList v-show="stage == 'main'"></PanelPlayersList>
             <PanelRoller></PanelRoller>
+            <PanelLog></PanelLog>
         </div>
     </div>
     
@@ -12,6 +13,7 @@
 <script>
 import PanelPlayersList from './PanelPlayersList.vue';
 import PanelRoller from './PanelRoller.vue';
+import PanelLog from './PanelLog.vue';
 
 import { state } from "@/socket"
 
@@ -25,7 +27,8 @@ export default {
     name: "MainPanel",
     components: {
         PanelPlayersList,
-        PanelRoller
+        PanelRoller,
+        PanelLog
     },
 
     computed: {
