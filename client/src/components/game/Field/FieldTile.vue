@@ -15,7 +15,7 @@
         <h4
             v-if="tile.price"
             class="tile__price" >
-            {{ tile.price }}
+            {{ tile.price }} M.
         </h4>
 
         <div class="tile-layout">

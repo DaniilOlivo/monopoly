@@ -45,7 +45,7 @@ export default {
     },
     computed: {
         tiles() {
-            const resultObj = {special: specialTilesMap, lines: {}}
+            const resultObj = {special: {}, lines: {}}
             
             const tiles = []
 
@@ -58,7 +58,7 @@ export default {
                 
                 if (id in specialTilesMap) {
                     tile.title = specialTilesMap[id]
-                    specialTilesMap[id] = tile
+                    resultObj.special[id] = tile
                 }
                 else {
                     if (type === "community_chest") tile.title = "Community chest"
