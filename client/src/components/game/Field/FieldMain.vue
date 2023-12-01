@@ -16,20 +16,32 @@
                 v-for="tile in arrTiles"
                 :key="tile.id"
                 :tile="tile"
-                type="rectangle" >
+                type="rectangle"
+                @mouseenter="showCard(tile)"
+                @mouseleave="hideCard()" >
             </FieldTile>
         </div>
 
         <div class="logo">
             <h1 class="logo__title">MONOPOLY</h1>
+            <div :class="['workspace', {'workspace_active': workspaceActive}]">
+                <CardTileStandard v-if="workspaceActive && activeCard.type =='standard'" :tile="activeCard"></CardTileStandard>
+                <CardTileCommunal v-else-if="workspaceActive && activeCard.type == 'communal'" :tile="activeCard"></CardTileCommunal>
+                <CardTileStation v-else-if="workspaceActive && activeCard.type == 'station'" :tile="activeCard"></CardTileStation>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 import FieldTile from './FieldTile.vue';
+import CardTileStandard from './CardTileStandard.vue';
+import CardTileCommunal from './CardTileCommunal.vue';
+import CardTileStation from './CardTileStation.vue';
 
 import { state } from "@/socket"
+
+const cardsType = ["standard", "communal", "station"]
 
 const specialTilesMap = {
     start: "Go",
@@ -41,7 +53,16 @@ const specialTilesMap = {
 export default {
     name: "FieldMain",
     components: {
-        FieldTile
+        FieldTile,
+        CardTileStandard,
+        CardTileCommunal,
+        CardTileStation
+    },
+    data() {
+        return {
+            workspaceActive: false,
+            activeCard: null
+        }
     },
     computed: {
         tiles() {
@@ -64,8 +85,6 @@ export default {
                     if (type === "community_chest") tile.title = "Community chest"
                     if (type === "chance") tile.title = "Chance"
                     if (type === "tax") tile.price = tile.cost
-                    // TODO: tooltip card
-                    // if (type === "standard") 
 
                     tiles.push(tile)
                 }
@@ -87,6 +106,19 @@ export default {
 
             return resultObj
         }
+    },
+
+    methods: {
+        showCard(tile) {
+            if (cardsType.indexOf(tile.type) == -1) return
+            this.activeCard = tile
+            this.workspaceActive = true
+        },
+
+        hideCard() {
+            this.activeCard = null
+            this.workspaceActive = false
+        } 
     }
 }
 </script>
@@ -170,6 +202,24 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.workspace {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: 100ms;
+}
+
+.workspace_active {
+    background-color: rgba(30, 30, 30, 0.5);
 }
 
 .logo__title {
