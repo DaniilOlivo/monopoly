@@ -21,6 +21,7 @@ describe("Core game", () => {
             game.roll([2, 2], "Scorpion")
             game.roll([1, 2], "Scorpion")
             assert.equal(findPlayer("Scorpion"), 7)
+            game.next()
 
             game.roll([4, 5], "Sub Zero")
             assert.equal(findPlayer("Sub Zero"), 9)

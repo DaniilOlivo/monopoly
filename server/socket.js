@@ -5,9 +5,9 @@ const mapSockets = {}
 module.exports = function connect(socket, serverSockets) {
     console.log("Connect socket")
 
-    // socket.onAny((eventName, ...args) => {
-        
-    // })
+    function updateGame(room) {
+        serverSockets.to(room.title).emit("updateGame", room.game)
+    }
 
     socket.on("register", (username, title) => {
         const room = roomManager.rooms[title]
@@ -32,13 +32,19 @@ module.exports = function connect(socket, serverSockets) {
         const {room} = mapSockets[socket.id]
         const game = room.startGame()
         serverSockets.to(room.title).emit("initGame")
-        serverSockets.to(room.title).emit("updateGame", game)
+        updateGame(room)
     })
 
     socket.on("roll", (valuesDices) => {
         const {username, room} = mapSockets[socket.id]
         room.game.roll(valuesDices, username)
-        serverSockets.to(room.title).emit("updateGame", room.game)
+        updateGame(room)
+    })
+
+    socket.on("next", () => {
+        const {room} = mapSockets[socket.id]
+        room.game.next()
+        updateGame(room)
     })
 
     socket.on("sendMes", (mes) => {

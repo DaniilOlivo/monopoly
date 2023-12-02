@@ -40,7 +40,6 @@ class Game {
         const [ok, circle] = this.field.move(currentPlayer, val1 + val2)
         if (ok) {
             if (circle) this.players[currentPlayer].money += 200
-            if (val1 != val2) this.tracker.next()
         }
     }
 
@@ -48,6 +47,15 @@ class Game {
         this.pushLog("roll dices with meaning", username, dices.toString())
         if (this.stage == "start") this.setOrderPlayer(username, dices)
         else this.rollStandard(dices)
+    }
+
+    next() {
+        const [val1, val2] = this.dices
+        if (val1 == val2) return false
+        else {
+            this.tracker.next()
+            return true
+        }
     }
 
     pushLog(mes, sender="system", bold=null) {
