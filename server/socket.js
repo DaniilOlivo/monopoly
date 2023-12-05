@@ -47,10 +47,34 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
+    socket.on("buy", (idTile) => {
+        const {username, room} = mapSockets[socket.id]
+        room.game.buyOwn(idTile, username)
+        updateGame(room)
+    })
+
+    socket.on("putPledge", (idTile) => {
+        const {room} = mapSockets[socket.id]
+        room.game.putPledge(idTile)
+        updateGame(room)
+    })
+
+    socket.on("redeemPledge", (idTile) => {
+        const {room} = mapSockets[socket.id]
+        room.game.redeemPledge(idTile)
+        updateGame(room)
+    })
+
+    socket.on("sell", (idTile) => {
+        const {room} = mapSockets[socket.id]
+        room.game.sell(idTile)
+        updateGame(room)
+    })
+
     socket.on("sendMes", (mes) => {
         const {username, room} = mapSockets[socket.id]
         room.game.pushLog(mes, username)
-        serverSockets.to(room.title).emit("updateGame", room.game)
+        updateGame(room)
     })
 
     socket.on('disconnecting', () => {
