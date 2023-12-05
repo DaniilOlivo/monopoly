@@ -14,7 +14,8 @@ class Game {
             const username = usernames[i]
             this.players[username] = {
                 color: COLORS[i],
-                money: settings["startMoney"]
+                money: settings["startMoney"],
+                own: []
             }
         }
 
@@ -56,6 +57,54 @@ class Game {
             this.tracker.next()
             return true
         }
+    }
+
+    buyOwn(idTile, username) {
+        const [tile, ] = this.field.getById(idTile)
+        const price = tile.price
+        const player = this.players[username]
+
+        if (price > player.money) return [false, "Not enough money"]
+        if (tile.owner) return [false, "Already has an owner"]
+
+        player.money -= price
+        tile.owner = username
+        player.own.push(idTile)
+        return [true, "Ok"]
+    }
+
+    putPledge(idTile) {
+        const [tile, ] = this.field.getById(idTile)
+        const owner = tile.owner
+        if (!owner || tile.pledge) return false
+        tile.pledge = true
+        this.players[owner].money += tile.price / 2
+        return true
+    }
+
+    redeemPledge(idTile) {
+        const [tile, ] = this.field.getById(idTile)
+        const cost = tile.price / 2
+        
+        if (!tile.owner) return [false, "Property with its own"]
+        const player = this.players[tile.owner]
+        if (!tile.pledge) return [false, "Is not in collateral"]
+        if (player.money < cost) return [false, "Not enough money"]
+
+        player.money -= cost
+        tile.pledge = false
+
+        return [true, "Ok"]
+    }
+
+    sell(idTile) {
+        const [tile, ] = this.field.getById(idTile)
+        if (!tile.owner) return false
+        const money = (tile.pledge) ? tile.price / 2 : tile.price
+        this.players[tile.owner].money += money
+        tile.owner = null
+        if (tile.pledge) tile.pledge = false
+        return true
     }
 
     pushLog(mes, sender="system", bold=null) {

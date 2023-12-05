@@ -35,6 +35,12 @@ describe("Component Field", () => {
             assert.deepEqual(startTile.players, listPlayers)
             assert.deepEqual(secondTile.players, [])
         })
+
+        it("getById", () => {
+            const [tile, index] = field.getById("cyan_2")
+            assert.equal(tile.title, "Euston Road")
+            assert.equal(index, 8)
+        })
     })
 
     describe("findPlayer", () => {

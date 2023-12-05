@@ -34,11 +34,20 @@ class Field {
             if (type == "station") tile.rent = stationsRent
 
             tile.players = []
+            tile.owner = null
+            tile.pledge = false
             if (tile.id === "start") Object.assign(tile.players, listPlayers)
 
         }
 
         this.tiles = tiles
+    }
+
+    getById(idTile) {
+        const tile = this.tiles.find((tile) => tile.id == idTile)
+        const index = this.tiles.indexOf(tile)
+
+        return [tile, index]
     }
 
     findPlayer(username) {
