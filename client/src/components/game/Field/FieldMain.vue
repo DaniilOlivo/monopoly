@@ -24,20 +24,14 @@
 
         <div class="logo">
             <h1 class="logo__title">MONOPOLY</h1>
-            <div :class="['workspace', {'workspace_active': workspaceActive}]">
-                <CardTileStandard v-if="workspaceActive && activeCard.type =='standard'" :tile="activeCard"></CardTileStandard>
-                <CardTileCommunal v-else-if="workspaceActive && activeCard.type == 'communal'" :tile="activeCard"></CardTileCommunal>
-                <CardTileStation v-else-if="workspaceActive && activeCard.type == 'station'" :tile="activeCard"></CardTileStation>
-            </div>
+            <FieldWorkspace :cardHover="cardHover"></FieldWorkspace>
         </div>
     </div>
 </template>
 
 <script>
 import FieldTile from './FieldTile.vue';
-import CardTileStandard from './CardTileStandard.vue';
-import CardTileCommunal from './CardTileCommunal.vue';
-import CardTileStation from './CardTileStation.vue';
+import FieldWorkspace from './FieldWorkspace.vue';
 
 import { state } from "@/socket"
 
@@ -54,14 +48,11 @@ export default {
     name: "FieldMain",
     components: {
         FieldTile,
-        CardTileStandard,
-        CardTileCommunal,
-        CardTileStation
+        FieldWorkspace,
     },
     data() {
         return {
-            workspaceActive: false,
-            activeCard: null
+            cardHover: null
         }
     },
     computed: {
@@ -111,13 +102,11 @@ export default {
     methods: {
         showCard(tile) {
             if (cardsType.indexOf(tile.type) == -1) return
-            this.activeCard = tile
-            this.workspaceActive = true
+            this.cardHover = tile
         },
 
         hideCard() {
-            this.activeCard = null
-            this.workspaceActive = false
+            this.cardHover = null
         } 
     }
 }
@@ -202,24 +191,6 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.workspace {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    transition: 100ms;
-}
-
-.workspace_active {
-    background-color: rgba(30, 30, 30, 0.5);
 }
 
 .logo__title {

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg">
+    <div :class="['bg', {'bg_active': modal}]">
         <div class="window">
             <h2 class="window__title" v-if="title">{{ title }}</h2>
             <slot></slot>
@@ -15,13 +15,17 @@
 export default {
     name: "WindowComponent",
     props: {
-        title: String
+        title: String,
+        modal: {
+            type: Boolean,
+            default: true
+        }
     }
 }
 </script>
 
 <style scoped>
-.bg {
+.bg_active {
     position: fixed;
     top: 0;
     left: 0;
