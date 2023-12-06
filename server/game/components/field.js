@@ -36,6 +36,8 @@ class Field {
             tile.players = []
             tile.owner = null
             tile.pledge = false
+            tile.canBuy = false
+            if (["standard", "communal", "station"].indexOf(tile.type) != -1) tile.canBuy = true
             if (tile.id === "start") Object.assign(tile.players, listPlayers)
 
         }

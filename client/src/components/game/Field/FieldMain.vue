@@ -35,8 +35,6 @@ import FieldWorkspace from './FieldWorkspace.vue';
 
 import { state } from "@/socket"
 
-const cardsType = ["standard", "communal", "station"]
-
 const specialTilesMap = {
     start: "Go",
     jail: "Jail",
@@ -101,7 +99,7 @@ export default {
 
     methods: {
         showCard(tile) {
-            if (cardsType.indexOf(tile.type) == -1) return
+            if (!tile.canBuy) return
             this.cardHover = tile
         },
 
