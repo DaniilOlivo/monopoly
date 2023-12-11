@@ -1,33 +1,35 @@
 <template>
-    <div :class="['workspace', {'workspace_active': cardHover}]">
-        <WindowComponent :modal="false">
-            <template v-if="cardHover">
-                <CardTileStandard v-if="cardHover.type == 'standard'" :tile="cardHover"></CardTileStandard>
-                <CardTileCommunal v-else-if="cardHover.type == 'communal'" :tile="cardHover"></CardTileCommunal>
-                <CardTileStation v-else-if="cardHover.type == 'station'" :tile="cardHover"></CardTileStation>
-            </template>
+    <div :class="['workspace', {'workspace_active': offerPurchase || cardHover}]">
+        <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
 
+        <WindowComponent :modal="false" v-else-if="cardHover">
+            <CardDispather :tile="cardHover"></CardDispather>
         </WindowComponent>
     </div>
 </template>
 
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
+import CardDispather from './cards/CardDispather.vue';
+import BuyWindow from './workspace/BuyWindow.vue';
 
-import CardTileStandard from './cards/CardTileStandard.vue';
-import CardTileStation from './cards/CardTileStation.vue';
-import CardTileCommunal from './cards/CardTileCommunal.vue';
+import { state } from "@/socket"
 
 export default {
     name: "FieldWorkspace",
     components: {
         WindowComponent,
-        CardTileStandard,
-        CardTileStation,
-        CardTileCommunal,
+        CardDispather,
+        BuyWindow
     },
     props: ["cardHover"],
 
+    computed: {
+        offerPurchase() {
+            const {username, game} = state
+            return game.players[username].service.offer
+        }
+    }
 }
 </script>
 
