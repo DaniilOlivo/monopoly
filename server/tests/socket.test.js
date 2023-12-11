@@ -139,13 +139,17 @@ describe("Socket", () => {
         const handler = (game) => {
             statesGame.push(game)
         }
+        let gameV3 = null
 
         before(() => {
             socketScorpion.on("updateGame", handler)
 
             socketScorpion.emit("roll", [2, 1])
             socketSubZero.emit("roll", [5, 5])
-            socketSubZero.emit("roll", [1, 4])
+            socketSubZero.emit("roll", [3, 3])
+            socketSubZero.emit("offer", false)
+            socketSubZero.emit("roll", [1, 2])
+            socketSubZero.emit("offer", true)
         })
 
         it("set order", () => {
@@ -154,10 +158,31 @@ describe("Socket", () => {
         })
 
         it("position first player", () => {
-            const gameV3 = statesGame[2]
+            gameV3 = statesGame[2]
             const tile = gameV3.field.tiles.find((tile) => tile.players.indexOf("Sub Zero") != -1)
             const index = gameV3.field.tiles.indexOf(tile)
-            assert.equal(index, 5)
+            assert.equal(index, 6)
+        })
+
+        it("double on dice", () => {
+            gameV3 = statesGame[2]
+            assert.equal(gameV3.tracker.current, "Sub Zero") 
+        })
+
+        it("waiting for a purchase decision", () => {
+            assert.isNotNull(gameV3.players["Sub Zero"].service.offer)
+        })
+
+        it("refusal to purchase", () => {
+            const gameV4 = statesGame[3]
+            assert.isNull(gameV4.players["Sub Zero"].service.offer)
+        })
+
+        it("acceptance of purchase offer", () => {
+            const gameV6 = statesGame[5]
+            assert.isNull(gameV6.players["Sub Zero"].service.offer)
+            assert.equal(gameV6.players["Sub Zero"].own[0], "cyan_3")
+            assert.equal(gameV6.tracker.current, "Scorpion")
         })
 
         after(() => {
@@ -169,7 +194,7 @@ describe("Socket", () => {
         it("push mes", () => {
             socketScorpion.emit("sendMes", "Get over here!")
             socketScorpion.once("updateGame", (game) => {
-                const mes = game.logs[3]
+                const mes = game.logs[4]
                 assert.equal(mes.sender, usernameExpect)
                 assert.equal(mes.mes, "Get over here!")
             })

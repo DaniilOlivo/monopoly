@@ -15,7 +15,10 @@ class Game {
             this.players[username] = {
                 color: COLORS[i],
                 money: settings["startMoney"],
-                own: []
+                own: [],
+                service: {
+                    offer: null
+                }
             }
         }
 
@@ -41,6 +44,9 @@ class Game {
         const [ok, circle] = this.field.move(currentPlayer, val1 + val2)
         if (ok) {
             if (circle) this.players[currentPlayer].money += 200
+            const [tile, ] = this.field.findPlayer(currentPlayer)
+            if (tile.canBuy) this.setService(currentPlayer, "offer", tile)
+            else this.next()
         }
     }
 
@@ -57,6 +63,14 @@ class Game {
             this.tracker.next()
             return true
         }
+    }
+
+    setService(username, setting, val) {
+        this.players[username].service[setting] = val
+    }
+
+    clearService(username, setting) {
+        this.players[username].service[setting] = null
     }
 
     buyOwn(idTile, username) {
