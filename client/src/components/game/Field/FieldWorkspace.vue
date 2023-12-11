@@ -1,26 +1,21 @@
 <template>
     <div :class="['workspace', {'workspace_active': offerPurchase || cardHover}]">
         <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
-
-        <WindowComponent :modal="false" v-else-if="cardHover">
-            <CardDispather :tile="cardHover"></CardDispather>
-        </WindowComponent>
+        <HoverWindow v-else-if="cardHover" :tile="cardHover"></HoverWindow>
     </div>
 </template>
 
 <script>
-import WindowComponent from '@/components/common/WindowComponent.vue';
-import CardDispather from './cards/CardDispather.vue';
 import BuyWindow from './workspace/BuyWindow.vue';
+import HoverWindow from './workspace/HoverWindow.vue';
 
 import { state } from "@/socket"
 
 export default {
     name: "FieldWorkspace",
     components: {
-        WindowComponent,
-        CardDispather,
-        BuyWindow
+        BuyWindow,
+        HoverWindow
     },
     props: ["cardHover"],
 
