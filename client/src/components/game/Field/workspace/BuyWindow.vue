@@ -1,7 +1,10 @@
 <template>
     <WindowComponent :modal="false" >
         <CardDispather :tile="tile"></CardDispather>
-        <p>{{ desc }}</p>
+        <div class="info">
+            <p>Price: <span class="info__cost">{{ tile.price }} M</span></p>
+            <p>{{ desc }}</p>
+        </div>
         <template v-slot:btns>
             <ButtonMain title="Refuse" @click="refuse"></ButtonMain>
             <ButtonMain title="Buy" @click="buy" :disable="!canBuy"></ButtonMain>
@@ -48,3 +51,13 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.info__cost {
+    font-weight: bold;
+}
+
+.info p {
+    text-align: center;
+}
+</style>
