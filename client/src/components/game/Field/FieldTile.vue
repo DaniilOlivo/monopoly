@@ -1,5 +1,5 @@
 <template>
-    <div :class="listClasses">
+    <div :class="listClasses" :style="{borderBottomColor: colorPlayer}">
         <div 
             v-if="tile.color"
             class="tile__color-cap"
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import { state } from "@/socket"
+
 export default {
     name: "FieldTile",
     props: {
@@ -50,10 +52,17 @@ export default {
 
     computed: {
         listClasses() {
-            return [
-                "tile",
-                "tile_" + this.type,
-            ]
+            const arrClasses = ["tile", "tile_" + this.type]
+            if (this.tile.owner) arrClasses.push("tile_owner")
+            return arrClasses
+        },
+        colorPlayer() {
+            const { game } = state
+            let color = "black"
+            if (this.tile.owner) {
+                color = game.players[this.tile.owner].color
+            }
+            return color
         }
     }
 }
@@ -69,6 +78,10 @@ export default {
     flex-direction: column;
 
     position: relative;
+}
+
+.tile_owner {
+    border-bottom: 6px solid black;
 }
 
 .tile_rectangle {
