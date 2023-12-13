@@ -186,6 +186,12 @@ describe("Socket", () => {
             assert.equal(game.players["Sub Zero"].own[0], "cyan_3")
             assert.equal(game.tracker.current, "Scorpion")
         })
+
+        it("Cannot buy an already occupied tile", async () => {
+            socketScorpion.emit("roll", [3, 6])
+            const game = await waitUpdateGame()
+            assert.isNull(game.players["Scorpion"].service.offer)
+        })
     })
 
     after(() => {
