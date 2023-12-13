@@ -5,12 +5,23 @@ const server = require("../../index")
 
 const url = "http://127.0.0.1:5500"
 
+function wait(socket, event) {
+    return new Promise((resolve) => {
+        socket.once(event, (...data) => resolve(data))
+    })
+}
+
+function waitMany(socket, eventsList) {
+    const arrPromises = []
+    for (const event of eventsList) arrPromises.push(wait(socket, event))
+    return Promise.all(arrPromises)
+}
+
 describe("Socket", () => {
     let socketScorpion = null
     let socketSubZero = null
 
     const titleRoom = "Hell"
-    const usernameExpect = "Scorpion"
 
     before((done) => {
         request.post(
@@ -27,88 +38,64 @@ describe("Socket", () => {
     })
 
     describe("register", () => {
-        it("register non-exist room", (done) => {
-            socketScorpion.emit("register", usernameExpect, "Heaven")
-
-            socketScorpion.once("registerResponse", (username, status, desc) => {
-                assert.equal(username, usernameExpect)
-                assert.isFalse(status)
-                assert.equal(desc, "This room does not exist. Try connecting to another")
-                done()
-            })
+        it("register non-exist room", async () => {
+            socketScorpion.emit("register", "Scorpion", "Heaven")
+            const [username, status, desc] = await wait(socketScorpion, "registerResponse")
+            assert.equal(username, "Scorpion")
+            assert.isFalse(status)
+            assert.equal(desc, "This room does not exist. Try connecting to another")
         })
 
         describe("register succesful", () => {
-            let registerResponse = null
-            let players = null
+            let res = []
 
-            before(() => {
-                socketScorpion.emit("register", usernameExpect, titleRoom)
+            before(async () => {
+                socketScorpion.emit("register", "Scorpion", titleRoom)
 
-                socketScorpion.once("registerResponse", (username, status, desc) => {
-                    registerResponse = {username, status, desc}
-                })
-
-                socketScorpion.once("dataRoom", (dataPlayers) => {
-                    players = dataPlayers
-                })
+                res = await waitMany(socketScorpion, ["registerResponse", "dataRoom"])
             })
 
             it("register response", () => {
-                assert.isNotNull(registerResponse)
-                const {username, status, desc} = registerResponse
-                assert.equal(username, usernameExpect)
+                const [username, status, desc] = res[0]
+                assert.equal(username, "Scorpion")
                 assert.isTrue(status)
                 assert.equal(desc, "Ok")
             })
 
             it("data room", () => {
-                assert.isNotNull(players)
-                const listPlayers = Object.keys(players)
-                assert.deepEqual(listPlayers, [usernameExpect])
-                assert.isTrue(players[usernameExpect].host)
+                const [dataRoom] = res[1]
+                assert.deepEqual(Object.keys(dataRoom), ["Scorpion"])
+                assert.isTrue(dataRoom["Scorpion"].host)
             })
         })
 
         describe("second socket", () => {            
-            it("Attempting to register an existing user", (done) => {
-                socketSubZero.emit("register", usernameExpect, titleRoom)
-                socketSubZero.once("registerResponse", (username, status, desc) => {
-                    assert.equal(username, usernameExpect)
-                    assert.isFalse(status)
-                    assert.equal(desc, "Such a player already exists")
-                    done()
-                })
+            it("Attempting to register an existing user", async () => {
+                socketSubZero.emit("register", "Scorpion", titleRoom)
+                const [username, status, desc] = await wait(socketSubZero, "registerResponse")
+                assert.equal(username, "Scorpion")
+                assert.isFalse(status)
+                assert.equal(desc, "Such a player already exists")
             })
 
             describe("second register", () => {
-                let registerResponse = null
-                let dataRoom = null
+                let res = []
 
-                const secondUsername = "Sub Zero"
-
-                before(() => {
-                    socketSubZero.emit("register", secondUsername, titleRoom)
-                    socketSubZero.once("registerResponse", (username, status, desc) => {
-                        registerResponse = {username, status, desc}
-                    })
-                    socketSubZero.once("dataRoom", (players) => {
-                        dataRoom = players
-                    })
+                before(async () => {
+                    socketSubZero.emit("register", "Sub Zero", titleRoom)
+                    res = await waitMany(socketSubZero, ["registerResponse", "dataRoom"])
                 })
 
                 it("register succesful second player", () => {
-                    assert.isNotNull(registerResponse)
-                    const {username, status, desc} = registerResponse
-                    assert.equal(username, secondUsername)
+                    const [username, status, desc] = res[0]
+                    assert.equal(username, "Sub Zero")
                     assert.isTrue(status)
                     assert.equal(desc, "Ok")
                 })
 
                 it("update room after second player", () => {
-                    assert.isNotNull(dataRoom)
-                    const listPlayers = Object.keys(dataRoom)
-                    assert.deepEqual(listPlayers, [usernameExpect, secondUsername])
+                    const [dataRoom] = res[1]
+                    assert.deepEqual(Object.keys(dataRoom), ["Scorpion", "Sub Zero"])
                 })
             })
         })
@@ -120,7 +107,7 @@ describe("Socket", () => {
         
         before(() => {
             socketScorpion.emit("startGame")
-
+            
             socketScorpion.once("initGame", () => initGame = true)
             socketScorpion.once("updateGame", (game) => updateGame = game)
         })
@@ -134,70 +121,70 @@ describe("Socket", () => {
         })
     })
 
+    describe("send messages", () => {
+        it("push mes", (done) => {
+            socketScorpion.emit("sendMes", "Get over here!")
+            socketScorpion.once("updateGame", (game) => {
+                const mes = game.logs[0]
+                assert.equal(mes.sender, "Scorpion")
+                assert.equal(mes.mes, "Get over here!")
+                done()
+            })
+        })
+    })
+
     describe("roll", () => {
-        const statesGame = []
-        const handler = (game) => {
-            statesGame.push(game)
+        async function waitUpdateGame() {
+            const [game] = await wait(socketScorpion, "updateGame")
+            return game
         }
-        let gameV3 = null
 
-        before(() => {
-            socketScorpion.on("updateGame", handler)
+        // Intermediate storage for temporary data, like the current version of the game
+        let buffer = {}
 
+        it("set order", async () => {
             socketScorpion.emit("roll", [2, 1])
+            await waitUpdateGame()
             socketSubZero.emit("roll", [5, 5])
+            const game = await waitUpdateGame()
+            assert.equal(game.stage, "main")
+        })
+
+        it("position first player", async () => {
             socketSubZero.emit("roll", [3, 3])
-            socketSubZero.emit("offer", false)
-            socketSubZero.emit("roll", [1, 2])
-            socketSubZero.emit("offer", true)
-        })
+            game = await waitUpdateGame()
+            tile = game.field.tiles.find((tile) => tile.players.indexOf("Sub Zero") != -1)
 
-        it("set order", () => {
-            const gameV2 = statesGame[1]
-            assert.equal(gameV2.stage, "main")
-        })
+            buffer.game = game
+            buffer.tile = tile
 
-        it("position first player", () => {
-            gameV3 = statesGame[2]
-            const tile = gameV3.field.tiles.find((tile) => tile.players.indexOf("Sub Zero") != -1)
-            const index = gameV3.field.tiles.indexOf(tile)
+            const index = game.field.tiles.indexOf(tile)
             assert.equal(index, 6)
         })
 
         it("double on dice", () => {
-            gameV3 = statesGame[2]
-            assert.equal(gameV3.tracker.current, "Sub Zero") 
+            assert.equal(buffer.game.tracker.current, "Sub Zero") 
         })
 
         it("waiting for a purchase decision", () => {
-            assert.isNotNull(gameV3.players["Sub Zero"].service.offer)
+            const {game, tile} = buffer
+            assert.deepEqual(game.players["Sub Zero"].service.offer, tile)
         })
 
-        it("refusal to purchase", () => {
-            const gameV4 = statesGame[3]
-            assert.isNull(gameV4.players["Sub Zero"].service.offer)
+        it("refusal to purchase", async () => {
+            socketSubZero.emit("offer", false)
+            const game = await waitUpdateGame()
+            assert.isNull(game.players["Sub Zero"].service.offer)
         })
 
-        it("acceptance of purchase offer", () => {
-            const gameV6 = statesGame[5]
-            assert.isNull(gameV6.players["Sub Zero"].service.offer)
-            assert.equal(gameV6.players["Sub Zero"].own[0], "cyan_3")
-            assert.equal(gameV6.tracker.current, "Scorpion")
-        })
-
-        after(() => {
-            socketScorpion.off("updateGame", handler)
-        })
-    })
-
-    describe("send messages", () => {
-        it("push mes", () => {
-            socketScorpion.emit("sendMes", "Get over here!")
-            socketScorpion.once("updateGame", (game) => {
-                const mes = game.logs[4]
-                assert.equal(mes.sender, usernameExpect)
-                assert.equal(mes.mes, "Get over here!")
-            })
+        it("acceptance of purchase offer", async () => {
+            socketSubZero.emit("roll", [1, 2])
+            await waitUpdateGame()
+            socketSubZero.emit("offer", true)
+            const game = await waitUpdateGame()
+            assert.isNull(game.players["Sub Zero"].service.offer)
+            assert.equal(game.players["Sub Zero"].own[0], "cyan_3")
+            assert.equal(game.tracker.current, "Scorpion")
         })
     })
 
