@@ -1,6 +1,6 @@
 <template>
     <div class="log">
-        <div class="list-log">
+        <div class="list-log" ref="listLog">
             <p 
                 class="line-log"
                 v-for="line in listLogs"
@@ -15,7 +15,7 @@
         </div>
 
         <div class="log-input">
-            <input type="text" class="log-input__input" v-model="mes">
+            <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
             <ButtonMain title="Message" @click="sendMes"></ButtonMain>
         </div>
     </div>
@@ -55,7 +55,16 @@ export default {
         sendMes() {
             socket.emit("sendMes", this.mes)
             this.mes = ""
+        },
+
+        scrollToBottom() {
+            const el = this.$refs.listLog
+            if (el) el.scrollTop = el.scrollHeight ** 2
         }
+    },
+
+    updated() {
+        this.scrollToBottom()
     }
 }
 </script>
