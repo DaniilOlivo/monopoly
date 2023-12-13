@@ -45,7 +45,6 @@ class Game {
         if (ok) {
             if (circle) this.players[currentPlayer].money += 200
             const [tile, ] = this.field.findPlayer(currentPlayer)
-            console.log(tile)
             this.pushLog("ends up on the", currentPlayer, tile.title)
             if (tile.canBuy && !tile.owner) {
                 this.setService(currentPlayer, "offer", tile)
