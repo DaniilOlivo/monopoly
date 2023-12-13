@@ -20,7 +20,12 @@
     "stationsRent": [25, 50, 100, 200],
 
     "tiles": [
-        {"id": "start"},
+        {
+            "id": "start",
+            "title": "Go",
+            "type": "special"
+        },
+
         {
             "type": "standard",
             "color": "brown",
@@ -103,7 +108,12 @@
             "rent_hotel": 600
         },
 
-        {"id": "jail", "prisoners": {}},
+        {
+            "id": "jail",
+            "prisoners": {},
+            "title": "Jail",
+            "type": "special"
+        },
 
         {   
             "type": "standard",
@@ -201,7 +211,9 @@
         },
 
         {
-            "id": "parking"
+            "id": "parking",
+            "title": "Free Parking",
+            "type": "special"
         },
 
         {   
@@ -300,7 +312,9 @@
         },
 
         {
-            "id": "cops"
+            "id": "cops",
+            "title": "Go to Jail",
+            "type": "special"
         },
 
         {   

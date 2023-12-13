@@ -35,13 +35,6 @@ import FieldWorkspace from './FieldWorkspace.vue';
 
 import { state } from "@/socket"
 
-const specialTilesMap = {
-    start: "Go",
-    jail: "Jail",
-    parking: "Free Parking",
-    cops: "Go to Jail"
-}
-
 export default {
     name: "FieldMain",
     components: {
@@ -66,13 +59,10 @@ export default {
 
                 const {id, type} = tile
                 
-                if (id in specialTilesMap) {
-                    tile.title = specialTilesMap[id]
+                if (type === "special") {
                     resultObj.special[id] = tile
                 }
                 else {
-                    if (type === "community_chest") tile.title = "Community chest"
-                    if (type === "chance") tile.title = "Chance"
                     if (type === "tax") tile.price = tile.cost
 
                     tiles.push(tile)

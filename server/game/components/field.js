@@ -32,6 +32,8 @@ class Field {
             if (type == "standard") tile.price_building = price_building[tile.color]
             if (type == "communal") tile.desc = desc.communal
             if (type == "station") tile.rent = stationsRent
+            if (type == "chance") tile.title = "Chance"
+            if (type == "community_chest") tile.title = "Community chest"
 
             tile.players = []
             tile.owner = null
