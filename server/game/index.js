@@ -45,7 +45,11 @@ class Game {
         if (ok) {
             if (circle) this.players[currentPlayer].money += 200
             const [tile, ] = this.field.findPlayer(currentPlayer)
-            if (tile.canBuy && !tile.owner) this.setService(currentPlayer, "offer", tile)
+            console.log(tile)
+            this.pushLog("ends up on the", currentPlayer, tile.title)
+            if (tile.canBuy && !tile.owner) {
+                this.setService(currentPlayer, "offer", tile)
+            }
             else this.next()
         }
     }
@@ -84,6 +88,7 @@ class Game {
         player.money -= price
         tile.owner = username
         player.own.push(idTile)
+        this.pushLog("buys", username, tile.title)
         return [true, "Ok"]
     }
 
