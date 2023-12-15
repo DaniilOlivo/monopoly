@@ -21,7 +21,6 @@ describe("Core game", () => {
             game.roll([2, 2], "Scorpion")
             game.roll([1, 2], "Scorpion")
             assert.equal(findPlayer("Scorpion"), 7)
-            game.next()
 
             game.roll([4, 5], "Sub Zero")
             assert.equal(findPlayer("Sub Zero"), 9)
@@ -112,7 +111,9 @@ describe("Core game", () => {
             assert.isTrue(result)
             const [tile, ] = game.field.getById("cyan_1")
             assert.isNull(tile.owner)
-            assert.equal(game.players["Sub Zero"].money, 100)
+            const player = game.players["Sub Zero"]
+            assert.equal(player.money, 100)
+            assert.equal(player.own.length, 0)
         })
 
         it("sell fail", () => {

@@ -119,7 +119,9 @@ class Game {
         const [tile, ] = this.field.getById(idTile)
         if (!tile.owner) return false
         const money = (tile.pledge) ? tile.price / 2 : tile.price
-        this.players[tile.owner].money += money
+        const player = this.players[tile.owner]
+        player.money += money
+        player.own.splice(player.own.indexOf(tile.id), 1)
         tile.owner = null
         if (tile.pledge) tile.pledge = false
         return true
