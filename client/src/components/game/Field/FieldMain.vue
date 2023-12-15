@@ -18,13 +18,16 @@
                 :tile="tile"
                 type="rectangle"
                 @mouseenter="showCard(tile)"
-                @mouseleave="hideCard()" >
+                @mouseleave="hideCard()"
+                @click="clickOwn(tile)" >
             </FieldTile>
         </div>
 
         <div class="logo">
             <h1 class="logo__title">MONOPOLY</h1>
-            <FieldWorkspace :cardHover="cardHover"></FieldWorkspace>
+            <FieldWorkspace
+                :cardHover="cardHover"
+                :selectOwn="selectOwn"></FieldWorkspace>
         </div>
     </div>
 </template>
@@ -43,7 +46,8 @@ export default {
     },
     data() {
         return {
-            cardHover: null
+            cardHoverIndex: -1,
+            selectOwnIndex: -1
         }
     },
     computed: {
@@ -52,6 +56,7 @@ export default {
             
             const tiles = []
 
+            let index = 0
             for (const srcTile of state.game.field.tiles) {
 
                 // copy each tile to avoid mutation of the global state
@@ -73,6 +78,9 @@ export default {
                     listColors.push(state.game.players[username].color)
                 }
                 
+                tile.index = index
+                index++
+                
                 tile.players = listColors
             }
 
@@ -84,18 +92,42 @@ export default {
             }
 
             return resultObj
+        },
+
+        cardHover() {
+            const index = this.cardHoverIndex
+            return (index != -1) ? state.game.field.tiles[index] : null
+        },
+
+        selectOwn() {
+            const index = this.selectOwnIndex
+            return (index != -1) ? state.game.field.tiles[index] : null
         }
     },
 
     methods: {
         showCard(tile) {
             if (!tile.canBuy) return
-            this.cardHover = tile
+            this.cardHoverIndex = tile.index
         },
 
         hideCard() {
-            this.cardHover = null
-        } 
+            this.cardHoverIndex = -1
+        },
+
+        clickOwn(tile) {
+            this.selectOwnIndex = -1
+            if (tile.owner) {
+                this.selectOwnIndex = tile.index
+            }
+        },
+
+        closeOwn() {
+            this.selectOwnIndex = -1
+        }
+    },
+    provide() {
+        return {closeOwn: this.closeOwn}
     }
 }
 </script>

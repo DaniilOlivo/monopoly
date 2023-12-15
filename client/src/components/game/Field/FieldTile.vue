@@ -54,6 +54,7 @@ export default {
         listClasses() {
             const arrClasses = ["tile", "tile_" + this.type]
             if (this.tile.owner) arrClasses.push("tile_owner")
+            if (this.tile.pledge) arrClasses.push("tile_pledge")
             return arrClasses
         },
         colorPlayer() {
@@ -78,6 +79,10 @@ export default {
     flex-direction: column;
 
     position: relative;
+}
+
+.tile_pledge {
+    background-color: #718772;
 }
 
 .tile_owner {
