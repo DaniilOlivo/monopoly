@@ -1,6 +1,8 @@
 <template>
     <div :class="['bg', {'bg_active': modal}]">
         <div class="window">
+            <img :src="imgExitCross" v-if="exitCross" @click="$emit('clickExitCross')" class="exit-cross">
+
             <h2 class="window__title" v-if="title">{{ title }}</h2>
             <slot></slot>
 
@@ -12,6 +14,8 @@
 </template>
 
 <script>
+import imgExitCross from "./img/exitCross.png"
+
 export default {
     name: "WindowComponent",
     props: {
@@ -19,8 +23,18 @@ export default {
         modal: {
             type: Boolean,
             default: true
+        },
+        exitCross: {
+            type: Boolean,
+            default: false
         }
-    }
+    },
+    data() {
+        return {
+            imgExitCross
+        }
+    },
+    emits: ["clickExitCross"]
 }
 </script>
 
@@ -50,6 +64,8 @@ export default {
     flex-direction: column;
     align-items: center;
     gap: 30px;
+
+    position: relative;
 }
 
 .window__title {
@@ -60,5 +76,12 @@ export default {
     display: flex;
     justify-content: center;
     gap: 30px;
+}
+
+.exit-cross {
+    position: absolute;
+
+    top: 5px;
+    right: 5px;
 }
 </style>
