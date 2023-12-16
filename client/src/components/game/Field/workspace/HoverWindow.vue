@@ -1,10 +1,13 @@
 <template>
     <WindowComponent :modal="false">
         <CardDispather :tile="tile"></CardDispather>
-        <p v-if="tile.owner">
-            This tile belongs to 
-            <span class="hover-window__owner" :style="{color: colorOwner}">{{ tile.owner }}</span>
-        </p>
+        <div class="info">
+            <p v-if="tile.owner">
+                This tile belongs to 
+                <span class="hover-window__owner" :style="{color: colorOwner}">{{ tile.owner }}</span>
+            </p>
+            <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
+        </div>
     </WindowComponent>
 </template>
 
@@ -33,7 +36,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.info {
+    text-align: center;
+}
+
+.info_warning {
+    color: brown;
+    font-weight: bold;
+}
 .hover-window__owner {
     font-weight: bold;
 }
