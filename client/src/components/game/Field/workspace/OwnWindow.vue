@@ -6,9 +6,9 @@
         </div>
         <template v-slot:btns>
             <ButtonMain title="Close" @click="closeOwn"></ButtonMain>
-            <ButtonMain title="Sell" @click="clickSell"></ButtonMain>
-            <ButtonMain title="Redeem Pledge" @click="clickRedeemPledge" v-if="pledge"></ButtonMain>
-            <ButtonMain title="Put Pledge" @click="clickPutPledge" v-else></ButtonMain>
+            <ButtonMain title="Sell" @click="clickSell" :disable="disableBtns"></ButtonMain>
+            <ButtonMain title="Redeem Pledge" @click="clickRedeemPledge" v-if="pledge" :disable="disableBtns"></ButtonMain>
+            <ButtonMain title="Put Pledge" @click="clickPutPledge" v-else :disable="disableBtns"></ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -18,7 +18,7 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { socket } from "@/socket"
+import { socket, state } from "@/socket"
 
 export default {
     name: "OwnWindwow",
@@ -44,6 +44,11 @@ export default {
     computed: {
         pledge() {
             return this.tile.pledge
+        },
+
+        disableBtns() {
+            const { game, username } = state
+            return game.tracker.current != username
         }
     },
     inject: ["closeOwn"]
