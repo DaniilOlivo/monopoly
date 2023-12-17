@@ -37,6 +37,7 @@ describe("Core game", () => {
             
             const player = game.players["Scorpion"]
             assert.deepEqual(player.own, [idTile])
+            assert.equal(player.monopoly.cyan, 1)
 
             const [tile, ] = game.field.getById(idTile)
             assert.equal(tile.owner, "Scorpion")
@@ -114,6 +115,7 @@ describe("Core game", () => {
             const player = game.players["Sub Zero"]
             assert.equal(player.money, 100)
             assert.equal(player.own.length, 0)
+            assert.equal(player.monopoly.cyan, 0)
         })
 
         it("sell fail", () => {

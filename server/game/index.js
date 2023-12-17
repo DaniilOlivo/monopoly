@@ -2,6 +2,7 @@ const { settings } = require("./utils")
 
 const Tracker = require("./components/tracker")
 const Field = require("./components/field")
+const Player = require("./components/player")
 
 const COLORS = settings["colors"]
 
@@ -10,22 +11,18 @@ class Game {
         this.stage = "start"
         this.players = {}
 
+        this.tracker = new Tracker(usernames.length)
+        this.field = new Field(usernames)
+
         for (let i = 0; i < usernames.length; i++) {
             const username = usernames[i]
-            this.players[username] = {
-                color: COLORS[i],
-                money: settings["startMoney"],
-                own: [],
-                service: {
-                    offer: null
-                }
-            }
+            this.players[username] = new Player(
+                username,
+                COLORS[i],
+                settings["startMoney"],
+                this.field.tiles
+            )
         }
-
-        const listPlayers = Object.keys(this.players)
-
-        this.tracker = new Tracker(listPlayers.length)
-        this.field = new Field(listPlayers)
 
         this.dices = [4, 2]
 
@@ -47,7 +44,7 @@ class Game {
             const [tile, ] = this.field.findPlayer(currentPlayer)
             this.pushLog("ends up on the", currentPlayer, tile.title)
             if (tile.canBuy && !tile.owner) {
-                this.setService(currentPlayer, "offer", tile)
+                this.players[currentPlayer].setService("offer", tile)
             }
             else this.next()
         }
@@ -68,14 +65,6 @@ class Game {
         }
     }
 
-    setService(username, setting, val) {
-        this.players[username].service[setting] = val
-    }
-
-    clearService(username, setting) {
-        this.players[username].service[setting] = null
-    }
-
     buyOwn(idTile, username) {
         const [tile, ] = this.field.getById(idTile)
         const price = tile.price
@@ -85,8 +74,7 @@ class Game {
         if (tile.owner) return [false, "Already has an owner"]
 
         player.money -= price
-        tile.owner = username
-        player.own.push(idTile)
+        player.addOwn(tile)
         this.pushLog("buys", username, tile.title)
         return [true, "Ok"]
     }
@@ -121,8 +109,7 @@ class Game {
         const money = (tile.pledge) ? tile.price / 2 : tile.price
         const player = this.players[tile.owner]
         player.money += money
-        player.own.splice(player.own.indexOf(tile.id), 1)
-        tile.owner = null
+        player.removeOwn(tile)
         if (tile.pledge) tile.pledge = false
         return true
     }
