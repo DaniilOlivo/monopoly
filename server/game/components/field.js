@@ -4,7 +4,7 @@ const COUNT_TILES = 40
 
 class Field {
     constructor(listPlayers) {
-        const {price_building, tiles, desc, stationsRent} = getConfig("tiles.json")
+        const {colorsSettings, tiles, desc, stationsRent} = getConfig("tiles.json")
         // Check valid json
         if (tiles.length != COUNT_TILES) throw new Error("Tiles are not 40. JSON is incorrect")
 
@@ -29,7 +29,11 @@ class Field {
                 else genId(tile, "type")
             }
 
-            if (type == "standard") tile.price_building = price_building[tile.color]
+            if (type == "standard") {
+                const {price, count} = colorsSettings[tile.color]
+                tile.priceBuilding = price
+                tile.count = count
+            }
             if (type == "communal") tile.desc = desc.communal
             if (type == "station") tile.rent = stationsRent
             if (type == "chance") tile.title = "Chance"

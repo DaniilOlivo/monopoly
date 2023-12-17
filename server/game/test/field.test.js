@@ -24,8 +24,10 @@ describe("Component Field", () => {
             const redTile = field.tiles.find((tile) => tile.color == "red")
             const blueTile = field.tiles.find((tile) => tile.color == "blue")
 
-            assert.equal(redTile.price_building, 150)
-            assert.equal(blueTile.price_building, 200)
+            assert.equal(redTile.priceBuilding, 150)
+            assert.equal(blueTile.priceBuilding, 200)
+            assert.equal(redTile.count, 3)
+            assert.equal(blueTile.count, 2)
         })
 
         it("Add players", () => {

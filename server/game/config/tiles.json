@@ -1,13 +1,37 @@
 {
-    "price_building": {
-        "brown": 50,
-        "cyan": 50,
-        "violet": 100,
-        "orange": 100,
-        "red": 150,
-        "yellow": 150,
-        "green": 200,
-        "blue": 200
+    "colorsSettings": {
+        "brown": {
+            "price": 50,
+            "count": 2
+        },
+        "cyan": {
+            "price": 50,
+            "count": 3
+        },
+        "violet": {
+            "price": 100,
+            "count": 3
+        },
+        "orange": {
+            "price": 100,
+            "count": 3
+        },
+        "red": {
+            "price": 150,
+            "count": 3
+        },
+        "yellow": {
+            "price": 150,
+            "count": 3
+        },
+        "green": {
+            "price": 200,
+            "count": 3
+        },
+        "blue": {
+            "price": 200,
+            "count": 2
+        }
     },
 
     "desc": {
