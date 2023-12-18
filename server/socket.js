@@ -47,7 +47,7 @@ module.exports = function connect(socket, serverSockets) {
             const tileId = room.game.players[username].service.offer.id
             room.game.buyOwn(tileId, username)
         }
-        room.game.clearService(username, "offer")
+        room.game.players[username].clearService("offer")
         room.game.next()
         updateGame(room)
     })
