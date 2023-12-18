@@ -29,6 +29,18 @@ class Tile {
     playerIn(username) {
         return this.players.indexOf(username) != -1
     }
+
+    addBuilding() {
+        if (this.hotel) return
+        this.building++
+        if (this.building == 5) this.hotel = true
+    }
+
+    removeBuilding() {
+        if (this.building == 0) return
+        this.building--
+        this.hotel = false
+    }
 }
 
 module.exports = Tile

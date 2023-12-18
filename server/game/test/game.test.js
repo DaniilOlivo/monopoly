@@ -106,14 +106,75 @@ describe("Core game", () => {
         })
     })
 
-    it("sell", () => {
+    describe("add building", () => {
+        const setMoney = (money) => game.players["Scorpion"].money = money
+
+        before(() => {
+            setMoney(1500)
+            game.buyOwn("red_1", "Scorpion")
+            game.buyOwn("blue_1", "Scorpion")
+            game.buyOwn("blue_2", "Scorpion")
+
+            // for simple calculations
+            setMoney(2000)
+        })
+
+        it("wrong type", () => {
+            const [result, desc] = game.addBuilding("station_1")
+            assert.isFalse(result)
+            assert.equal(desc, "Wrong type")
+        })
+
+        it("adding a building without a monopoly", () => {
+            const [result, desc] = game.addBuilding("red_1")
+            assert.isFalse(result)
+            assert.equal(desc, "No monopoly in this color")
+        })
+
+        it("one building", () => {
+            const [result, desc] = game.addBuilding("blue_1")
+            assert.isTrue(result)
+            assert.equal(desc, "Ok")
+
+            const [tile, ] = game.field.getById("blue_1")
+            assert.equal(tile.building, 1)
+            assert.equal(game.players["Scorpion"].money, 1800)
+        })
+
+        it("hotel", () => {
+            for (let i = 0; i < 4; i++) game.addBuilding("blue_1")
+            const [tile, ] = game.field.getById("blue_1")
+            assert.equal(tile.building, 5)
+            assert.isTrue(tile.hotel)
+        })
+
+        it("not enough money", () => {
+            setMoney(0)
+            const [result, desc] = game.addBuilding("blue_2")
+            assert.isFalse(result)
+            assert.equal(desc, "Not enough money")
+        })
+    })
+
+    describe("remove building", () => {
+        it("one building remove", () => {
+            game.removeBuilding("blue_1")
+            const player = game.players["Scorpion"]
+            const [tile, ] = game.field.getById("blue_1")
+            assert.equal(player.money, 100)
+            assert.equal(tile.building, 4)
+            assert.isFalse(tile.hotel)
+        })
+    })
+
+    describe("sell", () => {
         it("sell succesful", () => {
             const result = game.sell("cyan_1")
             assert.isTrue(result)
             const [tile, ] = game.field.getById("cyan_1")
             assert.isNull(tile.owner)
             const player = game.players["Sub Zero"]
-            assert.equal(player.money, 100)
+            assert.equal(player.money, 50)
             assert.equal(player.own.length, 0)
             assert.equal(player.monopoly.cyan, 0)
         })

@@ -114,6 +114,30 @@ class Game {
         return true
     }
 
+    addBuilding(idTile) {
+        const [tile, ] = this.field.getById(idTile)
+        const color = tile.color
+        const player = this.players[tile.owner]
+
+        if (!color) return [false, "Wrong type"]
+        if (player.monopoly[color] != tile.count) return [false, "No monopoly in this color"] 
+        
+        const cost = tile.priceBuilding
+        if (cost > player.money) return [false, "Not enough money"]
+
+        player.money -= cost
+        tile.addBuilding()
+        return [true, "Ok"]
+    }
+
+    removeBuilding(idTile) {
+        const [tile, ] = this.field.getById(idTile)
+        const player = this.players[tile.owner]
+        
+        player.money += tile.priceBuilding / 2
+        tile.removeBuilding()
+    }
+
     pushLog(mes, sender="system", bold=null) {
         this.logs.push({sender, mes, bold}) 
     }
