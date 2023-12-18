@@ -1,54 +1,38 @@
 const { getConfig } = require("../utils")
+const Tile = require("./tile")
 
 const COUNT_TILES = 40
 
 class Field {
     constructor(listPlayers) {
-        const {colorsSettings, tiles, desc, stationsRent} = getConfig("tiles.json")
+        const {tiles} = getConfig("tiles.json")
         // Check valid json
         if (tiles.length != COUNT_TILES) throw new Error("Tiles are not 40. JSON is incorrect")
+
 
         // Generating an id for cells where it is not explicitly specified
         // A certain parameter (color or type) is taken and a number is added to it
         // This applies to the same type of cells that do not have a special uniqueness
         const countIdTable = {}
-        const genId = (tile, parameter) => {
-            let currentParameter = tile[parameter]
+
+        const genId = (tile) => {
+            let currentParameter = tile.color ?? tile.type
             let id = 1
             let countId = countIdTable[currentParameter]
             if (countId) id = countId
             else countIdTable[currentParameter] = id
             countIdTable[currentParameter]++
-            tile.id = currentParameter + '_' + id
+            return currentParameter + '_' + id
         }
 
-        for (const tile of tiles) {
-            let type = tile.type
-            if (!tile.id) {
-                if (type == "standard") genId(tile, "color")
-                else genId(tile, "type")
-            }
+        this.tiles = []
 
-            if (type == "standard") {
-                const {price, count} = colorsSettings[tile.color]
-                tile.priceBuilding = price
-                tile.count = count
-            }
-            if (type == "communal") tile.desc = desc.communal
-            if (type == "station") tile.rent = stationsRent
-            if (type == "chance") tile.title = "Chance"
-            if (type == "community_chest") tile.title = "Community chest"
-
-            tile.players = []
-            tile.owner = null
-            tile.pledge = false
-            tile.canBuy = false
-            if (["standard", "communal", "station"].indexOf(tile.type) != -1) tile.canBuy = true
-            if (tile.id === "start") Object.assign(tile.players, listPlayers)
-
+        for (const tileConfig of tiles) {
+            const tile = new Tile(tileConfig)
+            if (!tile.id) tile.id = genId(tile)
+            if (tile.id === "start") Object.assign(tile.players, listPlayers) 
+            this.tiles.push(tile)
         }
-
-        this.tiles = tiles
     }
 
     getById(idTile) {
@@ -59,7 +43,7 @@ class Field {
     }
 
     findPlayer(username) {
-        const tile = this.tiles.find((tile) => tile.players.indexOf(username) != -1)
+        const tile = this.tiles.find((tile) => tile.playerIn(username))
         const index = this.tiles.indexOf(tile)
 
         return [tile, index]
