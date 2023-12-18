@@ -44,13 +44,46 @@ describe("api http", () => {
     })
 
     describe("list", () => {
-        it("get list", () => {
+        it("get list", (done) => {
             requester.get("/api/list")
                 .end((err, res) => {
                     assert.isNull(err)
                     assert.equal(res.status, 200)
                     const list = JSON.parse(res.text)
                     assert.deepEqual(list, [titleRoom])
+                    done()
+                })
+        })
+    })
+
+    describe("delete room", () => {
+        it("successful delete", (done) => {
+            requester.post("/api/delete")
+                .send({
+                    title: titleRoom
+                })
+                .end((err, res) => {
+                    assert.isNull(err)
+                    assert.equal(res.status, 200)
+                    const {ok, desc} = JSON.parse(res.text)
+                    assert.isTrue(ok)
+                    assert.equal(desc, "Room deleted")
+                    done()
+                })
+        })
+
+        it("deleting a non-existing room", (done) => {
+            requester.post("/api/delete")
+                .send({
+                    title: titleRoom
+                })
+                .end((err, res) => {
+                    assert.isNull(err)
+                    assert.equal(res.status, 200)
+                    const {ok, desc} = JSON.parse(res.text)
+                    assert.isFalse(ok)
+                    assert.equal(desc, "There is no such room")
+                    done()
                 })
         })
     })
