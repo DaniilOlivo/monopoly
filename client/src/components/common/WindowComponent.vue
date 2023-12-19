@@ -74,6 +74,7 @@ export default {
 
 .panel-btns {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 30px;
 }

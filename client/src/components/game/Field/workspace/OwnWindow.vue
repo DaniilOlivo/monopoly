@@ -9,6 +9,18 @@
             <ButtonMain title="Sell" @click="clickSell" :disable="disableBtns"></ButtonMain>
             <ButtonMain title="Redeem Pledge" @click="clickRedeemPledge" v-if="pledge" :disable="disableBtns"></ButtonMain>
             <ButtonMain title="Put Pledge" @click="clickPutPledge" v-else :disable="disableBtns"></ButtonMain>
+            <template v-if="monopoly">
+                <ButtonMain 
+                    :title="(tile.building == 4) ? 'Buy hotel' : 'Buy building'"
+                    @click="clickAddBuilding"
+                    :disable="disableBtns || tile.hotel || notEnoughMoney"
+                     ></ButtonMain>
+                <ButtonMain 
+                    :title="(tile.hotel) ? 'Sell hotel' : 'Sell building'"
+                    @click="clickRemoveBuilding"
+                    :disable="disableBtns || tile.building == 0"
+                    ></ButtonMain>
+            </template>
         </template>
     </WindowComponent>
 </template>
@@ -39,6 +51,12 @@ export default {
         },
         clickRedeemPledge() {
             socket.emit("redeemPledge", this.tile.id)
+        },
+        clickAddBuilding() {
+            socket.emit("addBuilding", this.tile.id)
+        },
+        clickRemoveBuilding() {
+            socket.emit("removeBuilding", this.tile.id)
         }
     },
     computed: {
@@ -49,6 +67,20 @@ export default {
         disableBtns() {
             const { game, username } = state
             return game.tracker.current != username
+        },
+
+        monopoly() {
+            if (!this.tile.color) return false
+            const { game, username } = state
+            const monopoly = game.players[username].monopoly[this.tile.color]
+            const count = this.tile.count
+            return monopoly == count
+        },
+
+        notEnoughMoney() {
+            const { game, username } = state
+            const money = game.players[username].money
+            return this.tile.priceBuilding > money 
         }
     },
     inject: ["closeOwn"]

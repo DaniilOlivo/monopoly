@@ -18,6 +18,13 @@
             {{ tile.price }} M.
         </h4>
 
+        <div class="building-line">
+            <template v-if="tile.building < 5 && tile.building > 0">
+                <img :src="buildingImg" v-for="number in tile.building" :key="number">
+            </template>
+            <img :src="hotelImg" v-if="tile.hotel">
+        </div>
+
         <div class="tile-layout">
             <div 
                 v-for="color in tile.players"
@@ -31,6 +38,9 @@
 
 <script>
 import { state } from "@/socket"
+
+import buildingImg from "./img/building.png"
+import hotelImg from "./img/hotel.png"
 
 export default {
     name: "FieldTile",
@@ -47,6 +57,13 @@ export default {
         tile: {
             type: Object,
             required: true
+        }
+    },
+
+    data() {
+        return {
+            buildingImg,
+            hotelImg
         }
     },
 
@@ -133,5 +150,16 @@ export default {
     width: 30px;
     height: 30px;
     border-radius: 50%;
+}
+
+.building-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 }
 </style>
