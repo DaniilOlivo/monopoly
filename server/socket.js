@@ -64,6 +64,18 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
+    socket.on("addBuilding", (idTile) => {
+        const {room} = mapSockets[socket.id]
+        room.game.addBuilding(idTile)
+        updateGame(room)
+    })
+
+    socket.on("removeBuilding", (idTile) => {
+        const {room} = mapSockets[socket.id]
+        room.game.removeBuilding(idTile)
+        updateGame(room)
+    })
+
     socket.on("putPledge", (idTile) => {
         const {room} = mapSockets[socket.id]
         room.game.putPledge(idTile)
