@@ -17,12 +17,12 @@
         <div class="cost-block">
             <div class="block-line">
                 <span>Cost house</span>
-                <span class="block-line__money">M {{ tile.price_building }}</span>
+                <span class="block-line__money">M {{ tile.priceBuilding }}</span>
             </div>
 
             <div class="block-line">
                 <span>Cost hotel</span>
-                <span class="block-line__money">M {{ tile.price_building }}</span>
+                <span class="block-line__money">M {{ tile.priceBuilding }}</span>
             </div>
         </div>
     </CardTile>
