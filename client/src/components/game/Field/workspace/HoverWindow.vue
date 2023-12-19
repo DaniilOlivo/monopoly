@@ -6,6 +6,7 @@
                 This tile belongs to 
                 <span class="hover-window__owner" :style="{color: colorOwner}">{{ tile.owner }}</span>
             </p>
+            <p v-if="monopoly">The player owns all the squares of that color</p>
             <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
         </div>
     </WindowComponent>
@@ -31,6 +32,13 @@ export default {
             let color = "black"
             color = state.game.players[this.tile.owner].color
             return color
+        },
+        monopoly() {
+            if (!this.tile.color) return false
+            const { game, username } = state
+            const monopoly = game.players[username].monopoly[this.tile.color]
+            const count = this.tile.count
+            return monopoly == count
         }
     }
 }
