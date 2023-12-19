@@ -38,4 +38,8 @@ button:disabled {
     background-color: rgb(76, 20, 20);
     color: gray;
 }
+
+button:disabled:hover {
+    transform: none;
+}
 </style>
