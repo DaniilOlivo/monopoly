@@ -6,7 +6,7 @@
         </div>
         <template v-slot:btns>
             <ButtonMain title="Close" @click="closeOwn"></ButtonMain>
-            <ButtonMain title="Sell" @click="clickSell" :disable="disableBtns"></ButtonMain>
+            <ButtonMain title="Sell" @click="clickSell" :disable="disableBtns || tile.building > 0"></ButtonMain>
             <ButtonMain title="Redeem Pledge" @click="clickRedeemPledge" v-if="pledge" :disable="disableBtns"></ButtonMain>
             <ButtonMain title="Put Pledge" @click="clickPutPledge" v-else :disable="disableBtns"></ButtonMain>
             <template v-if="monopoly">
