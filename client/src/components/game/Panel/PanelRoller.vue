@@ -52,11 +52,14 @@ export default {
         },
 
         disable() {
-            const username = state.username
-            const {stage, tracker} = state.game
+            const { username, game } = state
+            const {stage, tracker} = game
 
             if (stage == "start") return username in tracker.valuesDices
-            else return tracker.current != username
+            else {
+                if (game.players[username].service.offer) return true
+                return tracker.current != username
+            } 
         }
     },
 
