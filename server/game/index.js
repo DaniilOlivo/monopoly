@@ -43,8 +43,9 @@ class Game {
             if (circle) this.players[currentPlayer].money += 200
             const [tile, ] = this.field.findPlayer(currentPlayer)
             this.pushLog("ends up on the", currentPlayer, tile.title)
-            if (tile.canBuy && !tile.owner) {
-                this.players[currentPlayer].setService("offer", tile)
+            if (tile.canBuy) {
+                if (!tile.owner) this.players[currentPlayer].setService("offer", tile)
+                else if (tile.owner != currentPlayer) this.players[currentPlayer].setService("rent", tile)
             }
             else this.next()
         }
@@ -63,6 +64,38 @@ class Game {
             this.tracker.next()
             return true
         }
+    }
+
+    rent(idTile, username) {
+        const [tile, ] = this.field.getById(idTile)
+
+        if (!tile.canBuy) return false
+
+        const player = this.players[username]
+        const playerOwner = this.players[tile.owner]
+        let cost = 0
+
+        if (tile.color) {
+            cost = tile.rent_basic
+            if (playerOwner.monopoly[tile.color] == tile.count) cost = tile.rent_basic * 2
+            if (tile.building > 0 && tile.building < 5) cost = tile[`rent_${tile.building}_house`]
+            if (tile.hotel) cost = tile.rent_hotel
+        }
+
+        if (tile.type == "station") {
+            cost = tile.rent[playerOwner.monopoly[tile.type] - 1]
+        }
+
+        if (tile.type == "communal") {
+            const mod = (playerOwner.monopoly[tile.type] == 2) ? 10 : 4
+            const [val1, val2] = this.dices
+            cost = (val1 + val2) * mod
+        }
+
+        if (cost > player.money) return false
+        player.money -= cost
+
+        return true
     }
 
     buyOwn(idTile, username) {

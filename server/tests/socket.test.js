@@ -190,7 +190,21 @@ describe("Socket", () => {
         it("Cannot buy an already occupied tile", async () => {
             socketScorpion.emit("roll", [3, 6])
             const game = await waitUpdateGame()
+            buffer.game = game
             assert.isNull(game.players["Scorpion"].service.offer)
+        })
+
+        it("Waiting for rent", () => {
+            const game = buffer.game
+            assert.equal(game.players["Scorpion"].service.rent.id, "cyan_3")
+        })
+
+        it("Pay rent", async () => {
+            socketScorpion.emit("rent")
+            const game = await waitUpdateGame()
+            const player = game.players["Scorpion"]
+            assert.isNull(player.service.rent)
+            assert.equal(player.money, 1500 - 8)
         })
     })
 

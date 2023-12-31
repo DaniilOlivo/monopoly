@@ -167,7 +167,77 @@ describe("Core game", () => {
         })
     })
 
+    describe("rent", () => {
+        before(() => {
+            game.players["Scorpion"].money = 2000
+
+            game.buyOwn("orange_1", "Scorpion")
+            game.buyOwn("orange_2", "Scorpion")
+            game.buyOwn("station_1", "Scorpion")
+            game.buyOwn("electric_compamy", "Scorpion")
+
+            game.players["Sub Zero"].money = 2000
+            game.players["Scorpion"].money = 2000
+        })
+
+        afterEach(() => {
+            game.players["Sub Zero"].money = 2000
+        })
+
+        it("rent basic", () => {
+            game.rent("orange_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 14)
+        })
+
+        it("rent monopoly", () => {
+            game.buyOwn("orange_3", "Scorpion")
+            game.rent("orange_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 28)
+        })
+
+        it("rent with building", () => {
+            game.addBuilding("orange_1")
+            game.rent("orange_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 70)
+        })
+
+        it("rent with hotel", () => {
+            for (let i = 0; i < 4; i++) {
+                game.addBuilding("orange_1")
+            }
+            game.rent("orange_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 950)
+        })
+
+        it("rent station", () => {
+            game.rent("station_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 25)
+        })
+
+        it("rent two stations", () => {
+            game.buyOwn("station_2", "Scorpion")
+            game.rent("station_1", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 50)
+        })
+
+        it("rent communal", () => {
+            game.roll([1,2], "Sub Zero")
+            game.rent("electric_compamy", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 3 * 4)
+        })
+
+        it("rent two communals", () => {
+            game.buyOwn("water_company", "Scorpion")
+            game.rent("electric_compamy", "Sub Zero")
+            assert.equal(game.players["Sub Zero"].money, 2000 - 3 * 10)
+        })
+    })
+
     describe("sell", () => {
+        before(() => {
+            game.players["Sub Zero"].money = 0
+        })
+
         it("sell succesful", () => {
             const result = game.sell("cyan_1")
             assert.isTrue(result)

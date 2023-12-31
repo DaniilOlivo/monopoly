@@ -5,7 +5,8 @@ class Player {
         this.money = money
         this.own = []
         this.service = {
-            offer: null
+            offer: null,
+            rent: null,
         }
 
         this.monopoly = {}
