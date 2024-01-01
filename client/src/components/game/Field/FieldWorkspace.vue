@@ -1,6 +1,7 @@
 <template>
     <div :class="['workspace', {'workspace_active': activeWorkspace}]">
         <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
+        <RentWindow v-else-if="rentWait"></RentWindow>
         <OwnWindow v-else-if="activeOwn" :tile="activeOwn"></OwnWindow>
         <HoverWindow v-else-if="cardHover" :tile="cardHover"></HoverWindow>
     </div>
@@ -10,6 +11,7 @@
 import BuyWindow from './workspace/BuyWindow.vue';
 import HoverWindow from './workspace/HoverWindow.vue';
 import OwnWindow from './workspace/OwnWindow.vue';
+import RentWindow from './workspace/RentWindow.vue';
 
 import { state } from "@/socket"
 
@@ -18,12 +20,13 @@ export default {
     components: {
         BuyWindow,
         HoverWindow,
-        OwnWindow
+        OwnWindow,
+        RentWindow
     },
     props: ["cardHover", "selectOwn"],
     computed: {
         activeWorkspace() {
-            return this.offerPurchase || this.activeOwn || this.cardHover
+            return this.offerPurchase || this.activeOwn || this.cardHover || this.rentWait
         },
         offerPurchase() {
             const {username, game} = state
@@ -35,6 +38,10 @@ export default {
             const own = game.players[username].own
             if (own.indexOf(this.selectOwn.id) != -1) return this.selectOwn
             else return null
+        },
+        rentWait() {
+            const {username, game} = state
+            return game.players[username].service.rent
         }
     },
     emits: ["closeOwn"]
