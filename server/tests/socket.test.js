@@ -196,7 +196,9 @@ describe("Socket", () => {
 
         it("Waiting for rent", () => {
             const game = buffer.game
-            assert.equal(game.players["Scorpion"].service.rent, 8)
+            const rentObj = game.players["Scorpion"].service.rent
+            assert.equal(rentObj.cost, 8)
+            assert.equal(rentObj.tile.id, "cyan_3")
         })
 
         it("Pay rent", async () => {

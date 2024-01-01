@@ -2,6 +2,9 @@
     <WindowComponent :modal="false">
         <p>
             You have to pay <span class="rent-window__cost">{{ cost }} М.</span>
+            player <span
+                class="rent-window__owner"
+                :style="{color: colorOwner}">{{ tile.owner }}</span>
         </p>
 
         <template v-slot:btns>
@@ -24,7 +27,18 @@ export default {
     computed: {
         cost() {
             const { username, game } = state
-            return game.players[username].service.rent
+            return game.players[username].service.rent.cost
+        },
+
+        tile() {
+            const { username, game } = state
+            return game.players[username].service.rent.tile
+        },
+
+        colorOwner() {
+            const { game } = state
+            const owner = this.tile.owner
+            return game.players[owner].color
         },
 
         disableRent() {
@@ -44,5 +58,9 @@ export default {
 <style scoped>
 .rent-window__cost {
     font-style: italic;
+}
+
+.rent-window__owner {
+    font-weight: bold;
 }
 </style>

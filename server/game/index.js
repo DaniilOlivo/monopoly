@@ -47,7 +47,7 @@ class Game {
                 if (!tile.owner) this.players[currentPlayer].setService("offer", tile)
                 else if (tile.owner != currentPlayer) {
                     const cost = this.getRent(tile.id)
-                    this.players[currentPlayer].setService("rent", cost)
+                    this.players[currentPlayer].setService("rent", {cost, tile})
                 }
             }
             else this.next()
@@ -99,7 +99,7 @@ class Game {
 
     rent(username) {
         const player = this.players[username]
-        const cost = player.service.rent
+        const cost = player.service.rent.cost
 
         if (cost > player.money) return false
         player.money -= cost
