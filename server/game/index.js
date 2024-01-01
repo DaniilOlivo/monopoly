@@ -106,6 +106,8 @@ class Game {
         player.money -= cost
         owner.money += cost
 
+        this.pushLog("pays rent", username, cost + " M.")
+
         return true
     }
 
