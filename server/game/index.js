@@ -99,10 +99,12 @@ class Game {
 
     rent(username) {
         const player = this.players[username]
-        const cost = player.service.rent.cost
+        const {cost, tile} = player.service.rent
+        const owner = this.players[tile.owner]
 
         if (cost > player.money) return false
         player.money -= cost
+        owner.money += cost
 
         return true
     }

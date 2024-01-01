@@ -207,6 +207,7 @@ describe("Socket", () => {
             const player = game.players["Scorpion"]
             assert.isNull(player.service.rent)
             assert.equal(player.money, 1500 - 8)
+            assert.equal(game.players["Sub Zero"].money, 1500 - 120 + 8)
         })
     })
 
