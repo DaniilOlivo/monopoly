@@ -1,8 +1,8 @@
 <template>
     <div :class="['workspace', {'workspace_active': activeWorkspace}]">
         <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
-        <RentWindow v-else-if="rentWait"></RentWindow>
         <OwnWindow v-else-if="activeOwn" :tile="activeOwn"></OwnWindow>
+        <RentWindow v-else-if="rentWait"></RentWindow>
         <HoverWindow v-else-if="cardHover" :tile="cardHover"></HoverWindow>
     </div>
 </template>
