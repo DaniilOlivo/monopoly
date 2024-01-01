@@ -168,6 +168,11 @@ describe("Core game", () => {
     })
 
     describe("rent", () => {
+        const checkCost = (tileId, expectCost) => {
+            const cost = game.getRent(tileId)
+            assert.equal(cost, expectCost)
+        }
+
         before(() => {
             game.players["Scorpion"].money = 2000
 
@@ -176,60 +181,47 @@ describe("Core game", () => {
             game.buyOwn("station_1", "Scorpion")
             game.buyOwn("electric_compamy", "Scorpion")
 
-            game.players["Sub Zero"].money = 2000
             game.players["Scorpion"].money = 2000
         })
 
-        afterEach(() => {
-            game.players["Sub Zero"].money = 2000
-        })
-
         it("rent basic", () => {
-            game.rent("orange_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 14)
+            checkCost("orange_1", 14)
         })
 
         it("rent monopoly", () => {
             game.buyOwn("orange_3", "Scorpion")
-            game.rent("orange_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 28)
+            checkCost("orange_1", 28)
         })
 
         it("rent with building", () => {
             game.addBuilding("orange_1")
-            game.rent("orange_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 70)
+            checkCost("orange_1", 70)
         })
 
         it("rent with hotel", () => {
             for (let i = 0; i < 4; i++) {
                 game.addBuilding("orange_1")
             }
-            game.rent("orange_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 950)
+            checkCost("orange_1", 950)
         })
 
         it("rent station", () => {
-            game.rent("station_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 25)
+            checkCost("station_1", 25)
         })
 
         it("rent two stations", () => {
             game.buyOwn("station_2", "Scorpion")
-            game.rent("station_1", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 50)
+            checkCost("station_1", 50)
         })
 
         it("rent communal", () => {
             game.roll([1,2], "Sub Zero")
-            game.rent("electric_compamy", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 3 * 4)
+            checkCost("electric_compamy", 3 * 4)
         })
 
         it("rent two communals", () => {
             game.buyOwn("water_company", "Scorpion")
-            game.rent("electric_compamy", "Sub Zero")
-            assert.equal(game.players["Sub Zero"].money, 2000 - 3 * 10)
+            checkCost("electric_compamy", 3 * 10)
         })
     })
 

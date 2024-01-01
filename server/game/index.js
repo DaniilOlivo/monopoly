@@ -45,7 +45,10 @@ class Game {
             this.pushLog("ends up on the", currentPlayer, tile.title)
             if (tile.canBuy) {
                 if (!tile.owner) this.players[currentPlayer].setService("offer", tile)
-                else if (tile.owner != currentPlayer) this.players[currentPlayer].setService("rent", tile)
+                else if (tile.owner != currentPlayer) {
+                    const cost = this.getRent(tile.id)
+                    this.players[currentPlayer].setService("rent", cost)
+                }
             }
             else this.next()
         }
@@ -66,12 +69,11 @@ class Game {
         }
     }
 
-    rent(idTile, username) {
+    getRent(idTile) {
         const [tile, ] = this.field.getById(idTile)
 
         if (!tile.canBuy) return false
 
-        const player = this.players[username]
         const playerOwner = this.players[tile.owner]
         let cost = 0
 
@@ -91,6 +93,13 @@ class Game {
             const [val1, val2] = this.dices
             cost = (val1 + val2) * mod
         }
+
+        return cost
+    }
+
+    rent(username) {
+        const player = this.players[username]
+        const cost = player.service.rent
 
         if (cost > player.money) return false
         player.money -= cost
