@@ -23,6 +23,11 @@ describe("Socket", () => {
 
     const titleRoom = "Hell"
 
+    async function waitUpdateGame() {
+        const [game] = await wait(socketScorpion, "updateGame")
+        return game
+    }
+
     before((done) => {
         request.post(
             url + "/api/create",
@@ -134,11 +139,6 @@ describe("Socket", () => {
     })
 
     describe("roll", () => {
-        async function waitUpdateGame() {
-            const [game] = await wait(socketScorpion, "updateGame")
-            return game
-        }
-
         // Intermediate storage for temporary data, like the current version of the game
         let buffer = {}
 
@@ -208,6 +208,37 @@ describe("Socket", () => {
             assert.isNull(player.service.rent)
             assert.equal(player.money, 1500 - 8)
             assert.equal(game.players["Sub Zero"].money, 1500 - 120 + 8)
+        })
+    })
+
+    describe("deal",  () => {
+        it("offer deal", async () => {
+            socketScorpion.emit("deal", "Sub Zero", [100], ["cyan_3"])
+            const game = await waitUpdateGame()
+            const player = game.players["Sub Zero"]
+            assert.isNotNull(player.service.deal)
+        })
+
+        it("deviation trade", async () => {
+            socketSubZero.emit("trade", false)
+            const game = await waitUpdateGame()
+            const player = game.players["Sub Zero"]
+            assert.isNull(player.service.deal)
+            assert.equal(player.own[0], "cyan_3")
+        })
+
+        it("accepted trade", async () => {
+            socketScorpion.emit("deal", "Sub Zero", [1000], ["cyan_3"])
+            await waitUpdateGame()
+            socketSubZero.emit("trade", true)
+            const game = await waitUpdateGame()
+            const scorpionPlayer = game.players["Scorpion"]
+            const subZeroPlayer = game.players["Sub Zero"]
+            assert.isNull(subZeroPlayer.service.deal)
+            assert.equal(subZeroPlayer.money, 1500 - 120 + 8 + 1000)
+            assert.equal(scorpionPlayer.money, 1500 - 8 - 1000)
+            assert.deepEqual(subZeroPlayer.own, [])
+            assert.deepEqual(scorpionPlayer.own, ["cyan_3"])
         })
     })
 
