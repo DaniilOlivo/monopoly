@@ -225,6 +225,46 @@ describe("Core game", () => {
         })
     })
 
+    describe("trade", () => {
+        const include = (arr, el) => {
+            return -1 != arr.indexOf(el)
+        }
+
+        before(() => {
+            game.players["Sub Zero"].money = 1500
+            game.players["Scorpion"].money = 1500
+        })
+
+        it("offer deal", () => {
+            const arrIncoming = [69]
+            const arrHost = ["station_1", "station_2"]
+            game.offerDeal("Sub Zero", "Scorpion", arrIncoming, arrHost)
+            
+            const objDeal = game.players["Scorpion"].service.deal
+            assert.equal(objDeal.initiator, "Sub Zero")
+            assert.deepEqual(objDeal.income, arrIncoming)
+            assert.deepEqual(objDeal.host, arrHost)
+        })
+
+        it("swap", () => {
+            game.trade("Scorpion")
+
+            const initatorPlayer = game.players["Sub Zero"]
+            const targetPlayer = game.players["Scorpion"]
+
+            assert.isNull(targetPlayer.service.deal)
+
+            assert.equal(initatorPlayer.money, 1500 - 69)
+            assert.equal(targetPlayer.money, 1500 + 69)
+
+            assert.isTrue(include(initatorPlayer.own, "station_1"))
+            assert.isTrue(include(initatorPlayer.own, "station_2"))
+
+            assert.isFalse(include(targetPlayer.own, "station_1"))
+            assert.isFalse(include(targetPlayer.own, "station_2"))
+        })
+    })
+
     describe("sell", () => {
         before(() => {
             game.players["Sub Zero"].money = 0
@@ -237,7 +277,7 @@ describe("Core game", () => {
             assert.isNull(tile.owner)
             const player = game.players["Sub Zero"]
             assert.equal(player.money, 50)
-            assert.equal(player.own.length, 0)
+            assert.equal(player.own.length, 2)
             assert.equal(player.monopoly.cyan, 0)
         })
 

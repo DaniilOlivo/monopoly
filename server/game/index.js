@@ -111,6 +111,46 @@ class Game {
         return true
     }
 
+    offerDeal(initiator, target, arrIncoming, arrHost) {
+        this.players[target].setService("deal", {
+            initiator,
+            income: arrIncoming,
+            host: arrHost
+        })
+    }
+
+    trade(username) {
+        const targetPlayer = this.players[username]
+        const objDeal = this.players[username].service.deal
+        const initiatorPlayer = this.players[objDeal.initiator]
+
+        const swapMoney = (fromPlayer, toPlayer, value) => {
+            fromPlayer.money -= value
+            toPlayer.money += value
+        }
+
+        const swapOwn = (fromPlayer, toPlayer, idTile) => {
+            const arrOwn = fromPlayer.own
+            arrOwn.splice(arrOwn.indexOf(idTile), 1)
+
+            toPlayer.own.push(idTile)
+            const [tile, ] = this.field.getById(idTile)
+            tile.owner = toPlayer.username
+        }
+
+        for (const elementDeal of objDeal.income) {
+            if (typeof elementDeal == "number") swapMoney(initiatorPlayer, targetPlayer, elementDeal)
+            if (typeof elementDeal == "string") swapOwn(initiatorPlayer, targetPlayer, elementDeal)
+        }
+
+        for (const elementDeal of objDeal.host) {
+            if (typeof elementDeal == "number") swapMoney(targetPlayer, initiatorPlayer, elementDeal)
+            if (typeof elementDeal == "string") swapOwn(targetPlayer, initiatorPlayer, elementDeal)
+        }
+
+        targetPlayer.clearService("deal")
+    }
+
     buyOwn(idTile, username) {
         const [tile, ] = this.field.getById(idTile)
         const price = tile.price
