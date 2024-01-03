@@ -20,7 +20,9 @@ import { state } from "@/socket"
 const mapStatus = {
     firstRoll: "Roll the dice to determine the order of the players",
     waitPlayers: "Waiting for the other players",
-    waitMove: "It's your move, "
+    waitMove: "It's your move, ",
+    waitOffer: " thinking about buying",
+    waitRent: " must pay rent"
 }
 
 export default {
@@ -33,16 +35,22 @@ export default {
 
     computed: {
         status() {
-            const {stage, tracker} = state.game
+            const {stage, tracker, players} = state.game
             let keyStatus = ""
             if (stage == "start") {
                 if (state.username in tracker.valuesDices) keyStatus = "waitPlayers"
                 else keyStatus = "firstRoll"
-            } else keyStatus = "waitMove"
+            } else {
+                const service = players[tracker.current].service
+                if (service.offer) keyStatus = "waitOffer"
+                else if (service.rent) keyStatus = "waitRent"
+                else keyStatus = "waitMove"
+            }
 
             let textStatus = mapStatus[keyStatus]
 
             if (keyStatus == "waitMove") textStatus += tracker.current
+            if (keyStatus == "waitOffer" || keyStatus == "waitRent") textStatus = tracker.current + textStatus
 
             return textStatus
         },
