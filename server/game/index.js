@@ -111,11 +111,12 @@ class Game {
         return true
     }
 
-    offerDeal(initiator, target, arrIncoming, arrHost) {
+    offerDeal(initiator, target, arrIncoming, arrHost, moneyIncome, moneyHost) {
         this.players[target].setService("deal", {
             initiator,
             income: arrIncoming,
-            host: arrHost
+            host: arrHost,
+            moneyIncome, moneyHost
         })
     }
 
@@ -138,15 +139,15 @@ class Game {
             tile.owner = toPlayer.username
         }
 
-        for (const elementDeal of objDeal.income) {
-            if (typeof elementDeal == "number") swapMoney(initiatorPlayer, targetPlayer, elementDeal)
-            if (typeof elementDeal == "string") swapOwn(initiatorPlayer, targetPlayer, elementDeal)
+        for (const idTile of objDeal.income) {
+            swapOwn(initiatorPlayer, targetPlayer, idTile)
         }
+        swapMoney(initiatorPlayer, targetPlayer, objDeal.moneyIncome)
 
-        for (const elementDeal of objDeal.host) {
-            if (typeof elementDeal == "number") swapMoney(targetPlayer, initiatorPlayer, elementDeal)
-            if (typeof elementDeal == "string") swapOwn(targetPlayer, initiatorPlayer, elementDeal)
+        for (const idTile of objDeal.host) {
+            swapOwn(targetPlayer, initiatorPlayer, idTile)
         }
+        swapMoney(targetPlayer, initiatorPlayer, objDeal.moneyHost)
 
         targetPlayer.clearService("deal")
     }

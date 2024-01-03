@@ -236,14 +236,15 @@ describe("Core game", () => {
         })
 
         it("offer deal", () => {
-            const arrIncoming = [69]
             const arrHost = ["station_1", "station_2"]
-            game.offerDeal("Sub Zero", "Scorpion", arrIncoming, arrHost)
+            game.offerDeal("Sub Zero", "Scorpion", [], arrHost, 69, 0)
             
             const objDeal = game.players["Scorpion"].service.deal
             assert.equal(objDeal.initiator, "Sub Zero")
-            assert.deepEqual(objDeal.income, arrIncoming)
+            assert.deepEqual(objDeal.income, [])
+            assert.equal(objDeal.moneyIncome, 69)
             assert.deepEqual(objDeal.host, arrHost)
+            assert.equal(objDeal.moneyHost, 0)
         })
 
         it("swap", () => {

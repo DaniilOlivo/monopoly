@@ -213,7 +213,7 @@ describe("Socket", () => {
 
     describe("deal",  () => {
         it("offer deal", async () => {
-            socketScorpion.emit("deal", "Sub Zero", [100], ["cyan_3"])
+            socketScorpion.emit("deal", "Sub Zero", [], ["cyan_3"], 100, 0)
             const game = await waitUpdateGame()
             const player = game.players["Sub Zero"]
             assert.isNotNull(player.service.deal)
@@ -228,7 +228,7 @@ describe("Socket", () => {
         })
 
         it("accepted trade", async () => {
-            socketScorpion.emit("deal", "Sub Zero", [1000], ["cyan_3"])
+            socketScorpion.emit("deal", "Sub Zero", [], ["cyan_3"], 1000, 0)
             await waitUpdateGame()
             socketSubZero.emit("trade", true)
             const game = await waitUpdateGame()

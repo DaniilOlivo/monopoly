@@ -52,9 +52,9 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
-    socket.on("deal", (target, arrIncoming, arrHost) => {
+    socket.on("deal", (target, arrIncoming, arrHost, moneyIncome, moneyHost) => {
         const {username, room} = mapSockets[socket.id]
-        room.game.offerDeal(username, target, arrIncoming, arrHost)
+        room.game.offerDeal(username, target, arrIncoming, arrHost, moneyIncome, moneyHost)
         updateGame(room)
     })
 
