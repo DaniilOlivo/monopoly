@@ -46,7 +46,7 @@ export default {
     transition: 200ms;
 }
 
-.palyer-card_select {
+.player-card_select {
     border: lightblue 2px solid;
 }
 
