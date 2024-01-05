@@ -1,0 +1,110 @@
+[
+    {
+        "text": "Banking error in your favor",
+        "desc": "Get 200 M.",
+        "type": "money",
+        "amount": 200
+    },
+
+    {
+        "text": "Profitable sale of shares",
+        "desc": "Get 25 M.",
+        "type": "money",
+        "amount": 25
+    },
+
+    {
+        "text": "Release from prison",
+        "desc": "The card can be used later or sold",
+        "type": "release"
+    },
+
+    {
+        "text": "You won at the casino",
+        "desc": "Get 150 M.",
+        "type": "money",
+        "amount": 150
+    },
+
+    {
+        "text": "You received an inheritance",
+        "desc": "Get 100 M.",
+        "type": "money",
+        "amount": 100
+    },
+
+    {
+        "text": "Tax refund",
+        "desc":"Get 25 M.",
+        "type": "money",
+        "amount": 25
+    },
+
+    {
+        "text": "You were arrested",
+        "desc": "Go to jail",
+        "type": "arrest"
+    },
+
+    {
+        "text": "Payment for insurance",
+        "desc": "Pay 50 M.",
+        "type": "money",
+        "amount": -50
+    },
+
+    {
+        "text": "You took second place in a beauty contest",
+        "desc": "Get 10 M.",
+        "type": "money",
+        "amount": 10
+    },
+
+    {
+        "text": "Profitable sale of bonds",
+        "desc": "Get 50 M.",
+        "type": "money",
+        "amount": 50
+    },
+
+    {
+        "text": "Payment for treatment",
+        "desc": "Pay 100 M.",
+        "type": "money",
+        "amount": -100
+    },
+
+    {
+        "text": "Return to Old Kent Road",
+        "type": "goTo",
+        "location": "brown_1"
+    },
+
+    {
+        "text": "Rent collection",
+        "desc":"Get 100 M.",
+        "type": "money",
+        "amount": 100
+    },
+
+    {
+        "text": "Happy birthday!",
+        "desc": "Get 10 M. from each player",
+        "type": "happyBirthday",
+        "amount": 10
+    },
+
+    {
+        "text": "Pay the fine",
+        "desc": "Pay 10 M.",
+        "type": "money",
+        "amount": -10
+    },
+
+    {
+        "text": "Payment for doctor's services",
+        "desc": "Pay 50 M.",
+        "type": "money",
+        "amount": -50
+    }
+]
