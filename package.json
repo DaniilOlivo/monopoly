@@ -6,7 +6,7 @@
   "scripts": {
     "server-dev": "node index.js",
     "client-dev": "cd client && npm run serve",
-    "test": "mocha server/tests"
+    "test": "mocha server/**/tests/*.test.js"
   },
   "keywords": [],
   "author": "DaniilOlivo",
