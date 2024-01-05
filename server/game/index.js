@@ -145,6 +145,21 @@ class Game {
         }
         swapMoney(targetPlayer, initiatorPlayer, objDeal.moneyHost)
 
+        this.pushLog("made a deal", objDeal.initiator, username)
+
+        for (const idTile of objDeal.income) {
+            const [tile, ] = this.field.getById(idTile)
+            this.pushLog("receives property",objDeal.initiator, tile.title)
+        }
+
+        for (const idTile of objDeal.host) {
+            const [tile, ] = this.field.getById(idTile)
+            this.pushLog("receives property", username, tile.title)
+        }
+
+        if (objDeal.moneyIncome > 0) this.pushLog("receives money", objDeal.initiator, objDeal.moneyIncome + " M.")
+        if (objDeal.moneyHost > 0) this.pushLog("receives money", username, objDeal.moneyHost + " M.")
+
         targetPlayer.clearService("deal")
     }
 
