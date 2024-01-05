@@ -22,7 +22,8 @@ const mapStatus = {
     waitPlayers: "Waiting for the other players",
     waitMove: "It's your move, ",
     waitOffer: " thinking about buying",
-    waitRent: " must pay rent"
+    waitRent: " must pay rent",
+    waitDeal: "We are waiting for a decision ",
 }
 
 export default {
@@ -47,10 +48,20 @@ export default {
                 else keyStatus = "waitMove"
             }
 
+            let target = ""
+            for (const { service } of Object.values(players)) {
+                if (service.deal) {
+                    target = service.deal.target
+                    keyStatus = "waitDeal"
+                    break
+                }
+            }
+
             let textStatus = mapStatus[keyStatus]
 
             if (keyStatus == "waitMove") textStatus += tracker.current
             if (keyStatus == "waitOffer" || keyStatus == "waitRent") textStatus = tracker.current + textStatus
+            if (keyStatus == "waitDeal") textStatus += target
 
             return textStatus
         },
