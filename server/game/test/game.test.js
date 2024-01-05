@@ -274,6 +274,27 @@ describe("Core game", () => {
         })
     })
 
+    describe("pay", () => {
+        const player = game.players["Sub Zero"]
+
+        before(() => {
+            player.money = 0
+            player.setService("pay", 100)
+        })
+
+        it("pay fail", () => {
+            const result = game.pay("Sub Zero")
+            assert.isFalse(result)
+        })
+
+        it("pay succesful", () => {
+            player.money = 1500
+            const result = game.pay("Sub Zero")
+            assert.isTrue(result)
+            assert.equal(player.money, 1400)
+        })
+    })
+
     describe("sell", () => {
         before(() => {
             game.players["Sub Zero"].money = 0

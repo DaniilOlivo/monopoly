@@ -74,6 +74,13 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
+    socket.on("pay", () => {
+        const {username, room} = mapSockets[socket.id]
+        room.game.pay(username)
+        room.game.next()
+        updateGame(room)
+    })
+
     socket.on("next", () => {
         const {room} = mapSockets[socket.id]
         room.game.next()

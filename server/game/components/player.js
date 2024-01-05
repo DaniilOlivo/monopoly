@@ -7,7 +7,8 @@ class Player {
         this.service = {
             offer: null,
             rent: null,
-            deal: null
+            deal: null,
+            pay: null
         }
 
         this.monopoly = {}

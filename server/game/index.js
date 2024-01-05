@@ -40,15 +40,18 @@ class Game {
         const [val1, val2] = dices 
         const [ok, circle] = this.field.move(currentPlayer, val1 + val2)
         if (ok) {
-            if (circle) this.players[currentPlayer].money += 200
+            const player = this.players[currentPlayer]
+            if (circle) player.money += 200
             const [tile, ] = this.field.findPlayer(currentPlayer)
             this.pushLog("ends up on the", currentPlayer, tile.title)
             if (tile.canBuy) {
-                if (!tile.owner) this.players[currentPlayer].setService("offer", tile)
+                if (!tile.owner) player.setService("offer", tile)
                 else if (tile.owner != currentPlayer) {
                     const cost = this.getRent(tile.id)
-                    this.players[currentPlayer].setService("rent", {cost, tile})
+                    player.setService("rent", {cost, tile})
                 }
+            } else if (tile.type == "tax") {
+                player.setService("pay", tile.cost)
             }
             else this.next()
         }
@@ -67,6 +70,16 @@ class Game {
             this.tracker.next()
             return true
         }
+    }
+
+    pay(username) {
+        const player = this.players[username]
+        const cost = player.service.pay
+        if (cost > player.money) return false
+        player.money -= cost
+        player.clearService("pay")
+        this.pushLog("pays", username, cost + " M.")
+        return true
     }
 
     getRent(idTile) {

@@ -20,6 +20,7 @@ function waitMany(socket, eventsList) {
 describe("Socket", () => {
     let socketScorpion = null
     let socketSubZero = null
+    let socketSonyaBlade = null
 
     const titleRoom = "Hell"
 
@@ -36,6 +37,7 @@ describe("Socket", () => {
                 if (!err && res.statusCode == 200 && body.ok) {
                     socketScorpion = io(url)
                     socketSubZero = io(url)
+                    socketSonyaBlade = io(url)
                     done()
                 }
             }
@@ -111,6 +113,7 @@ describe("Socket", () => {
         let updateGame = null
         
         before(() => {
+            socketSonyaBlade.emit("register", "Sonya Blade", titleRoom)
             socketScorpion.emit("startGame")
             
             socketScorpion.once("initGame", () => initGame = true)
@@ -146,6 +149,8 @@ describe("Socket", () => {
             socketScorpion.emit("roll", [2, 1])
             await waitUpdateGame()
             socketSubZero.emit("roll", [5, 5])
+            await waitUpdateGame()
+            socketSonyaBlade.emit("roll", [1, 1])
             const game = await waitUpdateGame()
             assert.equal(game.stage, "main")
         })
@@ -209,6 +214,21 @@ describe("Socket", () => {
             assert.equal(player.money, 1500 - 8)
             assert.equal(game.players["Sub Zero"].money, 1500 - 120 + 8)
         })
+
+        it("community chest", async () => {
+            socketSonyaBlade.emit("roll", [1, 1])
+            await waitUpdateGame()
+        })
+
+        it("tax", async () => {
+            socketSonyaBlade.emit("roll", [1, 1])
+            await waitUpdateGame()
+            socketSonyaBlade.emit("pay")
+            const game = await waitUpdateGame()
+            const player = game.players["Sonya Blade"]
+            assert.isNull(player.service.pay)
+            assert.equal(player.money, 1500 - 200)
+        })
     })
 
     describe("deal",  () => {
@@ -254,6 +274,7 @@ describe("Socket", () => {
     after(() => {
         if (socketScorpion) socketScorpion.disconnect()
         if (socketSubZero) socketSubZero.disconnect()
+        if (socketSonyaBlade) socketSonyaBlade.disconnect()
         server.close()
     })
 })
