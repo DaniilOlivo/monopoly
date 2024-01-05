@@ -237,7 +237,15 @@ describe("Core game", () => {
 
         it("offer deal", () => {
             const arrHost = ["station_1", "station_2"]
-            game.offerDeal("Sub Zero", "Scorpion", [], arrHost, 69, 0)
+            const originObjDeal = {
+                initiator: "Sub Zero",
+                target: "Scorpion",
+                income: [],
+                moneyIncome: 69,
+                host: arrHost,
+                moneyHost: 0
+            }
+            game.offerDeal(originObjDeal)
             
             const objDeal = game.players["Scorpion"].service.deal
             assert.equal(objDeal.initiator, "Sub Zero")

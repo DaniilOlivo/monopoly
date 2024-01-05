@@ -111,13 +111,9 @@ class Game {
         return true
     }
 
-    offerDeal(initiator, target, arrIncoming, arrHost, moneyIncome, moneyHost) {
-        this.players[target].setService("deal", {
-            initiator,
-            income: arrIncoming,
-            host: arrHost,
-            moneyIncome, moneyHost
-        })
+    offerDeal(objDeal) {
+        const target = objDeal.target
+        this.players[target].setService("deal", objDeal)
     }
 
     trade(username) {
