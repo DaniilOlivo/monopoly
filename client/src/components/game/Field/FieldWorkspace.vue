@@ -3,6 +3,7 @@
         <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
         <OwnWindow v-else-if="activeOwn" :tile="activeOwn"></OwnWindow>
         <RentWindow v-else-if="rentWait"></RentWindow>
+        <DealWindow v-else-if="objDeal"></DealWindow>
         <HoverWindow v-else-if="cardHover" :tile="cardHover"></HoverWindow>
     </div>
 </template>
@@ -12,8 +13,10 @@ import BuyWindow from './workspace/BuyWindow.vue';
 import HoverWindow from './workspace/HoverWindow.vue';
 import OwnWindow from './workspace/OwnWindow.vue';
 import RentWindow from './workspace/RentWindow.vue';
+import DealWindow from './workspace/DealWindow.vue';
 
 import { state } from "@/socket"
+import { store } from "@/store"
 
 export default {
     name: "FieldWorkspace",
@@ -21,12 +24,21 @@ export default {
         BuyWindow,
         HoverWindow,
         OwnWindow,
-        RentWindow
+        RentWindow,
+        DealWindow
     },
     props: ["cardHover", "selectOwn"],
     computed: {
         activeWorkspace() {
-            return this.offerPurchase || this.activeOwn || this.cardHover || this.rentWait
+            const arrTriggers = [
+                this.offerPurchase,
+                this.activeOwn,
+                this.rentWait,
+                this.cardHover,
+                this.objDeal
+            ]
+
+            return arrTriggers.some(trigger => trigger)
         },
         offerPurchase() {
             const {username, game} = state
@@ -42,6 +54,9 @@ export default {
         rentWait() {
             const {username, game} = state
             return game.players[username].service.rent
+        },
+        objDeal() {
+            return store.state.objDeal
         }
     },
     emits: ["closeOwn"]

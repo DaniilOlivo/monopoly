@@ -1,5 +1,6 @@
 import { reactive } from "vue"
 import { io } from "socket.io-client"
+import { store } from "./store"
 
 export const state = reactive({
     connection: false,
@@ -12,8 +13,6 @@ export const state = reactive({
         "WaitingList": null,
     }
 })
-
-// const URL = "http://localhost:3000"
 
 export const socket = io({
     autoConnect: false,
@@ -38,7 +37,9 @@ socket.on("initGame", () => {
 })
 
 socket.on("updateGame", (game) => {
+    const username = state.username
     state.previousVerGame = state.game
+    store.setObjDeal(game.players[username].service.deal)
     state.game = game 
 })
 

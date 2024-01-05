@@ -56,7 +56,6 @@ export default {
     border-radius: 10px;
     background-color: white;
     padding: 30px 50px;
-    max-width: 500px;
 
     box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
 

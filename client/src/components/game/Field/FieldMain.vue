@@ -19,7 +19,7 @@
                 type="rectangle"
                 @mouseenter="showCard(tile)"
                 @mouseleave="hideCard()"
-                @click="clickOwn(tile)" >
+                @click="clickTile(tile)" >
             </FieldTile>
         </div>
 
@@ -40,6 +40,7 @@ import FieldWorkspace from './FieldWorkspace.vue';
 import ConsoleDev from "@/components/devComponents/ConsoleDev.vue"
 
 import { state } from "@/socket"
+import { store } from '@/store';
 
 export default {
     name: "FieldMain",
@@ -120,10 +121,16 @@ export default {
             this.cardHoverIndex = -1
         },
 
-        clickOwn(tile) {
+        clickTile(tile) {
+            const { username } = state
             this.selectOwnIndex = -1
             if (tile.owner) {
-                this.selectOwnIndex = tile.index
+                const objDeal = store.state.objDeal
+                if (objDeal) {
+                    if (objDeal.initiator) return
+                    if (tile.owner === objDeal.target) store.addIdTile("host", tile.id)
+                    if (tile.owner === username) store.addIdTile("income", tile.id)
+                } else this.selectOwnIndex = tile.index
             }
         },
 
