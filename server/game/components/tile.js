@@ -41,6 +41,11 @@ class Tile {
         this.building--
         this.hotel = false
     }
+
+    resetBuilding() {
+        this.building = 0
+        this.hotel = false
+    }
 }
 
 module.exports = Tile

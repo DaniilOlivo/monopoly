@@ -140,22 +140,15 @@ class Game {
             toPlayer.money += value
         }
 
-        const swapOwn = (fromPlayer, toPlayer, idTile) => {
-            const arrOwn = fromPlayer.own
-            arrOwn.splice(arrOwn.indexOf(idTile), 1)
-
-            toPlayer.own.push(idTile)
-            const [tile, ] = this.field.getById(idTile)
-            tile.owner = toPlayer.username
-        }
-
         for (const idTile of objDeal.income) {
-            swapOwn(initiatorPlayer, targetPlayer, idTile)
+            const [tile, ] = this.field.getById(idTile)
+            initiatorPlayer.transfer(tile, targetPlayer)
         }
         swapMoney(initiatorPlayer, targetPlayer, objDeal.moneyIncome)
 
         for (const idTile of objDeal.host) {
-            swapOwn(targetPlayer, initiatorPlayer, idTile)
+            const [tile, ] = this.field.getById(idTile)
+            targetPlayer.transfer(tile, initiatorPlayer)
         }
         swapMoney(targetPlayer, initiatorPlayer, objDeal.moneyHost)
 

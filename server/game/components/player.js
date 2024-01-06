@@ -32,6 +32,12 @@ class Player {
         tile.owner = null
         this.own.splice(this.own.indexOf(tile.id), 1)
         this.monopoly[this._getKey(tile)] -= 1
+        tile.resetBuilding()
+    }
+
+    transfer(tile, receivingPlayer) {
+        this.removeOwn(tile)
+        receivingPlayer.addOwn(tile)
     }
 
     setService(setting, val) {
