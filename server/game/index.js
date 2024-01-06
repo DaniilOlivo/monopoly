@@ -50,6 +50,7 @@ class Game {
                     const cost = this.getRent(tile.id)
                     player.setService("rent", {cost, tile})
                 }
+                else this.next()
             } else if (tile.type == "tax") {
                 player.setService("pay", tile.cost)
             }
