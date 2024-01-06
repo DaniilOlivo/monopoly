@@ -1,7 +1,7 @@
 <template>
     <div :class="['workspace', {'workspace_active': activeWorkspace}]">
-        <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
-        <OwnWindow v-else-if="activeOwn" :tile="activeOwn"></OwnWindow>
+        <OwnWindow v-if="activeOwn" :tile="activeOwn"></OwnWindow>
+        <BuyWindow v-else-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
         <RentWindow v-else-if="rentWait"></RentWindow>
         <TaxWindow v-else-if="taxWait"></TaxWindow>
         <DealWindow v-else-if="objDeal"></DealWindow>
