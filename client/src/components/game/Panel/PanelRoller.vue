@@ -58,7 +58,7 @@ export default {
             if (stage == "start") return username in tracker.valuesDices
             else {
                 const service = game.players[username].service
-                if (service.offer || service.rent) return true
+                if (service.offer || service.rent || service.deal) return true
                 return tracker.current != username
             } 
         }
