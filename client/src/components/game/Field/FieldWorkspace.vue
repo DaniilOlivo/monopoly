@@ -3,6 +3,7 @@
         <BuyWindow v-if="offerPurchase" :tile="offerPurchase"></BuyWindow>
         <OwnWindow v-else-if="activeOwn" :tile="activeOwn"></OwnWindow>
         <RentWindow v-else-if="rentWait"></RentWindow>
+        <TaxWindow v-else-if="taxWait"></TaxWindow>
         <DealWindow v-else-if="objDeal"></DealWindow>
         <HoverWindow v-else-if="cardHover" :tile="cardHover"></HoverWindow>
     </div>
@@ -14,6 +15,7 @@ import HoverWindow from './workspace/HoverWindow.vue';
 import OwnWindow from './workspace/OwnWindow.vue';
 import RentWindow from './workspace/RentWindow.vue';
 import DealWindow from './workspace/DealWindow.vue';
+import TaxWindow from './workspace/TaxWindow.vue';
 
 import { state } from "@/socket"
 import { store } from "@/store"
@@ -25,7 +27,8 @@ export default {
         HoverWindow,
         OwnWindow,
         RentWindow,
-        DealWindow
+        DealWindow,
+        TaxWindow
     },
     props: ["cardHover", "selectOwn"],
     computed: {
@@ -34,6 +37,7 @@ export default {
                 this.offerPurchase,
                 this.activeOwn,
                 this.rentWait,
+                this.taxWait,
                 this.cardHover,
                 this.objDeal
             ]
@@ -54,6 +58,10 @@ export default {
         rentWait() {
             const {username, game} = state
             return game.players[username].service.rent
+        },
+        taxWait() {
+            const {username, game} = state
+            return game.players[username].service.pay
         },
         objDeal() {
             return store.state.objDeal
