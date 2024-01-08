@@ -1,8 +1,9 @@
-const { settings } = require("./utils")
+const { settings, getConfig } = require("./utils")
 
 const Tracker = require("./components/tracker")
 const Field = require("./components/field")
 const Player = require("./components/player")
+const Cards = require("./components/cards")
 
 const COLORS = settings["colors"]
 
@@ -27,6 +28,9 @@ class Game {
         this.dices = [4, 2]
 
         this.logs = []
+
+        this.chests = new Cards(getConfig("chest.json"))
+        this.chance = new Cards(getConfig("chance.json"))
     }
 
     setOrderPlayer(username, dices) {

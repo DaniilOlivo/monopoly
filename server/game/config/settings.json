@@ -3,5 +3,6 @@
         "red", "orange", "yellow", "green", "blue", "violet", "white", "black"
     ],
 
-    "startMoney": 1500
+    "startMoney": 1500,
+    "countCards": 48
 }
