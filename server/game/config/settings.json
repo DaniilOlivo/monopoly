@@ -4,5 +4,6 @@
     ],
 
     "startMoney": 1500,
-    "countCards": 48
+    "countCards": 48,
+    "lapMoney": 200
 }

@@ -45,7 +45,7 @@ class Game {
         const [ok, circle] = this.field.move(currentPlayer, val1 + val2)
         if (ok) {
             const player = this.players[currentPlayer]
-            if (circle) player.money += 200
+            if (circle) player.money += settings["lapMoney"]
             const [tile, ] = this.field.findPlayer(currentPlayer)
             this.pushLog("ends up on the", currentPlayer, tile.title)
             if (tile.canBuy) {
