@@ -36,33 +36,33 @@ class Field {
     }
 
     getById(idTile) {
-        const tile = this.tiles.find((tile) => tile.id == idTile)
-        const index = this.tiles.indexOf(tile)
-
-        return [tile, index]
+        const tile = this.tiles.find(tile => tile.id == idTile)
+        if (!tile) throw new Error("No such tile with id " + idTile)
+        return tile
     }
 
     findPlayer(username) {
-        const tile = this.tiles.find((tile) => tile.playerIn(username))
-        const index = this.tiles.indexOf(tile)
+        const tile = this.tiles.find(tile => tile.playerIn(username))
+        if (!tile) throw new Error("No such player " + username)
+        return tile
+    }
 
-        return [tile, index]
+    getIndexTile(tile) {
+        return this.tiles.indexOf(tile)
     }
 
     replacePlayer(username, newIndex) {
         // -1 in the new index indicates deletion
-        if (newIndex < -1 || newIndex >= COUNT_TILES) return false
-        const [tile] = this.findPlayer(username)
-        const indexPlayer = tile.players.indexOf(username)
-        tile.players.splice(indexPlayer, 1)
+        if (newIndex < -1 || newIndex >= COUNT_TILES) throw new Error("Invalid index " + newIndex)
+        const tile = this.findPlayer(username)
+        tile.removePlayer(username)
         if (newIndex != -1) {
-            this.tiles[newIndex].players.push(username)
+            this.tiles[newIndex].addPlayer(username)
         }
-        return true
     }
 
     move(username, countSteps) {
-        let newCircleBool = false
+        let newLapBool = false
 
         const getNewIndex = (currentIndex, addedValue) => {
             let newIndex = currentIndex + addedValue
@@ -74,16 +74,16 @@ class Field {
             return newIndex
         }
 
-        const [tile, index] = this.findPlayer(username)
-        if (!tile) return [false, newCircleBool]
+        const tile = this.findPlayer(username)
+        const index = this.getIndexTile(tile)
 
         const newIndex = getNewIndex(index, countSteps)
         
-        if (index > newIndex) newCircleBool = true
+        if (index > newIndex) newLapBool = true
 
-        const result = this.replacePlayer(username, newIndex)
+        this.replacePlayer(username, newIndex)
 
-        return [result, newCircleBool]
+        return newLapBool
     }
 }
 
