@@ -1,5 +1,9 @@
+const { getConfig } = require("../utils") 
+
 class Player {
-    constructor(username, color, money, tiles) {
+    constructor(username, color, money) {
+        const { tiles } = getConfig("tiles.json")
+
         this.username = username
         this.color = color
         this.money = money
@@ -8,14 +12,19 @@ class Player {
             offer: null,
             rent: null,
             deal: null,
-            pay: null
+            tax: null
         }
 
         this.monopoly = {}
         for (const tile of tiles) {
-            if (!tile.canBuy) continue
+            if (!this._canBuy(tile)) continue
             this.monopoly[this._getKey(tile)] = 0
         }
+    }
+
+    _canBuy(tile) {
+        const type = tile.type
+        return ["standard", "communal", "station"].indexOf(type) != -1
     }
 
     _getKey(tile) {
@@ -46,6 +55,12 @@ class Player {
 
     clearService(setting) {
         this.service[setting] = null
+    }
+
+    resetServices() {
+        for (const setting in this.service) {
+            this.service[setting] = null
+        }
     }
 }
 

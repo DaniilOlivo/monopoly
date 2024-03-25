@@ -4,13 +4,24 @@ const Game = require("../index")
 
 describe("Core game", () => {
     const game = new Game(["Scorpion", "Sub Zero"])
-    
-    function findPlayer(username) {
-        const [, indexPlayer] = game.field.findPlayer(username)
-        return indexPlayer
+    game.testMode = true
+    const testUsername = "Scorpion"
+    const testPlayer = game.players[testUsername]
+
+    const getDataTile = (idTile) => {
+        const tile = game.field.getById(idTile)
+        return [idTile, tile]
     }
 
+    const buyForce = (username, tile) => game.buyOwn(username, {noMoney: true, directlyTile: tile})
+
     describe("roll", () => {
+        const findPlayer = (username) => {
+            const field = game.field
+            const tile = field.findPlayer(username)
+            return field.getIndexTile(tile)
+        }
+
         it("set order", () => {
             game.roll([3, 4], "Scorpion")
             game.roll([2, 2], "Sub Zero")
@@ -18,302 +29,259 @@ describe("Core game", () => {
         })
 
         it("move", () => {
-            game.roll([2, 2], "Scorpion")
-            game.roll([1, 2], "Scorpion")
+            game.roll([4, 3], "Scorpion")
             assert.equal(findPlayer("Scorpion"), 7)
+        })
 
-            game.roll([4, 5], "Sub Zero")
+        it("move with double", () => {
+            game.roll([3, 3], "Sub Zero")
+            game.roll([1, 2], "Sub Zero")
             assert.equal(findPlayer("Sub Zero"), 9)
+        })
+
+        after(() => {
+            for (const player of Object.values(game.players)) {
+                player.resetServices()
+            } 
         })
     })
 
     describe("buy", () => {
-        const idTile = "cyan_2"
+        const [idTile, tile] = getDataTile("cyan_2")
+        let result = false
 
-        it("buy succesful", () => {
-            const [result, desc] = game.buyOwn(idTile, "Scorpion")
-            assert.isTrue(result)
-            assert.equal(desc, "Ok")
+        before(() => {
+            testPlayer.setService("offer", tile)
+            result = game.buyOwn(testUsername)
+        })
+
+        it("Buy succesful", () => assert.isTrue(result))
+        it("Money paid", () => assert.equal(testPlayer.money, 1400))
+        it("The player now has property", () => assert.deepEqual(testPlayer.own, [idTile]))
+        it("Clear service", () => assert.isNull(testPlayer.service.offer))
+        it("Property added to monopoly accounting", () => assert.equal(testPlayer.monopoly.cyan, 1))
+        it("The tile now has an owner", () => assert.equal(tile.owner, testUsername))
+    })
+
+    describe("pledge", () => {
+        const [idTile, tile] = getDataTile("cyan_1")
+
+        before(() => testPlayer.money = 0)
+
+        describe("put pledge", () => {
+            let result = false
             
-            const player = game.players["Scorpion"]
-            assert.deepEqual(player.own, [idTile])
-            assert.equal(player.monopoly.cyan, 1)
-
-            const [tile, ] = game.field.getById(idTile)
-            assert.equal(tile.owner, "Scorpion")
+            before(() => {
+                buyForce(testUsername, tile)
+                result = game.putPledge(idTile)
+            })
+    
+            it("Successful mortgage", () => assert.isTrue(result))
+            it("Money received", () => assert.equal(testPlayer.money, 50))
+            it("The tile has a flag", () => assert.isTrue(tile.pledge))
         })
-
-        it("Property with its own", () => {
-            const [result, desc] = game.buyOwn(idTile, "Sub Zero")
-            assert.isFalse(result)
-            assert.equal(desc, "Already has an owner")
+    
+        describe("redeem pledge", () => {
+            let result = false
+    
+            before(() => result = game.redeemPledge(idTile))
+    
+            it("Successful redeem", () => assert.isTrue(result))
+            it("Money paid", () => assert.equal(testPlayer.money, 0))
+            it("Taking down the flag", () => assert.isFalse(tile.pledge))
         })
+    }) 
 
-        it("Not enough money", () => {
-            game.players["Sub Zero"].money = 0
-            const [result, desc] = game.buyOwn("cyan_1", "Sub Zero")
-            assert.isFalse(result)
-            assert.equal(desc, "Not enough money")
-        })
-    })
-
-    describe("put pledge", () => {
-        const idTile = "cyan_1"
-        
-        before(() => {
-            game.players["Sub Zero"].money = 1500
-            game.buyOwn(idTile, "Sub Zero")
-        })
-
-        it("pledge succesful", () => {
-            const result = game.putPledge(idTile)
-            assert.isTrue(result)
-            assert.equal(game.players["Sub Zero"].money, 1450)
-
-            const [tile, ] = game.field.getById(idTile)
-            assert.isTrue(tile.pledge)
-        })
-
-        it("no owner", () => {
-            const result = game.putPledge("cyan_3")
-            assert.isFalse(result)
-        })
-    })
-
-    describe("redeem pledge", () => {
-        it("redeem succesful", () => {
-            const [result, desc] = game.redeemPledge("cyan_1")
-            assert.isTrue(result)
-            assert.equal(desc, "Ok")
-
-            const [tile, ] = game.field.getById("cyan_1")
-            assert.isFalse(tile.pledge)
-
-            assert.equal(game.players["Sub Zero"].money, 1400)
-        })
-
-        it("redeem fail", () => {
-            const attemptRedeem = (idTile, expectDesc) => {
-                const [result, desc] = game.redeemPledge(idTile)
-                assert.isFalse(result)
-                assert.equal(desc, expectDesc)
-            }
-            attemptRedeem("cyan_3", "Property with its own")
-            attemptRedeem("cyan_1", "Is not in collateral")
-            game.putPledge("cyan_1")
-            game.players["Sub Zero"].money = 0 
-            attemptRedeem("cyan_1", "Not enough money")
-        })
-    })
-
-    describe("add building", () => {
-        const setMoney = (money) => game.players["Scorpion"].money = money
+    describe("building", () => {
+        const [idTile, tile] = getDataTile("blue_1")
+        const [, secondTile] = getDataTile("blue_2") 
 
         before(() => {
-            setMoney(1500)
-            game.buyOwn("red_1", "Scorpion")
-            game.buyOwn("blue_1", "Scorpion")
-            game.buyOwn("blue_2", "Scorpion")
+            buyForce(testUsername, tile)
+            buyForce(testUsername, secondTile)
 
-            // for simple calculations
-            setMoney(2000)
+            testPlayer.money = 1000
         })
 
-        it("wrong type", () => {
-            const [result, desc] = game.addBuilding("station_1")
-            assert.isFalse(result)
-            assert.equal(desc, "Wrong type")
+        describe("add building", () => {
+            describe("one building", () => {
+                let result = false
+    
+                before(() => result = game.addBuilding(idTile))
+    
+                it("Building added successfully", () => assert.isTrue(result))
+                it("The building is added to the tile", () => assert.equal(tile.building, 1))
+                it("Money paid", () => assert.equal(testPlayer.money, 800))
+            })
+    
+            describe("hotel", () => {
+                before(() => {
+                    for (let i = 0; i < 4; i++) game.addBuilding(idTile)
+                })
+    
+                it("Number of buildings", () => assert.equal(tile.building, 5))
+                it("Hotel flag", () => assert.isTrue(tile.hotel))
+            })
         })
+    
+        describe("remove building", () => {
+            let result = false
 
-        it("adding a building without a monopoly", () => {
-            const [result, desc] = game.addBuilding("red_1")
-            assert.isFalse(result)
-            assert.equal(desc, "No monopoly in this color")
-        })
+            before(() => {
+                testPlayer.money = 0
+                result = game.removeBuilding(idTile)  
+            })
 
-        it("one building", () => {
-            const [result, desc] = game.addBuilding("blue_1")
-            assert.isTrue(result)
-            assert.equal(desc, "Ok")
-
-            const [tile, ] = game.field.getById("blue_1")
-            assert.equal(tile.building, 1)
-            assert.equal(game.players["Scorpion"].money, 1800)
-        })
-
-        it("hotel", () => {
-            for (let i = 0; i < 4; i++) game.addBuilding("blue_1")
-            const [tile, ] = game.field.getById("blue_1")
-            assert.equal(tile.building, 5)
-            assert.isTrue(tile.hotel)
-        })
-
-        it("not enough money", () => {
-            setMoney(0)
-            const [result, desc] = game.addBuilding("blue_2")
-            assert.isFalse(result)
-            assert.equal(desc, "Not enough money")
-        })
-    })
-
-    describe("remove building", () => {
-        it("one building remove", () => {
-            game.removeBuilding("blue_1")
-            const player = game.players["Scorpion"]
-            const [tile, ] = game.field.getById("blue_1")
-            assert.equal(player.money, 100)
-            assert.equal(tile.building, 4)
-            assert.isFalse(tile.hotel)
+            it("The building has been successfully cleaned", () => assert.isTrue(result))
+            it("Money received", () => assert.equal(testPlayer.money, 100))
+            it("The number of buildings has decreased", () => assert.equal(tile.building, 4))
+            it("Hotel flag removed", () => assert.isFalse(tile.hotel))
         })
     })
 
     describe("rent", () => {
-        const checkCost = (tileId, expectCost) => {
-            const cost = game.getRent(tileId)
-            assert.equal(cost, expectCost)
+        const buy = (idTile) => {
+            const [, tile] = getDataTile(idTile)
+            buyForce("Sub Zero", tile)
+            return tile
         }
 
-        before(() => {
-            game.players["Scorpion"].money = 2000
+        describe("pay rent", () => {
+            const [idTile, tile] = getDataTile("violet_1")
+            let result = false
+            const owner = game.players["Sub Zero"]
 
-            game.buyOwn("orange_1", "Scorpion")
-            game.buyOwn("orange_2", "Scorpion")
-            game.buyOwn("station_1", "Scorpion")
-            game.buyOwn("electric_compamy", "Scorpion")
+            before(() => {
+                buy(idTile)
 
-            game.players["Scorpion"].money = 2000
+                testPlayer.money = 10
+                owner.money = 0
+
+                testPlayer.setService("rent", tile)
+                result = game.rent(testUsername)
+            })
+
+            it("Rent paid successfully", () => assert.isTrue(result))
+            it("The player paid", () => assert.equal(testPlayer.money, 0))
+            it("The owner received the money", () => assert.equal(owner.money, 10))
+            it("Service cleared", () => assert.isNull(testPlayer.service.rent))
         })
 
-        it("rent basic", () => {
-            checkCost("orange_1", 14)
-        })
-
-        it("rent monopoly", () => {
-            game.buyOwn("orange_3", "Scorpion")
-            checkCost("orange_1", 28)
-        })
-
-        it("rent with building", () => {
-            game.addBuilding("orange_1")
-            checkCost("orange_1", 70)
-        })
-
-        it("rent with hotel", () => {
-            for (let i = 0; i < 4; i++) {
-                game.addBuilding("orange_1")
+        describe("rents for different tiles", () => {
+            const checkCost = (idTile, expectVal) => {
+                const [ , tile] = getDataTile(idTile)
+                game.rent(testUsername, {directlyTile: tile})
+                assert.equal(game.players["Sub Zero"].money, expectVal)
             }
-            checkCost("orange_1", 950)
-        })
 
-        it("rent station", () => {
-            checkCost("station_1", 25)
-        })
+            before(() => {
+                buy("brown_1")
+                buy("station_1")
+                buy("electric_compamy")
+            })
 
-        it("rent two stations", () => {
-            game.buyOwn("station_2", "Scorpion")
-            checkCost("station_1", 50)
-        })
+            beforeEach(() => {
+                testPlayer.money = 1000
+                game.players["Sub Zero"].money = 0
+            })
 
-        it("rent communal", () => {
-            game.roll([1,2], "Sub Zero")
-            checkCost("electric_compamy", 3 * 4)
-        })
-
-        it("rent two communals", () => {
-            game.buyOwn("water_company", "Scorpion")
-            checkCost("electric_compamy", 3 * 10)
-        })
-    })
-
-    describe("trade", () => {
-        const include = (arr, el) => {
-            return -1 != arr.indexOf(el)
-        }
-
-        before(() => {
-            game.players["Sub Zero"].money = 1500
-            game.players["Scorpion"].money = 1500
-        })
-
-        it("offer deal", () => {
-            const arrHost = ["station_1", "station_2"]
-            const originObjDeal = {
-                initiator: "Sub Zero",
-                target: "Scorpion",
-                income: [],
-                moneyIncome: 69,
-                host: arrHost,
-                moneyHost: 0
-            }
-            game.offerDeal(originObjDeal)
-            
-            const objDeal = game.players["Scorpion"].service.deal
-            assert.equal(objDeal.initiator, "Sub Zero")
-            assert.deepEqual(objDeal.income, [])
-            assert.equal(objDeal.moneyIncome, 69)
-            assert.deepEqual(objDeal.host, arrHost)
-            assert.equal(objDeal.moneyHost, 0)
-        })
-
-        it("swap", () => {
-            game.trade("Scorpion")
-
-            const initatorPlayer = game.players["Sub Zero"]
-            const targetPlayer = game.players["Scorpion"]
-
-            assert.isNull(targetPlayer.service.deal)
-
-            assert.equal(initatorPlayer.money, 1500 - 69)
-            assert.equal(targetPlayer.money, 1500 + 69)
-
-            assert.isTrue(include(initatorPlayer.own, "station_1"))
-            assert.isTrue(include(initatorPlayer.own, "station_2"))
-
-            assert.isFalse(include(targetPlayer.own, "station_1"))
-            assert.isFalse(include(targetPlayer.own, "station_2"))
-        })
-    })
-
-    describe("pay", () => {
-        const player = game.players["Sub Zero"]
-
-        before(() => {
-            player.money = 0
-            player.setService("pay", 100)
-        })
-
-        it("pay fail", () => {
-            const result = game.pay("Sub Zero")
-            assert.isFalse(result)
-        })
-
-        it("pay succesful", () => {
-            player.money = 1500
-            const result = game.pay("Sub Zero")
-            assert.isTrue(result)
-            assert.equal(player.money, 1400)
+            it("rent basic", () => checkCost("brown_1", 2))
+            it("rent monopoly", () => {
+                buy("brown_2")
+                checkCost("brown_1", 4)
+            })
+            it("rent with building", () => {
+                game.addBuilding("brown_1", {noMoney: true})
+                checkCost("brown_1", 10)
+            })
+            it("rent with hotel", () => {
+                for (let i = 0; i < 4; i++) game.addBuilding("brown_1", {noMoney: true})
+                checkCost("brown_1", 250)
+            })
+            it("rent station", () => checkCost("station_1", 25))
+            it("rent two stations", () => {
+                buy("station_2")
+                checkCost("station_1", 50)
+            })
+            it("rent communal", () => {
+                game.dices = [1, 2]
+                checkCost("electric_compamy", 3 * 4)
+            })
+            it("rent two communals", () => {
+                buy("water_company")
+                game.dices = [1, 2]
+                checkCost("electric_compamy", 3 * 10)
+            })
         })
     })
 
     describe("sell", () => {
+        const [idTile, tile] = getDataTile("orange_1")
+        let result = false
+
         before(() => {
-            game.players["Sub Zero"].money = 0
+            buyForce(testUsername, tile)
+            testPlayer.money = 0
+            result = game.sell(idTile)
         })
 
-        it("sell succesful", () => {
-            const result = game.sell("cyan_1")
-            assert.isTrue(result)
-            const [tile, ] = game.field.getById("cyan_1")
-            assert.isNull(tile.owner)
-            const player = game.players["Sub Zero"]
-            assert.equal(player.money, 50)
-            assert.equal(player.own.length, 2)
-            assert.equal(player.monopoly.cyan, 0)
+        it("sell succesful", () => assert.isTrue(result))
+        it("Property has no owner", () => assert.isNull(tile.owner))
+        it("Money received", () => assert.equal(testPlayer.money, 180))
+        it("Property removed from monopoly accounting", () => assert.equal(testPlayer.monopoly.orange, 0))
+        it("The property has been removed from the property list", () => assert.notInclude(testPlayer.own, idTile))
+    })
+
+    describe("tax", () => {
+        let result = false
+
+        before(() => {
+            testPlayer.money = 200
+            testPlayer.setService("tax", 200)
+            result = game.tax(testUsername)
         })
 
-        it("sell fail", () => {
-            const result = game.sell("cyan_1")
-            assert.isFalse(result)
+        it("pay succesful", () => assert.isTrue(result))
+        it("Money paid", () => assert.equal(testPlayer.money, 0))
+    })
+
+    describe("trade", () => {
+        const initatorPlayer = game.players["Sub Zero"]
+        const targetPlayer = game.players["Scorpion"]
+
+        const arrHost = ["station_3", "station_4"]
+        const [idStation1 , tileStation1] = getDataTile("station_3")
+        const [ , tileStation2] = getDataTile("station_4")
+
+        let resultDeal = false
+        let resultTrade = false
+
+        before(() => {
+            game.players["Sub Zero"].money = 1500
+            game.players["Scorpion"].money = 1500
+
+            buyForce("Scorpion", tileStation1)
+            buyForce("Scorpion", tileStation2)
+
+            const objDeal = {
+                target: "Scorpion",
+                income: [],
+                moneyIncome: 100,
+                host: arrHost,
+                moneyHost: 0
+            }
+
+            resultDeal = game.deal("Sub Zero", objDeal)
+            resultTrade = game.trade("Scorpion")
         })
+
+        it("valid object deal", () => assert.isTrue(resultDeal))
+        it("successful trade", () => assert.isTrue(resultTrade))
+        it("target received money", () => assert.equal(targetPlayer.money, 1600))
+        it("initiator paid", () => assert.equal(initatorPlayer.money, 1400))
+        it("target property list reduced", () => assert.notInclude(targetPlayer.own, idStation1))
+        it("initiator property list has been increased", () => assert.include(initatorPlayer.own, idStation1))
+        it("owner of the tile has changed", () => assert.equal(tileStation1.owner, "Sub Zero"))
+        it("cleaned service", () => assert.isNull(targetPlayer.service.deal))
     })
 })
