@@ -284,4 +284,36 @@ describe("Core game", () => {
         it("owner of the tile has changed", () => assert.equal(tileStation1.owner, "Sub Zero"))
         it("cleaned service", () => assert.isNull(targetPlayer.service.deal))
     })
+
+    describe.only("command", () => {
+        describe("testmode", () => {
+            before(() => game.command("testmode false"))
+            it("testmode false", () => assert.isFalse(game.testMode))
+            it("testmode true", () => {
+                game.command("testmode true")
+                assert.isTrue(game.testMode)
+            })
+        })
+
+        describe("buy", () => {
+            before(() => {
+                testPlayer.money = 220
+                game.command("buy Scorpion red_1")
+            })
+
+            it("property added to the player", () => assert.include(testPlayer.own, "red_1"))
+            it("money paid", () => assert.equal(testPlayer.money, 0))
+            it("flag no money", () => {
+                game.command("buy Scorpion red_2 true")
+                assert.equal(testPlayer.money, 0)
+            })
+        })
+
+        describe("pledge", () => {
+            const [, tile] = getDataTile("red_2")
+            before(() => game.command("pledge put red_2 true"))
+            it("successful pledge", () => assert.isTrue(tile.pledge))
+            it("wrong action", () => assert.throw(() => game.command("pledge lol red_2"), "Wrong action"))
+        })        
+    })
 })

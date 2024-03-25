@@ -146,29 +146,69 @@ class Game {
         else this.pushError(mes, detail)
     }
 
-    // // Special method for special developer commands
-    // command(commandString) {
-    //     const parseBool = (valString) => valString == "true"
+    // Special method for special developer commands
+    command(commandString) {
+        const parseBool = (valString) => valString == "true"
 
-    //     const splitString = commandString.split(" ")
-    //     const command = splitString[0]
-    //     const args = splitString.slice(1)
+        const splitString = commandString.split(" ")
+        const command = splitString[0]
+        const args = splitString.slice(1)
 
-    //     if (command == "testmode") {
-    //         const [val] = args
-    //         this.testMode = parseBool(val)
-    //     }
+        if (command == "testmode") {
+            const [val] = args
+            this.testMode = parseBool(val)
+        }
 
-    //     if (command == "buy") {
-    //         const [username, idTile, noMoney] = args
+        if (command == "buy") {
+            const [username, idTile, noMoney] = args
 
-    //         if (this._checkUsername(username)) return this.error("Wrong username", username)
-    //         if (this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
+            if (!this._checkUsername(username)) return this.error("Wrong username", username)
+            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
 
-    //         const tile = this.field.getById(idTile)
-    //         this.buyOwn(username, {noMoney: parseBool(noMoney), directlyTile: tile})
-    //     }
-    // }
+            const tile = this.field.getById(idTile)
+            this.buyOwn(username, {noMoney: parseBool(noMoney), directlyTile: tile})
+        }
+
+        if (command == "pledge") {
+            const [action, idTile, noMoney] = args
+
+            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
+
+            const options = { noMoney: parseBool(noMoney) }
+            if (action == "put") this.putPledge(idTile, options)
+            else if (action == "redeem") this.redeemPledge(idTile, options)
+            else return this.error("Wrong action", action)
+        }
+
+        if (command == "build") {
+            const [action, idTile, noMoney] = args
+
+            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
+
+            const options = { noMoney: parseBool(noMoney) }
+            if (action == "add") this.addBuilding(idTile, options)
+            else if (action == "remove") this.removeBuilding(idTile, options)
+            else return this.error("Wrong action", action)
+        }
+
+        if (command == "sell") {
+            const [idTile, noMoney] = args
+
+            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
+
+            this.sell(idTile, { noMoney: parseBool(noMoney) })
+        }
+
+        if (command == "money") {
+            const [username, value] = args
+
+            if (!this._checkUsername(username)) return this.error("Wrong username", username)
+            if (!Number.isInteger(value)) return this.error("Value must be an integer", value)
+
+            const player = this.players[username]
+            player.money += value
+        }
+    }
 
     // =================================================================
     // Services methods
