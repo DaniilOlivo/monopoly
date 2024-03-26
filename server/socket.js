@@ -5,8 +5,14 @@ const mapSockets = {}
 module.exports = function connect(socket, serverSockets) {
     console.log("Connect socket")
 
-    function updateGame(room) {
+    const updateGame = (room) => {
         serverSockets.to(room.title).emit("updateGame", room.game)
+    }
+ 
+    const gameUse = () => {
+        const { username, room } = mapSockets[socket.id]
+
+        updateGame(room)
     }
 
     socket.on("register", (username, title) => {
@@ -30,102 +36,45 @@ module.exports = function connect(socket, serverSockets) {
 
     socket.on("startGame", () => {
         const {room} = mapSockets[socket.id]
-        const game = room.startGame()
+        room.startGame()
         serverSockets.to(room.title).emit("initGame")
         updateGame(room)
     })
 
-    socket.on("roll", (valuesDices) => {
+    socket.on("game", (command, ...args) => {
         const {username, room} = mapSockets[socket.id]
-        room.game.roll(valuesDices, username)
-        updateGame(room)
-    })
+        const game = room.game
 
-    socket.on("offer", (result) => {
-        const {username, room} = mapSockets[socket.id]
-        if (result) {
-            const tileId = room.game.players[username].service.offer.id
-            room.game.buyOwn(tileId, username)
+        const apiGames = {
+            "message": ([mes]) => game.pushLog(mes, username),
+            "roll": ([dices]) => game.roll(dices, username),
+            "next": game.next,
+            "buy": ([resolve]) => {
+                game.buyOwn(username, {clearService: resolve})
+                game.next()
+            },
+            "pledge": ([action, idTile]) => {
+                if (action == "put") game.putPledge(idTile)
+                else if (action == "redeem") game.redeemPledge(idTile)
+                else game.error("Invalid action", action)
+            },
+            "building": ([action, idTile]) => {
+                if (action == "add") game.addBuilding(idTile)
+                else if (action == "remove") game.removeBuilding(idTile)
+                else game.error("Invalid action", action)
+            },
+            "rent": () => {
+                game.rent(username)
+                game.next()
+            },
+            "sell": ([idTile]) => game.sell(idTile),
+            "tax": () => game.tax(username),
+            "deal": ([objDeal]) => game.deal(username, objDeal),
+            "trade": ([resolve]) => game.trade(username, {clearService: resolve})
         }
-        room.game.players[username].clearService("offer")
-        room.game.next()
-        updateGame(room)
-    })
 
-    socket.on("deal", (objDeal) => {
-        const {username, room} = mapSockets[socket.id]
-        objDeal.initiator = username
-        room.game.offerDeal(objDeal)
-        updateGame(room)
-    })
-
-    socket.on("trade", (result) => {
-        const {username, room} = mapSockets[socket.id]
-        if (result) room.game.trade(username)
-        else room.game.players[username].clearService("deal")
-        updateGame(room)
-    })
-
-    socket.on("rent", () => {
-        const {username, room} = mapSockets[socket.id]
-        room.game.rent(username)
-        room.game.players[username].clearService("rent")
-        room.game.next()
-        updateGame(room)
-    })
-
-    socket.on("pay", () => {
-        const {username, room} = mapSockets[socket.id]
-        room.game.pay(username)
-        room.game.next()
-        updateGame(room)
-    })
-
-    socket.on("next", () => {
-        const {room} = mapSockets[socket.id]
-        room.game.next()
-        updateGame(room)
-    })
-
-    socket.on("buy", (idTile) => {
-        const {username, room} = mapSockets[socket.id]
-        room.game.buyOwn(idTile, username)
-        updateGame(room)
-    })
-
-    socket.on("addBuilding", (idTile) => {
-        const {room} = mapSockets[socket.id]
-        room.game.addBuilding(idTile)
-        updateGame(room)
-    })
-
-    socket.on("removeBuilding", (idTile) => {
-        const {room} = mapSockets[socket.id]
-        room.game.removeBuilding(idTile)
-        updateGame(room)
-    })
-
-    socket.on("putPledge", (idTile) => {
-        const {room} = mapSockets[socket.id]
-        room.game.putPledge(idTile)
-        updateGame(room)
-    })
-
-    socket.on("redeemPledge", (idTile) => {
-        const {room} = mapSockets[socket.id]
-        room.game.redeemPledge(idTile)
-        updateGame(room)
-    })
-
-    socket.on("sell", (idTile) => {
-        const {room} = mapSockets[socket.id]
-        room.game.sell(idTile)
-        updateGame(room)
-    })
-
-    socket.on("sendMes", (mes) => {
-        const {username, room} = mapSockets[socket.id]
-        room.game.pushLog(mes, username)
+        if (command in apiGames) apiGames[command](args)
+        else game.error("Invalid command", command)
         updateGame(room)
     })
 
@@ -146,8 +95,6 @@ module.exports = function connect(socket, serverSockets) {
             console.log("Disconnect anonymous socket")
         }
     })
-
-    // socket.on("disconnect", () => console.log("Disconnect"))
 }
 
 

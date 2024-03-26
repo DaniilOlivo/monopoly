@@ -285,7 +285,7 @@ describe("Core game", () => {
         it("cleaned service", () => assert.isNull(targetPlayer.service.deal))
     })
 
-    describe.only("command", () => {
+    describe("command", () => {
         describe("testmode", () => {
             before(() => game.command("testmode false"))
             it("testmode false", () => assert.isFalse(game.testMode))

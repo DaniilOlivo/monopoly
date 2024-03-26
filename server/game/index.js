@@ -213,9 +213,13 @@ class Game {
     // =================================================================
     // Services methods
     buyOwn(username, options={}) {
-        const { noMoney, directlyTile } = options
+        const { noMoney, directlyTile, clearService } = options
 
         const player = this.players[username]
+        if (clearService) {
+            player.clearService("offer")
+            return true
+        }
         let tile = player.service.offer
         if (directlyTile) tile = directlyTile 
         let price = tile.price
@@ -362,8 +366,16 @@ class Game {
         return true
     }
 
-    trade(username) {
+    trade(username, options={}) {
+        const { clearService } = options
+
         const targetPlayer = this.players[username]
+
+        if (clearService) {
+            targetPlayer.clearService("deal")
+            return true
+        }
+
         const objDeal = this.players[username].service.deal
         if (!this._checkValidObjDeal(objDeal)) return this.error("Invalid object deal", JSON.stringify(objDeal))
         const initiatorPlayer = this.players[objDeal.initiator]
