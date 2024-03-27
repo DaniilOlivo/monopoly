@@ -201,12 +201,13 @@ class Game {
 
         if (command == "money") {
             const [username, value] = args
+            let valuerNumber = parseInt(value)
 
             if (!this._checkUsername(username)) return this.error("Wrong username", username)
-            if (!Number.isInteger(value)) return this.error("Value must be an integer", value)
+            if (Number.isNaN(valuerNumber)) return this.error("Value must be an integer", value)
 
             const player = this.players[username]
-            player.money += value
+            player.money += valuerNumber
         }
     }
 

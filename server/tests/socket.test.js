@@ -185,21 +185,38 @@ describe("Socket", () => {
             await waitGame(socketMelina, "updateGame")
         })
 
-        let game = null
-        let gameJade = null
+        describe("hadler game signals", () => {
+            let game = null
+            let gameJade = null
 
-        before(async () => {
-            socketMelina.emit("game", "ping")
-            game = await waitGame(socketMelina, "updateGame")
-            gameJade = await waitGame(socketJade, "updateGame")
+            before(async () => {
+                socketMelina.emit("game", "ping")
+                game = await waitGame(socketMelina, "updateGame")
+                gameJade = await waitGame(socketJade, "updateGame")
+            })
+
+            it("game has been updated", () => assert.isNotNull(game))
+            it("another player updated their game", () => assert.isNotNull(gameJade))
+            it("game api worked", () => {
+                const objMes = getLastMes(game)
+                assert.equal(objMes.mes, "ping")
+                assert.equal(objMes.sender, "Melina")
+            })
         })
 
-        it("game has been updated", () => assert.isNotNull(game))
-        it("another player updated their game", () => assert.isNotNull(gameJade))
-        it("game api worked", () => {
-            const objMes = getLastMes(game)
-            assert.equal(objMes.mes, "ping")
-            assert.equal(objMes.sender, "Melina")
+        describe("dev commands", () => {
+            let game = null
+
+            before(async () => {
+                socketMelina.emit("game", "command", "money Jade 1000")
+                game = await waitGame(socketMelina, "updateGame")
+            })
+
+            it("Money added", () => {
+                console.log(game.logs)
+                const money = game.players["Jade"].money
+                assert.equal(money, 2500)
+            })
         })
 
         after(() => {

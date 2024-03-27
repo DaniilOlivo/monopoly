@@ -65,7 +65,8 @@ module.exports = function connect(socket, serverSockets) {
             "sell": ([idTile]) => game.sell(idTile),
             "tax": () => game.tax(username),
             "deal": ([objDeal]) => game.deal(username, objDeal),
-            "trade": ([resolve]) => game.trade(username, {clearService: resolve})
+            "trade": ([resolve]) => game.trade(username, {clearService: resolve}),
+            "command": ([stringCommand]) => game.command(stringCommand),
         }
 
         if (command in apiGames) apiGames[command](args)
