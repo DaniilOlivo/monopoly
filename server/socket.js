@@ -8,12 +8,6 @@ module.exports = function connect(socket, serverSockets) {
     const updateGame = (room) => {
         serverSockets.to(room.title).emit("updateGame", room.game)
     }
- 
-    const gameUse = () => {
-        const { username, room } = mapSockets[socket.id]
-
-        updateGame(room)
-    }
 
     socket.on("register", (username, title) => {
         const room = roomManager.rooms[title]
@@ -46,6 +40,7 @@ module.exports = function connect(socket, serverSockets) {
         const game = room.game
 
         const apiGames = {
+            "ping": () => game.ping(username),
             "message": ([mes]) => game.pushLog(mes, username),
             "roll": ([dices]) => game.roll(dices, username),
             "next": game.next,

@@ -212,6 +212,11 @@ class Game {
 
     // =================================================================
     // Services methods
+    ping(username) {
+        this.pushLog("ping", username)
+        return true
+    }
+
     buyOwn(username, options={}) {
         const { noMoney, directlyTile, clearService } = options
 
