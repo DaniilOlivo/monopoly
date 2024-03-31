@@ -24,16 +24,12 @@ export default {
     },
     computed: {
         mapRent() {
-            const obj = {}
-            const labels = ["Rent", "2 stations", "3 stations", "4 stations"]
-
-            for (let i = 0; i < labels.length; i++) {
-                const label = labels[i]
-                const value = this.tile.rent[i]
-                obj[label] = value
+            return {
+                "Rent": 25,
+                "2 stations": 50,
+                "3 stations": 100,
+                "4 stations": 200
             }
-
-            return obj
         }
     }
 }
