@@ -1,6 +1,6 @@
 import { reactive } from "vue"
 
-import { socket, state } from "./socket"
+import { state, gameApi } from "./socket"
 
 // Simple implementation of global storage
 // I didn’t want to complicate the code and connect Vuex
@@ -53,17 +53,17 @@ export const store = {
     },
 
     dealSocket() {
-        socket.emit("deal", this.state.objDeal)
+        gameApi("deal", this.state.objDeal)
         this.state.objDeal = null
     },
 
     refuseTradeSocket() {
-        socket.emit("trade", false)
+        gameApi("trade", false)
         this.state.objDeal = null
     },
 
     acceptTradeSocket() {
-        socket.emit("trade", true)
+        gameApi("trade", true)
         this.state.objDeal = null
     },
 }

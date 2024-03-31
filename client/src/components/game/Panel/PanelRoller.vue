@@ -11,7 +11,7 @@
 <script>
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
-import { socket, state } from "@/socket"
+import { state, gameApi } from "@/socket"
 
 import dice_1 from "./img/dice_1.png"
 import dice_2 from "./img/dice_2.png"
@@ -74,7 +74,7 @@ export default {
         },
 
         roll() {
-            socket.emit("roll", this.randomArr())
+            gameApi("roll", this.randomArr())
         }
     }
 }

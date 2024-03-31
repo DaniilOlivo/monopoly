@@ -24,7 +24,7 @@
 <script>
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
-import { state, socket } from "@/socket"
+import { state, gameApi } from "@/socket"
 
 export default {
     name: "PanelLog",
@@ -53,7 +53,7 @@ export default {
     },
     methods: {
         sendMes() {
-            socket.emit("sendMes", this.mes)
+            gameApi("message", this.mes)
             this.mes = ""
         },
 

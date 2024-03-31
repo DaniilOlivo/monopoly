@@ -18,6 +18,10 @@ export const socket = io({
     autoConnect: false,
 })
 
+export function gameApi(command, ...args) {
+    socket.emit("game", command, ...args)
+}
+
 socket.on("registerResponse", (username, status, desc) => {
     if (status) {
         state.username = username

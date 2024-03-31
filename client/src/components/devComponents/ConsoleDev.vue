@@ -30,8 +30,7 @@ export default {
         executeCommand() {
             if (this.currentCommand == "") return
             this.logs.push(this.currentCommand)
-            const [event, arg] = this.currentCommand.split(" ")
-            socket.emit(event, arg)
+            socket.emit("game", "command", this.currentCommand)
             this.currentCommand = ""
         }
     }

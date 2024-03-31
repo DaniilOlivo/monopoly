@@ -16,7 +16,7 @@
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { state, socket } from '@/socket';
+import { state, gameApi } from '@/socket';
 
 export default {
     name: "BuyWindow",
@@ -42,11 +42,11 @@ export default {
     },
     methods: {
         buy() {
-            socket.emit("offer", true)
+            gameApi("buy", true)
         },
 
         refuse() {
-            socket.emit("offer", false)
+            gameApi("buy", false)
         }
     }
 }

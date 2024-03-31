@@ -16,7 +16,7 @@
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { socket, state } from "@/socket";
+import { state, gameApi } from "@/socket";
 
 export default {
     name: "RentWindow",
@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         clickRent() {
-            socket.emit("rent")
+            gameApi("rent")
         }
     }
 }

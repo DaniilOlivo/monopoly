@@ -14,7 +14,7 @@
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { socket, state } from "@/socket"
+import { state, gameApi } from "@/socket"
 
 export default {
     name: 'TaxWindow',
@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         clickPay() {
-            socket.emit('pay')
+            gameApi("tax")
         }
     }
 }

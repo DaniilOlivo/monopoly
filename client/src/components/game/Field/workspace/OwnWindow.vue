@@ -30,7 +30,7 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { socket, state } from "@/socket"
+import { state, gameApi } from "@/socket"
 
 export default {
     name: "OwnWindwow",
@@ -44,19 +44,19 @@ export default {
     },
     methods: {
         clickSell() {
-            socket.emit("sell", this.tile.id)
+            gameApi("sell", this.tile.id)
         },
         clickPutPledge() {
-            socket.emit("putPledge", this.tile.id)
+            gameApi("pledge", "put", this.tile.id)
         },
         clickRedeemPledge() {
-            socket.emit("redeemPledge", this.tile.id)
+            gameApi("pledge", "redeem", this.tile.id)
         },
         clickAddBuilding() {
-            socket.emit("addBuilding", this.tile.id)
+            gameApi("building", "add", this.tile.id)
         },
         clickRemoveBuilding() {
-            socket.emit("removeBuilding", this.tile.id)
+            gameApi("building", "remove", this.tile.id)
         }
     },
     computed: {
