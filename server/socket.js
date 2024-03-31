@@ -45,7 +45,7 @@ module.exports = function connect(socket, serverSockets) {
             "roll": ([dices]) => game.roll(dices, username),
             "next": game.next,
             "buy": ([resolve]) => {
-                game.buyOwn(username, {clearService: resolve})
+                game.buyOwn(username, {clearService: !resolve})
                 game.next()
             },
             "pledge": ([action, idTile]) => {
@@ -65,7 +65,7 @@ module.exports = function connect(socket, serverSockets) {
             "sell": ([idTile]) => game.sell(idTile),
             "tax": () => game.tax(username),
             "deal": ([objDeal]) => game.deal(username, objDeal),
-            "trade": ([resolve]) => game.trade(username, {clearService: resolve}),
+            "trade": ([resolve]) => game.trade(username, {clearService: !resolve}),
             "command": ([stringCommand]) => game.command(stringCommand),
         }
 
