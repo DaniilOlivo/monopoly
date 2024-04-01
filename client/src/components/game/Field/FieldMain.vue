@@ -39,8 +39,7 @@ import FieldTile from './FieldTile.vue';
 import FieldWorkspace from './FieldWorkspace.vue';
 import ConsoleDev from "@/components/devComponents/ConsoleDev.vue"
 
-import { state } from "@/socket"
-import { store } from '@/store';
+import { mapState, mapMutations } from "vuex"
 
 export default {
     name: "FieldMain",
@@ -57,13 +56,21 @@ export default {
         }
     },
     computed: {
+        ...mapState([
+            "game",
+            "username",
+            "localObjectDeal"
+        ]),
+
         tiles() {
+            const { field, players } = this.game
+
             const resultObj = {special: {}, lines: {}}
             
             const tiles = []
 
             let index = 0
-            for (const srcTile of state.game.field.tiles) {
+            for (const srcTile of field.tiles) {
 
                 // copy each tile to avoid mutation of the global state
                 const tile = Object.assign({}, srcTile)
@@ -81,7 +88,7 @@ export default {
                 
                 const listColors = []
                 for (const username of tile.players) {
-                    listColors.push(state.game.players[username].color)
+                    listColors.push(players[username].color)
                 }
                 
                 tile.index = index
@@ -102,16 +109,20 @@ export default {
 
         cardHover() {
             const index = this.cardHoverIndex
-            return (index != -1) ? state.game.field.tiles[index] : null
+            const tile = this.game.field.tiles[index]
+            return (index != -1) ? tile : null
         },
 
         selectOwn() {
             const index = this.selectOwnIndex
-            return (index != -1) ? state.game.field.tiles[index] : null
+            const tile = this.game.field.tiles[index]
+            return (index != -1) ? tile : null
         }
     },
 
     methods: {
+        ...mapMutations(["dealAddTile"]),
+
         showCard(tile) {
             if (!tile.canBuy) return
             this.cardHoverIndex = tile.index
@@ -122,14 +133,14 @@ export default {
         },
 
         clickTile(tile) {
-            const { username } = state
             this.selectOwnIndex = -1
-            if (tile.owner) {
-                const objDeal = store.state.objDeal
-                if (objDeal) {
+            const { id, owner } = tile
+            if (owner) {
+                const objDeal = this.localObjectDeal
+                if (objDeal.active) {
                     if (objDeal.initiator) return
-                    if (tile.owner === objDeal.target) store.addIdTile("host", tile.id)
-                    if (tile.owner === username) store.addIdTile("income", tile.id)
+                    if (owner === objDeal.target) this.dealAddTile({side: "host", idTile: id})
+                    if (owner === this.username) this.dealAddTile({side: "income", idTile: id})
                 } else this.selectOwnIndex = tile.index
             }
         },

@@ -16,7 +16,9 @@
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { state, gameApi } from '@/socket';
+
+import { mapState } from "vuex"
+import { gameApi } from '@/socket';
 
 export default {
     name: "BuyWindow",
@@ -29,9 +31,13 @@ export default {
         tile: Object
     },
     computed: {
+        ...mapState([
+            "game",
+            "username"
+        ]),
+
         canBuy() {
-            const {game, username} = state
-            const moneyPlayer = game.players[username].money
+            const moneyPlayer = this.game.players[this.username].money
             return moneyPlayer >= this.tile.price
         },
 

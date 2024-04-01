@@ -16,7 +16,9 @@
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { state, gameApi } from "@/socket";
+
+import { mapState } from 'vuex';
+import { gameApi } from "@/socket";
 
 export default {
     name: "RentWindow",
@@ -25,26 +27,27 @@ export default {
         ButtonMain
     },
     computed: {
+        ...mapState([
+            "username",
+            "game"
+        ]),
+
         cost() {
-            const { username, game } = state
-            return game.players[username].service.rent.cost
+            return this.game.players[this.username].service.rent.cost
         },
 
         tile() {
-            const { username, game } = state
-            return game.players[username].service.rent.tile
+            return this.game.players[this.username].service.rent.tile
         },
 
         colorOwner() {
-            const { game } = state
             const owner = this.tile.owner
-            return game.players[owner].color
+            return this.game.players[owner].color
         },
 
         disableRent() {
-            const { username, game } = state
             const cost = this.cost
-            return cost > game.players[username].money
+            return cost > this.game.players[this.username].money
         }
     },
     methods: {

@@ -50,8 +50,8 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
 
-import { store } from '@/store';
-import { state } from '@/socket';
+import { mapMutations, mapState } from "vuex"
+import { gameApi } from "@/socket"
 
 const mapDesc = {
     "create": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them",
@@ -72,6 +72,12 @@ export default {
         }
     },
     computed: {
+        ...mapState([
+            "game",
+        ]),
+        ...mapState({
+            objDeal: "localObjectDeal"
+        }),
         incomeList() {
             const listObjs = []
             const originList = this.objDeal.income
@@ -81,7 +87,7 @@ export default {
                 if (editable) {
                     listObjs.push({
                         title: this.getTitle(originList[i]),
-                        click: () => store.deleteIdTile("income", i)
+                        click: () => this.dealDeleteTile({side: "income", index: i})
                     })
                 } else {
                     listObjs.push(this.getTitle(originList[i]))
@@ -101,7 +107,7 @@ export default {
                 if (editable) {
                     listObjs.push({
                         title: this.getTitle(originList[i]),
-                        click: () => store.deleteIdTile("host", i)
+                        click: () => this.dealDeleteTile({side: "host", index: i})
                     })
                 } else {
                     listObjs.push(this.getTitle(originList[i]))
@@ -109,10 +115,6 @@ export default {
             }
 
             return listObjs
-        },
-
-        objDeal() {
-            return store.state.objDeal
         },
 
         titleWindow() {
@@ -127,8 +129,18 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            "dealDeleteTile",
+            "setMoney",
+            "setDeal"
+        ]),
+
+        ...mapMutations({
+            closeDealWindow: "closeDeal"
+        }),
+
         getTitle(idTile) {
-            const { game } = state
+            const game = this.game
             const tiles = game.field.tiles
             const tile = tiles.find((tile) => tile.id == idTile)
             if (tile) return tile.title
@@ -136,37 +148,36 @@ export default {
         },
 
         clickMoneyIncome() {
-            store.setMoney("income", this.moneyIncome)
+            this.setMoney({side: "income", amount: this.moneyIncome})
             this.moneyIncome = 0
         },
 
         clickMoneyHost() {
-            store.setMoney("host", this.moneyHost)
+            this.setMoney({side: "host", amount: this.moneyHost})
             this.moneyHost = 0
         },
 
-        closeDealWindow() {
-            store.closeDealWindow()
-        },
-
         dealSocket() {
-            store.dealSocket()
+            gameApi("deal", this.objDeal)
+            this.closeDealWindow()
         },
 
         refuse() {
-            store.refuseTradeSocket()
+            gameApi("trade", false)
+            this.closeDealWindow()
         },
 
         accept() {
-            store.acceptTradeSocket()
+            gameApi("trade", true)
+            this.closeDealWindow()
         },
 
         change() {
-            const objDeal = store.state.objDeal
-            store.refuseTradeSocket()
+            const objDeal = this.objDeal
+            this.refuse()
 
             objDeal.target = objDeal.initiator
-            objDeal.initiator = null
+            objDeal.initiator = ""
 
             const income = objDeal.income
             objDeal.income = objDeal.host
@@ -176,7 +187,7 @@ export default {
             objDeal.moneyIncome = objDeal.moneyHost
             objDeal.moneyHost = money
 
-            store.setObjDeal(objDeal)
+            this.setDeal(objDeal)
         }
     }
 }

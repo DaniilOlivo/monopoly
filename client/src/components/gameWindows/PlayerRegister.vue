@@ -15,7 +15,7 @@
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue'
 import ButtonMain from '../common/ButtonMain.vue'
-import { state, socket } from "@/socket"
+import { socket } from "@/socket"
 
 import { skipRegister } from "@/components/devComponents/skip"
 
@@ -34,7 +34,7 @@ export default {
 
     computed: {
         warning() {
-            return state.messages.PlayerRegister
+            return this.$store.state.service.register
         }
     },
 

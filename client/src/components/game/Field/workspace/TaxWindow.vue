@@ -14,7 +14,9 @@
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
-import { state, gameApi } from "@/socket"
+
+import { mapState } from 'vuex';
+import { gameApi } from "@/socket"
 
 export default {
     name: 'TaxWindow',
@@ -23,15 +25,18 @@ export default {
         ButtonMain
     },
     computed: {
+        ...mapState([
+            "username",
+            "game"
+        ]),
+
         cost() {
-            const { username, game } = state
-            const player = game.players[username]
+            const player = this.game.players[this.username]
             return player.service.pay
         },
 
         disableBtn() {
-            const { username, game } = state
-            const player = game.players[username]
+            const player = this.game.players[this.username]
             return this.cost > player.money
         }
     },

@@ -15,7 +15,7 @@ import PanelPlayersList from './PanelPlayersList.vue';
 import PanelRoller from './PanelRoller.vue';
 import PanelLog from './PanelLog.vue';
 
-import { state } from "@/socket"
+import { mapState } from "vuex"
 
 const mapStatus = {
     firstRoll: "Roll the dice to determine the order of the players",
@@ -35,11 +35,16 @@ export default {
     },
 
     computed: {
+        ...mapState([
+            "game",
+            "username"
+        ]),
+
         status() {
-            const {stage, tracker, players} = state.game
+            const {stage, tracker, players} = this.game
             let keyStatus = ""
             if (stage == "start") {
-                if (state.username in tracker.valuesDices) keyStatus = "waitPlayers"
+                if (this.username in tracker.valuesDices) keyStatus = "waitPlayers"
                 else keyStatus = "firstRoll"
             } else {
                 const service = players[tracker.current].service
@@ -67,7 +72,7 @@ export default {
         },
 
         stage() {
-            return state.game.stage
+            return this.game.stage
         }
     }
 }

@@ -17,8 +17,7 @@ import RentWindow from './workspace/RentWindow.vue';
 import DealWindow from './workspace/DealWindow.vue';
 import TaxWindow from './workspace/TaxWindow.vue';
 
-import { state } from "@/socket"
-import { store } from "@/store"
+import { mapState } from "vuex"
 
 export default {
     name: "FieldWorkspace",
@@ -32,6 +31,12 @@ export default {
     },
     props: ["cardHover", "selectOwn"],
     computed: {
+        ...mapState([
+            "username",
+            "game",
+            "localObjectDeal"
+        ]),
+
         activeWorkspace() {
             const arrTriggers = [
                 this.offerPurchase,
@@ -45,26 +50,22 @@ export default {
             return arrTriggers.some(trigger => trigger)
         },
         offerPurchase() {
-            const {username, game} = state
-            return game.players[username].service.offer
+            return this.game.players[this.username].service.offer
         },
         activeOwn() {
             if (!this.selectOwn) return null
-            const {username, game} = state
-            const own = game.players[username].own
+            const own = this.game.players[this.username].own
             if (own.indexOf(this.selectOwn.id) != -1) return this.selectOwn
             else return null
         },
         rentWait() {
-            const {username, game} = state
-            return game.players[username].service.rent
+            return this.game.players[this.username].service.rent
         },
         taxWait() {
-            const {username, game} = state
-            return game.players[username].service.pay
+            return this.game.players[this.username].service.pay
         },
         objDeal() {
-            return store.state.objDeal
+            return this.localObjectDeal.active
         }
     },
     emits: ["closeOwn"]

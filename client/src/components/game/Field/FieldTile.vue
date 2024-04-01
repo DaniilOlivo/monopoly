@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import { state } from "@/socket"
-
 import buildingImg from "./img/building.png"
 import hotelImg from "./img/hotel.png"
 
@@ -75,7 +73,7 @@ export default {
             return arrClasses
         },
         colorPlayer() {
-            const { game } = state
+            const game = this.$store.state.game
             let color = "black"
             if (this.tile.owner) {
                 color = game.players[this.tile.owner].color

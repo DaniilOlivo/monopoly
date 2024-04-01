@@ -30,7 +30,8 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { state, gameApi } from "@/socket"
+import { mapState } from 'vuex';
+import { gameApi } from "@/socket"
 
 export default {
     name: "OwnWindwow",
@@ -60,26 +61,28 @@ export default {
         }
     },
     computed: {
+        ...mapState([
+            "username",
+            "game"
+        ]),
+
         pledge() {
             return this.tile.pledge
         },
 
         disableBtns() {
-            const { game, username } = state
-            return game.tracker.current != username
+            return this.game.tracker.current != this.username
         },
 
         monopoly() {
             if (!this.tile.color) return false
-            const { game, username } = state
-            const monopoly = game.players[username].monopoly[this.tile.color]
+            const monopoly = this.game.players[this.username].monopoly[this.tile.color]
             const count = this.tile.count
             return monopoly == count
         },
 
         notEnoughMoney() {
-            const { game, username } = state
-            const money = game.players[username].money
+            const money = this.game.players[this.username].money
             return this.tile.priceBuilding > money 
         }
     },

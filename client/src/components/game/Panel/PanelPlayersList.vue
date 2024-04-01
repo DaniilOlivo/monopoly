@@ -11,8 +11,8 @@
 
 <script>
 import PlayerCard from './PlayerCard.vue';
-import { state } from "@/socket"
-import { store } from '@/store';
+
+import { mapState } from "vuex"
 
 export default {
     name: "PanelPlayerList",
@@ -20,9 +20,14 @@ export default {
         PlayerCard
     },
     computed: {
+        ...mapState([
+            "username",
+            "game"
+        ]),
+        
         listPlayers() {
-            const { tracker, players } = state.game
-            const usernameThis = state.username
+            const { tracker, players } = this.game
+            const usernameThis = this.username
             const arr = []
 
             for (const username of tracker.order) {
@@ -40,9 +45,10 @@ export default {
     },
     methods: {
         openDealWindow(target) {
-            const { username } = state
-            if (username === target) return
-            store.openDealWindow(target)
+            if (this.username === target) return
+            const currnetPlayer = this.game.tracker.current
+            if (currnetPlayer !== this.username) return
+            this.$store.commit("openDeal", target)
         }
     }
 }

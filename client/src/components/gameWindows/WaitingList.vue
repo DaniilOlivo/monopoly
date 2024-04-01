@@ -14,7 +14,9 @@
 import WindowComponent from '../common/WindowComponent.vue';
 import ButtonMain from '../common/ButtonMain.vue';
 import ListComponent from '../common/ListComponent.vue';
-import { state, socket } from "@/socket"
+
+import { socket } from "@/socket"
+import { mapState } from "vuex"
 
 import { skipStartGame } from "@/components/devComponents/skip"
 
@@ -26,19 +28,20 @@ export default {
         ListComponent,
     },
     computed: {
+        ...mapState({
+            objectPlayers: state => state.service.waiting,
+            username: "username",
+        }),
+
         list() {
-            const objPlayers = state.messages.WaitingList
-            if (!objPlayers) return []
-            return Object.keys(objPlayers)
+            if (!this.objectPlayers) return []
+            return Object.keys(this.objectPlayers)
         },
 
         activeButton() {
-            const objPlayers = state.messages.WaitingList
-
-            if (objPlayers) {
-                const username = state.username
-                const host = objPlayers[username].host
-                const lenPlayers = Object.keys(objPlayers).length
+            if (this.objectPlayers) {
+                const host = this.objectPlayers[this.username].host
+                const lenPlayers = this.list.length
                 
                 return host && lenPlayers >= 2
             }

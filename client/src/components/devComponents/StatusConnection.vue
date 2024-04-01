@@ -5,13 +5,11 @@
 </template>
 
 <script>
-import { state } from "@/socket"
-
 export default {
     name: "StatusConnection",
     computed: {
         connection() {
-            return state.connection
+            return this.$store.state.connection
         }
     }
 }

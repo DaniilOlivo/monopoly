@@ -11,7 +11,8 @@
 <script>
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
-import { state, gameApi } from "@/socket"
+import { mapState } from "vuex"
+import { gameApi } from "@/socket"
 
 import dice_1 from "./img/dice_1.png"
 import dice_2 from "./img/dice_2.png"
@@ -42,22 +43,28 @@ export default {
     },
 
     computed: {
+        ...mapState([
+            "game",
+            "previousGame",
+            "username"
+        ]),
+        
         valuesDices() {
-            const {stage, tracker, dices} = state.game
-            if (stage == "start" || state.previousVerGame.stage == "start") {
-                const currentDices = tracker.valuesDices[state.username]
+            const {stage, tracker, dices} = this.game
+            if (stage == "start" || this.previousGame.stage == "start") {
+                const currentDices = tracker.valuesDices[this.username]
                 if (currentDices) return currentDices
                 else return [1, 1]
             } else return dices
         },
 
         disable() {
-            const { username, game } = state
-            const {stage, tracker} = game
+            const { stage, tracker } = this.game
+            const username = this.username
 
             if (stage == "start") return username in tracker.valuesDices
             else {
-                const service = game.players[username].service
+                const service = this.game.players[username].service
                 if (service.offer || service.rent || service.deal) return true
                 return tracker.current != username
             } 

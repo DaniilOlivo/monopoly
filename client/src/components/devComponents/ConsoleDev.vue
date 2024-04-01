@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { socket } from "@/socket"
+import { gameApi } from "@/socket"
 
 export default {
     name: "ConsoleDev",
@@ -30,7 +30,7 @@ export default {
         executeCommand() {
             if (this.currentCommand == "") return
             this.logs.push(this.currentCommand)
-            socket.emit("game", "command", this.currentCommand)
+            gameApi("command", this.currentCommand)
             this.currentCommand = ""
         }
     }

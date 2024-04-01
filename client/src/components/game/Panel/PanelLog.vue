@@ -24,7 +24,7 @@
 <script>
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
-import { state, gameApi } from "@/socket"
+import { gameApi } from "@/socket"
 
 export default {
     name: "PanelLog",
@@ -38,8 +38,8 @@ export default {
     },
     computed: {
         listLogs() {
-
-            const {logs, players} = state.game
+            const game = this.$store.state.game
+            const {logs, players} = game
             
             let count = 0
             logs.forEach((objLog) => {
