@@ -1,7 +1,7 @@
 <template>
-    <div :class="['bg', {'bg_active': modal}]">
+    <div :class="['bg', {'bg_fullscreen': fullscreen}]">
         <div class="window">
-            <img :src="imgExitCross" v-if="exitCross" @click="$emit('clickExitCross')" class="exit-cross">
+            <img :src="imgExitCross" v-if="exitCross.active" @click="exitCross.handler" class="exit-cross">
 
             <h2 class="window__title" v-if="title">{{ title }}</h2>
             <slot></slot>
@@ -20,26 +20,30 @@ export default {
     name: "WindowComponent",
     props: {
         title: String,
-        modal: {
-            type: Boolean,
-            default: true
-        },
-        exitCross: {
+        fullscreen: {
             type: Boolean,
             default: false
-        }
+        },
+        exitCross: {
+            type: Object,
+            default() {
+                return {
+                    active: false,
+                    handler: () => {}
+                }
+            }
+        },
     },
     data() {
         return {
             imgExitCross
         }
-    },
-    emits: ["clickExitCross"]
+    }
 }
 </script>
 
 <style scoped>
-.bg_active {
+.bg_fullscreen {
     position: fixed;
     top: 0;
     left: 0;
@@ -52,6 +56,7 @@ export default {
 
     background-color: aliceblue;
 }
+
 .window {
     border-radius: 10px;
     background-color: white;

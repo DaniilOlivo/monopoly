@@ -1,12 +1,12 @@
 <template>
-    <WindowComponent :modal="false">
+    <WindowComponent title="Tax">
         <p>
             Pay tax in the amount
             <span class="tax-window__cost">{{ cost }}</span>
         </p>
 
         <template v-slot:btns>
-            <ButtonMain title="Pay" @click="clickPay" :disable="disableBtn"></ButtonMain>
+            <ButtonMain @click="clickPay" :disable="disableBtn">Pay</ButtonMain>
         </template>
     </WindowComponent>
 </template>

@@ -1,11 +1,11 @@
 <template>
-    <WindowComponent title="Lobby">
+    <WindowComponent :fullscreen="true" title="Lobby">
         <ListComponent :elements="list">
         </ListComponent>
 
         <template v-slot:btns>
-            <ButtonMain title="Leave" @click="clickLeave"></ButtonMain>
-            <ButtonMain title="Start game" @click="clickStartGame" v-show="activeButton"></ButtonMain>
+            <ButtonMain @click="clickLeave">Leave</ButtonMain>
+            <ButtonMain @click="clickStartGame" :disable="!activeButton">Start game</ButtonMain>
         </template>
     </WindowComponent>
 </template>

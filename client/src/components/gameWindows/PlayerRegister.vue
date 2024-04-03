@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent title="Come up with username">
+    <WindowComponent :fullscreen="true" title="Come up with username">
         <div class="input-line">
             <label>Username:</label>
             <input type="text" v-model="username">
@@ -7,7 +7,7 @@
         <p class="warning" v-show="warning">{{ warning }}</p>
 
         <template v-slot:btns>
-            <ButtonMain title="Join room" @click="clickRegister"></ButtonMain>
+            <ButtonMain @click="clickRegister">Join room</ButtonMain>
         </template>
     </WindowComponent>
 </template>

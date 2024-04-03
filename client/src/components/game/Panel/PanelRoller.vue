@@ -4,7 +4,7 @@
             <img :src="mapDices[valuesDices[0]]" alt="dice" class="dice">
             <img :src="mapDices[valuesDices[1]]" alt="dice" class="dice">
         </div>
-        <ButtonMain title="Roll" :disable="disable" @click="roll"></ButtonMain>
+        <ButtonMain :disable="disable" @click="roll">Roll</ButtonMain>
     </div>
 </template>
 

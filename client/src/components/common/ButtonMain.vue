@@ -1,12 +1,13 @@
 <template>
-    <button :disabled="disable">{{ title }}</button>
+    <button :disabled="disable">
+        <slot></slot>
+    </button>
 </template>
 
 <script>
 export default {
     name: "ButtonMain",
     props: {
-        title: String,
         disable: {
             type: Boolean,
             default: false

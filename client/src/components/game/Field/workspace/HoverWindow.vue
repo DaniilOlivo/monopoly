@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent :modal="false">
+    <WindowComponent>
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
             <p v-if="tile.owner">

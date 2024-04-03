@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent title="Create Room">
+    <WindowComponent :fullscreen="true" title="Create Room">
         <div class="input-line">
             <label>Title room:</label>
             <input type="text" v-model="title">
@@ -7,8 +7,8 @@
         <p class="warning" v-show="warning">{{ warning }}</p>
 
         <template v-slot:btns>
-            <ButtonMain title="Back" @click="clickBack"></ButtonMain>
-            <ButtonMain title="Create room" @click="clickCreate(title)"></ButtonMain>
+            <ButtonMain @click="clickBack">Back</ButtonMain>
+            <ButtonMain @click="clickCreate(title)">Create room</ButtonMain>
         </template>
     </WindowComponent>
 </template>

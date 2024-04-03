@@ -1,13 +1,13 @@
 <template>
-    <WindowComponent :modal="false" >
+    <WindowComponent title="Do you want to buy property?">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
             <p>Price: <span class="info__cost">{{ tile.price }} M</span></p>
             <p>{{ desc }}</p>
         </div>
         <template v-slot:btns>
-            <ButtonMain title="Refuse" @click="refuse"></ButtonMain>
-            <ButtonMain title="Buy" @click="buy" :disable="!canBuy"></ButtonMain>
+            <ButtonMain @click="refuse">Refuse</ButtonMain>
+            <ButtonMain @click="buy" :disable="!canBuy">Buy</ButtonMain>
         </template>
     </WindowComponent>
 </template>

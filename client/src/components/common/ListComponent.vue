@@ -2,7 +2,7 @@
     <ul class="list">
         <li :class="['list__el', {'list__el_clickable': clickable}]"
             v-for="el in list" 
-            :key="el.title" 
+            :key="el.id" 
             @click="el.click">
             {{ el.title }}
         </li>
@@ -13,7 +13,6 @@
 export default {
     name: "ListComponent",
     props: {
-        title: String,
         elements: {
             type: Array,
             default: function() {
@@ -27,12 +26,18 @@ export default {
     },
     computed: {
         list() {
-            if (this.clickable) return this.elements
-            else {
-                return this.elements.map(title => {
-                    return {title}
-                })
+            let list = this.elements
+            if (!this.clickable) {
+                list = list.map(title => {
+                    return {
+                        title: title,
+                        click: () => {}
+                    }
+                }) 
             }
+
+            list.forEach((el, i) => el.id = i)
+            return list
         }
     }
 }

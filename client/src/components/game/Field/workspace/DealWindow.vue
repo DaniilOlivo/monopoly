@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent :modal="false" :title="titleWindow">
+    <WindowComponent :title="titleWindow">
         <p class="deal-window-desc">{{ descWindow }}</p>
 
         <div class="deal-window-workspace">
@@ -10,9 +10,8 @@
                 <div class="deal-col__panel">
                     <input type="number" v-model.number="moneyIncome">
                     <ButtonMain
-                        title="Give money"
                         @click="clickMoneyIncome"
-                        :disable="objDeal.initiator"></ButtonMain>
+                        :disable="objDeal.initiator">Give money</ButtonMain>
                 </div>
             </div>
             
@@ -23,23 +22,22 @@
                 <div class="deal-col__panel">
                     <input type="number" v-model.number="moneyHost">
                     <ButtonMain
-                        title="Get money"
                         @click="clickMoneyHost"
-                        :disable="objDeal.initiator"></ButtonMain>
+                        :disable="objDeal.initiator">Get money</ButtonMain>
                 </div>
             </div>
         </div>
 
         <template v-slot:btns>
             <template v-if="objDeal.initiator">
-                <ButtonMain title="Refuse" @click="refuse"></ButtonMain>
-                <ButtonMain title="Change deal" @click="change"></ButtonMain>
-                <ButtonMain title="Accept" @click="accept"></ButtonMain>
+                <ButtonMain @click="refuse">Refuse</ButtonMain>
+                <ButtonMain @click="change">Change deal</ButtonMain>
+                <ButtonMain @click="accept">Accept</ButtonMain>
             </template>
 
             <template v-else>
-                <ButtonMain title="Cancel" @click="closeDealWindow"></ButtonMain>
-                <ButtonMain title="Offer Deal" @click="dealSocket"></ButtonMain>
+                <ButtonMain @click="closeDealWindow">Cancel</ButtonMain>
+                <ButtonMain @click="dealSocket">Offer deal</ButtonMain>
             </template>
         </template>
     </WindowComponent>

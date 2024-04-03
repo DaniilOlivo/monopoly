@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent :modal="false">
+    <WindowComponent title="Rent">
         <p>
             You have to pay <span class="rent-window__cost">{{ cost }} М.</span>
             player <span
@@ -8,7 +8,7 @@
         </p>
 
         <template v-slot:btns>
-            <ButtonMain title="Rent" @click="clickRent" :disable="disableRent"></ButtonMain>
+            <ButtonMain @click="clickRent" :disable="disableRent">Rent</ButtonMain>
         </template>
     </WindowComponent>
 </template>

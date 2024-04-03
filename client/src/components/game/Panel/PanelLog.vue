@@ -16,7 +16,7 @@
 
         <div class="log-input">
             <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
-            <ButtonMain title="Message" @click="sendMes"></ButtonMain>
+            <ButtonMain @click="sendMes">Message</ButtonMain>
         </div>
     </div>
 </template>
