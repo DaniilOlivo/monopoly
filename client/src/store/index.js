@@ -33,6 +33,7 @@ export default createStore({
     game: null,
     previousGame: null,
     localObjectDeal: getEmptyObjectDeal(),
+    consoleDevOpen: false,
   },
   getters: {
   },
@@ -88,6 +89,9 @@ export default createStore({
     setMoney(state, {side, amount}) {
       const keySide = "money" + side[0].toUpperCase() + side.slice(1)
       state.localObjectDeal[keySide] = amount
+    },
+    setConsole(state, isOpen) {
+      state.consoleDevOpen = isOpen
     }
   },
   actions: {

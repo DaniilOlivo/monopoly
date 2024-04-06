@@ -24,20 +24,17 @@
         </div>
 
         <div class="logo">
-            <h1 class="logo__title" @click="countClickLogo++">MONOPOLY</h1>
+            <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
             <FieldWorkspace
                 :cardHover="cardHover"
                 :selectOwn="selectOwn"></FieldWorkspace>
         </div>
-
-        <ConsoleDev v-show="countClickLogo >= 5"></ConsoleDev>
     </div>
 </template>
 
 <script>
 import FieldTile from './FieldTile.vue';
 import FieldWorkspace from './FieldWorkspace.vue';
-import ConsoleDev from "@/components/devComponents/ConsoleDev.vue"
 
 import { mapState, mapMutations } from "vuex"
 
@@ -46,7 +43,6 @@ export default {
     components: {
         FieldTile,
         FieldWorkspace,
-        ConsoleDev
     },
     data() {
         return {
@@ -59,7 +55,8 @@ export default {
         ...mapState([
             "game",
             "username",
-            "localObjectDeal"
+            "localObjectDeal",
+            "consoleDevOpen"
         ]),
 
         tiles() {
@@ -121,7 +118,7 @@ export default {
     },
 
     methods: {
-        ...mapMutations(["dealAddTile"]),
+        ...mapMutations(["dealAddTile", "setConsole"]),
 
         showCard(tile) {
             if (!tile.canBuy) return
@@ -147,6 +144,14 @@ export default {
 
         closeOwn() {
             this.selectOwnIndex = -1
+        },
+
+        clickLogo() {
+            this.countClickLogo++
+            if (this.countClickLogo >= 5 && !this.consoleDevOpen) {
+                this.countClickLogo = 0
+                this.setConsole(true)
+            } 
         }
     },
     provide() {

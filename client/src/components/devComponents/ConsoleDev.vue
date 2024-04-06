@@ -28,9 +28,11 @@ export default {
     },
     methods: {
         executeCommand() {
+            const command = this.currentCommand
             if (this.currentCommand == "") return
-            this.logs.push(this.currentCommand)
-            gameApi("command", this.currentCommand)
+            if (command == "exit") return this.$store.commit("setConsole", false)
+            this.logs.push(command)
+            gameApi("command", command)
             this.currentCommand = ""
         }
     }
