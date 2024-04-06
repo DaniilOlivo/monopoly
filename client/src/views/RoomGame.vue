@@ -1,15 +1,14 @@
 <template>
     <StatusConnection></StatusConnection>
-    <PlayerRegister v-if="stage == 'register'"></PlayerRegister>
-    <WaitingList v-if="stage == 'waiting'"></WaitingList>
-    <GameCore v-if="stage == 'game' && game"></GameCore>
+    <component :is="currentComponent"></component>
 </template>
 
 <script>
 import StatusConnection from '@/components/devComponents/StatusConnection.vue';
-import PlayerRegister from '@/components/gameWindows/PlayerRegister.vue';
-import WaitingList from '@/components/gameWindows/WaitingList.vue';
-import GameCore from "@/components/game/GameCore.vue"
+import PlayerRegister from '@/components/services/PlayerRegister.vue';
+import WaitingList from '@/components/services/WaitingList.vue';
+import GameCore from "@/components/game/GameCore.vue";
+import OopsWindow from '@/components/services/OopsWindow.vue';
 
 import { socket } from "@/socket"
 import { mapState } from "vuex"
@@ -20,16 +19,32 @@ export default {
         StatusConnection,
         PlayerRegister,
         WaitingList,
-        GameCore
+        GameCore,
+        OopsWindow
     },
 
     mounted() {
         socket.connect()
     },
 
-    computed: mapState([
-        "stage",
-        "game"
-    ])
+    computed: {
+        ...mapState([
+            "stage",
+            "game"
+        ]),
+        currentComponent() {
+            const mapStage = {
+                "register": "PlayerRegister",
+                "waiting": "WaitingList",
+                "game": "GameCore"
+            }
+
+            let currentComponent = mapStage[this.stage]
+            if (!currentComponent) return "OopsWindow"
+            if (this.stage === "game" && !this.game) return "OopsWindow"
+            
+            return currentComponent
+        }
+    }
 }
 </script>
