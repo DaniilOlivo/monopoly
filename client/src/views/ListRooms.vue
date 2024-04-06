@@ -12,9 +12,11 @@
 </template>
 
 <script>
-import WindowComponent from '../components/common/WindowComponent.vue';
-import ButtonMain from '../components/common/ButtonMain.vue';
+import WindowComponent from '@/components/common/WindowComponent.vue';
+import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
+
+import { getListRooms } from "@/api/menu"
 
 export default {
     name: "ListRooms",
@@ -31,10 +33,9 @@ export default {
     created() {
         this.updateList()
     },
-    inject: ["getListRooms"],
     methods: {
         async updateList() {
-            const list = await this.getListRooms()
+            const list = await getListRooms()
             this.list = list.map(title => {
                 return {
                     title,

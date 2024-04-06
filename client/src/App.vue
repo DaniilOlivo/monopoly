@@ -3,14 +3,8 @@
 </template>
 
 <script>
-import { createRoom, getListRooms } from "./api/menu"
-
 export default {
-  name: "App",
-  provide: {
-    createRoom,
-    getListRooms
-  }
+  name: "App"
 }
 </script>
 

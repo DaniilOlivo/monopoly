@@ -17,6 +17,8 @@
 import WindowComponent from '../components/common/WindowComponent.vue';
 import ButtonMain from '../components/common/ButtonMain.vue';
 
+import { createRoom } from "@/api/menu"
+
 export default {
     name: "CreateRoom",
     components: {
@@ -29,10 +31,9 @@ export default {
             warning: "",
         }
     },
-    inject: ["createRoom"],
     methods: {
         async clickCreate(title) {
-            const {ok, desc} = await this.createRoom(title)
+            const {ok, desc} = await createRoom(title)
             if (ok) {
                 this.$router.push({
                     name: "game",
