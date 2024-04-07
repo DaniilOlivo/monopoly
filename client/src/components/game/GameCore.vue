@@ -1,21 +1,21 @@
 <template>
     <div class="game">
         <FieldMain></FieldMain>
-        <MainPanel></MainPanel>
+        <PanelMain></PanelMain>
         <ConsoleDev v-show="showConsole"></ConsoleDev>
     </div>
 </template>
 
 <script>
 import FieldMain from "./Field/FieldMain.vue";
-import MainPanel from "./Panel/MainPanel.vue";
+import PanelMain from "./Panel/PanelMain.vue";
 import ConsoleDev from "../devComponents/ConsoleDev.vue";
 
 export default {
     name: "GameCore",
     components: {
         FieldMain,
-        MainPanel,
+        PanelMain,
         ConsoleDev
     },
     computed: {

@@ -1,17 +1,10 @@
 <template>
     <div class="log">
         <div class="list-log" ref="listLog">
-            <p 
-                class="line-log"
+            <LogLine
                 v-for="line in listLogs"
-                :key="line.id" >
-                <span 
-                    class="line-log__sender"
-                    v-if="line.sender != 'system'"
-                    :style="{color: line.color}" >{{ line.sender }}:</span>
-                <span class="line-log__mes">{{ line.mes }}</span>
-                <span class="line-log__bold" v-if="line.bold">{{ line.bold }}</span>
-            </p>
+                v-bind="line"
+                :key="line.id"></LogLine>
         </div>
 
         <div class="log-input">
@@ -22,6 +15,7 @@
 </template>
 
 <script>
+import LogLine from "./LogLine.vue"
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
 import { gameApi } from "@/socket"
@@ -29,6 +23,7 @@ import { gameApi } from "@/socket"
 export default {
     name: "PanelLog",
     components: {
+        LogLine,
         ButtonMain
     },
     data() {
@@ -44,7 +39,13 @@ export default {
             let count = 0
             logs.forEach((objLog) => {
                 objLog.id = count
-                objLog.color = players[objLog.sender].color
+                let color = "black"
+                const sender = objLog.sender
+                if (sender in players) color = players[sender].color
+                if (sender === "system") color = "darkblue"
+                if (sender === "error") color = "red"
+                objLog.color = color
+                objLog.flagError = sender === "error"
                 count++
             })
 
@@ -70,7 +71,6 @@ export default {
 </script>
 
 <style scoped>
-
 .list-log {
     box-sizing: border-box;
     display: display;
@@ -92,13 +92,5 @@ export default {
 .log-input__input {
     flex-grow: 1;
     padding: 0.5em 1.5em;
-}
-
-.line-log__sender, .line-log__bold  {
-    font-weight: bold;
-}
-
-.line-log__mes {
-    margin: 0 10px;
 }
 </style>

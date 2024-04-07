@@ -7,7 +7,6 @@
             <PanelLog></PanelLog>
         </div>
     </div>
-    
 </template>
 
 <script>
@@ -27,7 +26,7 @@ const mapStatus = {
 }
 
 export default {
-    name: "MainPanel",
+    name: "PanelMain",
     components: {
         PanelPlayersList,
         PanelRoller,
