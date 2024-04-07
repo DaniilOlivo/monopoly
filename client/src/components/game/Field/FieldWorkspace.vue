@@ -34,8 +34,9 @@ export default {
         ...mapState([
             "username",
             "game",
-            "localObjectDeal"
         ]),
+
+        ...mapState("deal", {activeDeal: state => state.localObjectDeal.active}),
 
         activeWorkspace() {
             const arrTriggers = [
@@ -65,7 +66,8 @@ export default {
             return this.game.players[this.username].service.pay
         },
         objDeal() {
-            return this.localObjectDeal.active
+            console.log(this.activeDeal)
+            return this.activeDeal
         }
     },
     emits: ["closeOwn"]

@@ -12,7 +12,7 @@
 <script>
 import PlayerCard from './PlayerCard.vue';
 
-import { mapState } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
     name: "PanelPlayerList",
@@ -44,11 +44,13 @@ export default {
         }
     },
     methods: {
+        ...mapMutations("deal", ["openDeal"]),
+
         openDealWindow(target) {
             if (this.username === target) return
             const currnetPlayer = this.game.tracker.current
             if (currnetPlayer !== this.username) return
-            this.$store.commit("openDeal", target)
+            this.openDeal(target)
         }
     }
 }

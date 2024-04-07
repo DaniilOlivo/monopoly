@@ -73,9 +73,9 @@ export default {
         ...mapState([
             "game",
         ]),
-        ...mapState({
-            objDeal: "localObjectDeal"
-        }),
+
+        ...mapState("deal", {objDeal: "localObjectDeal"}),
+
         incomeList() {
             const listObjs = []
             const originList = this.objDeal.income
@@ -127,13 +127,13 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([
+        ...mapMutations("deal", [
             "dealDeleteTile",
             "setMoney",
             "setDeal"
         ]),
 
-        ...mapMutations({
+        ...mapMutations("deal", {
             closeDealWindow: "closeDeal"
         }),
 

@@ -55,9 +55,10 @@ export default {
         ...mapState([
             "game",
             "username",
-            "localObjectDeal",
             "consoleDevOpen"
         ]),
+
+        ...mapState("deal", {objDeal: "localObjectDeal"}),
 
         tiles() {
             const { field, players } = this.game
@@ -118,7 +119,9 @@ export default {
     },
 
     methods: {
-        ...mapMutations(["dealAddTile", "setConsole"]),
+        ...mapMutations(["setConsole"]),
+
+        ...mapMutations("deal", ["dealAddTile"]),
 
         showCard(tile) {
             if (!tile.canBuy) return
@@ -133,7 +136,7 @@ export default {
             this.selectOwnIndex = -1
             const { id, owner } = tile
             if (owner) {
-                const objDeal = this.localObjectDeal
+                const objDeal = this.objDeal
                 if (objDeal.active) {
                     if (objDeal.initiator) return
                     if (owner === objDeal.target) this.dealAddTile({side: "host", idTile: id})
