@@ -32,8 +32,8 @@ class Game {
         // Otherwise errors will be added to the log
         this.testMode = false
 
-        this.chests = new Cards(getConfig("chest.json"))
-        this.chance = new Cards(getConfig("chance.json"))
+        this.chests = new Cards(getConfig("chest.json"), "chests")
+        this.chance = new Cards(getConfig("chance.json"), "chance")
     }
 
     // =================================================================

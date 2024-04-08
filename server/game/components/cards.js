@@ -3,13 +3,15 @@ const { settings } = require("../utils")
 const COUNT_CARDS = settings["countCards"]
 
 class Cards {
-    constructor(arrCardsSource) {
+    constructor(arrCardsSource, type) {
         const len = arrCardsSource.length
         this.list = []
 
         let count = 0
         for (let i = 0; i < COUNT_CARDS; i++) {
-            this.list.push(Object.assign({}, arrCardsSource[count]))
+            const objCard = Object.assign({}, arrCardsSource[count])
+            objCard.typeDeck = type
+            this.list.push(objCard)
             count++
             if (count == len) count = 0
         }
