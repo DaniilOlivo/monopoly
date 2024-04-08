@@ -11,7 +11,7 @@
                     <input type="number" v-model.number="moneyIncome">
                     <ButtonMain
                         @click="clickMoneyIncome"
-                        :disable="objDeal.initiator">Give money</ButtonMain>
+                        :disable="!!objDeal.initiator">Give money</ButtonMain>
                 </div>
             </div>
             
@@ -23,7 +23,7 @@
                     <input type="number" v-model.number="moneyHost">
                     <ButtonMain
                         @click="clickMoneyHost"
-                        :disable="objDeal.initiator">Get money</ButtonMain>
+                        :disable="!!objDeal.initiator">Get money</ButtonMain>
                 </div>
             </div>
         </div>
