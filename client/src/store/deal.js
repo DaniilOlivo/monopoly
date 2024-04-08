@@ -16,6 +16,12 @@ export default {
         localObjectDeal: getEmptyObjectDeal(),
     },
 
+    getters: {
+        activeDeal(state) {
+            return state.localObjectDeal.active
+        }
+    },
+
     mutations: {
         openDeal(state, usernameTarget) {
             state.localObjectDeal.active = true
@@ -44,6 +50,16 @@ export default {
         setMoney(state, {side, amount}) {
             const keySide = "money" + side[0].toUpperCase() + side.slice(1)
             state.localObjectDeal[keySide] = amount
+        }
+    },
+    actions: {
+        addTile({ commit, state, rootState }, { owner, id }) {
+            const { initiator, target } = state.localObjectDeal
+            if (initiator) return
+            if (owner === target) commit(
+                "dealAddTile", {side: "host", idTile: id})
+            if (owner === rootState.username) commit(
+                "dealAddTile", {side: "income", idTile: id})
         }
     }
 }

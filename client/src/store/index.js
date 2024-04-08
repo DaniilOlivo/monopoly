@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 
 import deal from "./deal"
+import workspace from "./workspace"
 
 const stages = {
   queue: [
@@ -60,6 +61,7 @@ export default createStore({
   actions: {
   },
   modules: {
-    deal
+    deal,
+    workspace
   }
 })

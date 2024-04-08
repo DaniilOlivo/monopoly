@@ -15,7 +15,7 @@
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { gameApi } from "@/socket"
 
 export default {
@@ -25,19 +25,14 @@ export default {
         ButtonMain
     },
     computed: {
-        ...mapState([
-            "username",
-            "game"
-        ]),
+        ...mapGetters(["thisPlayer"]),
 
         cost() {
-            const player = this.game.players[this.username]
-            return player.service.pay
+            return this.thisPlayer.service.tax
         },
 
         disableBtn() {
-            const player = this.game.players[this.username]
-            return this.cost > player.money
+            return this.cost > this.thisPlayer.money
         }
     },
     methods: {

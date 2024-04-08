@@ -1,10 +1,10 @@
 <template>
     <WindowComponent title="Rent">
         <p>
-            You have to pay <span class="rent-window__cost">{{ cost }} М.</span>
+            You have to pay <span class="rent-window__cost">{{ rent.cost }} М.</span>
             player <span
                 class="rent-window__owner"
-                :style="{color: colorOwner}">{{ tile.owner }}</span>
+                :style="{color: colorOwner}">{{ rent.tile.owner }}</span>
         </p>
 
         <template v-slot:btns>
@@ -17,7 +17,7 @@
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import { gameApi } from "@/socket";
 
 export default {
@@ -27,27 +27,21 @@ export default {
         ButtonMain
     },
     computed: {
-        ...mapState([
-            "username",
-            "game"
-        ]),
+        ...mapState(["game"]),
 
-        cost() {
-            return this.game.players[this.username].service.rent.cost
-        },
+        ...mapGetters(["thisPlayer"]),
 
-        tile() {
-            return this.game.players[this.username].service.rent.tile
+        rent() {
+            return this.thisPlayer.service.rent
         },
 
         colorOwner() {
-            const owner = this.tile.owner
+            const owner = this.rent.tile.owner
             return this.game.players[owner].color
         },
 
         disableRent() {
-            const cost = this.cost
-            return cost > this.game.players[this.username].money
+            return this.rent.cost > this.thisPlayer.money
         }
     },
     methods: {

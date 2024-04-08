@@ -2,12 +2,12 @@
     <WindowComponent title="Property management">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
-            <p class="info_warning" v-if="pledge">Property is mortgaged</p>
+            <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
         </div>
         <template v-slot:btns>
-            <ButtonMain @click="closeOwn">Close</ButtonMain>
+            <ButtonMain @click="unselect">Close</ButtonMain>
             <ButtonMain @click="clickSell" :disable="disableBtns || tile.building > 0">Sell</ButtonMain>
-            <ButtonMain @click="clickRedeemPledge" v-if="pledge" :disable="disableBtns">Redeem Pledge</ButtonMain>
+            <ButtonMain @click="clickRedeemPledge" v-if="tile.pledge" :disable="disableBtns">Redeem Pledge</ButtonMain>
             <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Put Pledge</ButtonMain>
             <template v-if="monopoly">
                 <ButtonMain 
@@ -28,7 +28,7 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapMutations } from 'vuex';
 import { gameApi } from "@/socket"
 
 export default {
@@ -38,10 +38,35 @@ export default {
         CardDispather,
         ButtonMain
     },
-    props: {
-        tile: Object
+
+    computed: {
+        ...mapState([
+            "username",
+            "game"
+        ]),
+
+        ...mapGetters(["thisPlayer"]),
+
+        ...mapGetters("workspace", {tile: "selectOwn"}),
+
+        disableBtns() {
+            return this.game.tracker.current != this.username
+        },
+
+        monopoly() {
+            if (!this.tile.color) return false
+            const monopoly = this.thisPlayer.monopoly[this.tile.color]
+            return monopoly == this.tile.numberTilesArea
+        },
+
+        notEnoughMoney() {
+            return this.tile.priceBuilding > this.thisPlayer.money 
+        }
     },
+
     methods: {
+        ...mapMutations("workspace", ["unselect"]),
+
         clickSell() {
             gameApi("sell", this.tile.id)
         },
@@ -57,34 +82,7 @@ export default {
         clickRemoveBuilding() {
             gameApi("building", "remove", this.tile.id)
         }
-    },
-    computed: {
-        ...mapState([
-            "username",
-            "game"
-        ]),
-
-        pledge() {
-            return this.tile.pledge
-        },
-
-        disableBtns() {
-            return this.game.tracker.current != this.username
-        },
-
-        monopoly() {
-            if (!this.tile.color) return false
-            const monopoly = this.game.players[this.username].monopoly[this.tile.color]
-            const count = this.tile.count
-            return monopoly == count
-        },
-
-        notEnoughMoney() {
-            const money = this.game.players[this.username].money
-            return this.tile.priceBuilding > money 
-        }
-    },
-    inject: ["closeOwn"]
+    }
 }
 </script>
 

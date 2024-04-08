@@ -16,7 +16,7 @@
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import CardDispather from '../cards/CardDispather.vue';
 
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 export default {
     name: "HoverWindow",
@@ -24,25 +24,21 @@ export default {
         WindowComponent,
         CardDispather
     },
-    props: {
-        tile: Object
-    },
     computed: {
-        ...mapState([
-            "username",
-            "game"
-        ]),
+        ...mapState(["game"]),
+
+        ...mapGetters(["thisPlayer"]),
+
+        ...mapGetters("workspace", {tile: "cardHover"}),
 
         colorOwner() {
-            let color = "black"
-            color = this.game.players[this.tile.owner].color
-            return color
+            return this.game.players[this.tile.owner].color ?? "black"
         },
+
         monopoly() {
             if (!this.tile.color) return false
-            const monopoly = this.game.players[this.username].monopoly[this.tile.color]
-            const count = this.tile.count
-            return monopoly == count
+            const monopoly = this.thisPlayer.monopoly[this.tile.color]
+            return monopoly == this.tile.numberTilesArea
         }
     }
 }

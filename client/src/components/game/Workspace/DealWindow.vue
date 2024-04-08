@@ -36,7 +36,7 @@
             </template>
 
             <template v-else>
-                <ButtonMain @click="closeDealWindow">Cancel</ButtonMain>
+                <ButtonMain @click="closeDeal">Cancel</ButtonMain>
                 <ButtonMain @click="dealSocket">Offer deal</ButtonMain>
             </template>
         </template>
@@ -77,42 +77,11 @@ export default {
         ...mapState("deal", {objDeal: "localObjectDeal"}),
 
         incomeList() {
-            const listObjs = []
-            const originList = this.objDeal.income
-            const editable = !this.objDeal.initiator
-
-            for (let i = 0; i < originList.length; i++) {
-                if (editable) {
-                    listObjs.push({
-                        title: this.getTitle(originList[i]),
-                        click: () => this.dealDeleteTile({side: "income", index: i})
-                    })
-                } else {
-                    listObjs.push(this.getTitle(originList[i]))
-                }
-                
-            }
-
-            return listObjs
+            return this.getList("income")
         },
 
         hostList() {
-            const listObjs = []
-            const originList = this.objDeal.host
-            const editable = !this.objDeal.initiator
-
-            for (let i = 0; i < originList.length; i++) {
-                if (editable) {
-                    listObjs.push({
-                        title: this.getTitle(originList[i]),
-                        click: () => this.dealDeleteTile({side: "host", index: i})
-                    })
-                } else {
-                    listObjs.push(this.getTitle(originList[i]))
-                }
-            }
-
-            return listObjs
+            return this.getList("host")
         },
 
         titleWindow() {
@@ -129,20 +98,34 @@ export default {
     methods: {
         ...mapMutations("deal", [
             "dealDeleteTile",
+            "closeDeal",
             "setMoney",
             "setDeal"
         ]),
 
-        ...mapMutations("deal", {
-            closeDealWindow: "closeDeal"
-        }),
-
         getTitle(idTile) {
-            const game = this.game
-            const tiles = game.field.tiles
-            const tile = tiles.find((tile) => tile.id == idTile)
+            const tile = this.game.field.tiles.find((tile) => tile.id == idTile)
             if (tile) return tile.title
             else return ""
+        },
+
+        getList(side) {
+            const listObjs = []
+            const sourceList = this.objDeal[side]
+            const editable = !this.objDeal.initiator
+
+            for (let i = 0; i < sourceList.length; i++) {
+                if (editable) {
+                    listObjs.push({
+                        title: this.getTitle(sourceList[i]),
+                        click: () => this.dealDeleteTile({side, index: i})
+                    })
+                } else {
+                    listObjs.push(this.getTitle(sourceList[i]))
+                }
+            }
+
+            return listObjs
         },
 
         clickMoneyIncome() {
@@ -157,17 +140,17 @@ export default {
 
         dealSocket() {
             gameApi("deal", this.objDeal)
-            this.closeDealWindow()
+            this.closeDeal()
         },
 
         refuse() {
             gameApi("trade", false)
-            this.closeDealWindow()
+            this.closeDeal()
         },
 
         accept() {
             gameApi("trade", true)
-            this.closeDealWindow()
+            this.closeDeal()
         },
 
         change() {

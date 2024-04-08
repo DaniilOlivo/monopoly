@@ -14,10 +14,10 @@
 
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
-import CardDispather from '../cards/CardDispather.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
+import CardDispather from '../cards/CardDispather.vue';
 
-import { mapState } from "vuex"
+import { mapGetters } from "vuex"
 import { gameApi } from '@/socket';
 
 export default {
@@ -27,18 +27,15 @@ export default {
         CardDispather,
         ButtonMain
     },
-    props: {
-        tile: Object
-    },
     computed: {
-        ...mapState([
-            "game",
-            "username"
-        ]),
+        ...mapGetters(["thisPlayer"]),
+
+        tile() {
+            return this.thisPlayer.service.offer
+        },
 
         canBuy() {
-            const moneyPlayer = this.game.players[this.username].money
-            return moneyPlayer >= this.tile.price
+            return this.thisPlayer.money >= this.tile.price
         },
 
         desc() {

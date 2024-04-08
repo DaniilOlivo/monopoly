@@ -25,40 +25,35 @@
 
         <div class="logo">
             <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
-            <FieldWorkspace
-                :cardHover="cardHover"
-                :selectOwn="selectOwn"></FieldWorkspace>
+            <WorkspaceMain></WorkspaceMain>
         </div>
     </div>
 </template>
 
 <script>
 import FieldTile from './FieldTile.vue';
-import FieldWorkspace from './FieldWorkspace.vue';
+import WorkspaceMain from '../Workspace/WorkspaceMain.vue';
 
-import { mapState, mapMutations } from "vuex"
+import { mapState, mapMutations, mapActions, mapGetters } from "vuex"
 
 export default {
     name: "FieldMain",
     components: {
         FieldTile,
-        FieldWorkspace,
+        WorkspaceMain
     },
     data() {
         return {
-            cardHoverIndex: -1,
-            selectOwnIndex: -1,
             countClickLogo: 0
         }
     },
     computed: {
         ...mapState([
             "game",
-            "username",
             "consoleDevOpen"
         ]),
 
-        ...mapState("deal", {objDeal: "localObjectDeal"}),
+        ...mapGetters("deal", ["activeDeal"]),
 
         tiles() {
             const { field, players } = this.game
@@ -103,50 +98,37 @@ export default {
             }
 
             return resultObj
-        },
-
-        cardHover() {
-            const index = this.cardHoverIndex
-            const tile = this.game.field.tiles[index]
-            return (index != -1) ? tile : null
-        },
-
-        selectOwn() {
-            const index = this.selectOwnIndex
-            const tile = this.game.field.tiles[index]
-            return (index != -1) ? tile : null
         }
     },
 
     methods: {
         ...mapMutations(["setConsole"]),
 
-        ...mapMutations("deal", ["dealAddTile"]),
+        ...mapMutations("workspace", [
+            "hover",
+            "select",
+            "unhover"
+        ]),
+
+        ...mapActions("deal", ["addTile"]),
 
         showCard(tile) {
             if (!tile.canBuy) return
-            this.cardHoverIndex = tile.index
+            this.hover(tile.index)
         },
 
         hideCard() {
-            this.cardHoverIndex = -1
+            this.unhover()
         },
 
         clickTile(tile) {
-            this.selectOwnIndex = -1
+            this.unhover()
             const { id, owner } = tile
-            if (owner) {
-                const objDeal = this.objDeal
-                if (objDeal.active) {
-                    if (objDeal.initiator) return
-                    if (owner === objDeal.target) this.dealAddTile({side: "host", idTile: id})
-                    if (owner === this.username) this.dealAddTile({side: "income", idTile: id})
-                } else this.selectOwnIndex = tile.index
-            }
-        },
 
-        closeOwn() {
-            this.selectOwnIndex = -1
+            if (owner) {
+                if (this.activeDeal) this.addTile({id, owner})
+                else this.selectOwnIndex = tile.index
+            }
         },
 
         clickLogo() {
@@ -156,9 +138,6 @@ export default {
                 this.setConsole(true)
             } 
         }
-    },
-    provide() {
-        return {closeOwn: this.closeOwn}
     }
 }
 </script>
