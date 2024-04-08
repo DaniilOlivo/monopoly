@@ -34,6 +34,8 @@ socket.on("initGame", () => {
 
 socket.on("updateGame", (game) => {
     store.commit("setGame", game)
+    const objDeal = store.getters.thisPlayer.service.deal
+    if (objDeal) store.commit("deal/setDeal", objDeal)
 })
 
 socket.on("connect", () => store.commit("setConnection", true))
