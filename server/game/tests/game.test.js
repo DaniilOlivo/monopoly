@@ -157,7 +157,7 @@ describe("Core game", () => {
                 testPlayer.money = 10
                 owner.money = 0
 
-                testPlayer.setService("rent", tile)
+                testPlayer.setService("rent", { tile, cost: 10 })
                 result = game.rent(testUsername)
             })
 

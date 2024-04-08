@@ -105,7 +105,7 @@ class Game {
 
         if (tile.canBuy) {
             if (!tile.owner) player.setService("offer", tile)
-            else if (tile.owner != usernamePlayer) player.setService("rent", tile)
+            else if (tile.owner != usernamePlayer) player.setService("rent", {tile, cost: this._getRent(tile.id)})
             else this.next()
         } else if (tile.type == "tax") {
             player.setService("tax", tile.cost)
@@ -315,24 +315,25 @@ class Game {
     }
 
     rent(username, options={}) {
-        const { noMoney, directlyTile } = options
+        let { noMoney, directlyTile } = options
 
         const player = this.players[username]
 
-        const tile = directlyTile ?? player.service.rent
+        if (directlyTile) directlyTile = {tile: directlyTile, cost: this._getRent(directlyTile.id)}
+        const { tile, cost } = directlyTile ?? player.service.rent
         if (!tile) return this.error("The player does not owe rent to anyone", username)
-        const cost = noMoney ? 0 : this._getRent(tile.id)
+        let price = noMoney ? 0 : cost
 
         if (!tile.owner) return this.error("Property has no owner", tile.id)
-        if (cost > player.money) return this.error("The player does not have enough money", username)
+        if (price > player.money) return this.error("The player does not have enough money", username)
 
         const owner = this.players[tile.owner]
 
-        player.money -= cost
-        owner.money += cost
+        player.money -= price
+        owner.money += price
         player.clearService("rent")
 
-        this.pushLog("pays rent", username, cost + " M.")
+        this.pushLog("pays rent", username, price + " M.")
 
         return true
     }
