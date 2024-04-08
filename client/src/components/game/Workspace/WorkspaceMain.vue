@@ -11,6 +11,7 @@ import OwnWindow from './OwnWindow.vue';
 import RentWindow from './RentWindow.vue';
 import DealWindow from './DealWindow.vue';
 import TaxWindow from './TaxWindow.vue';
+import CardWindow from './CardWindow.vue';
 
 import { mapGetters } from "vuex"
 
@@ -22,7 +23,8 @@ export default {
         OwnWindow,
         RentWindow,
         DealWindow,
-        TaxWindow
+        TaxWindow,
+        CardWindow
     },
     computed: {
         ...mapGetters(["thisPlayer"]),
@@ -40,6 +42,7 @@ export default {
                 ["BuyWindow", this.thisPlayer.service.offer],
                 ["RentWindow", this.thisPlayer.service.rent],
                 ["TaxWindow", this.thisPlayer.service.tax],
+                ["CardWindow", this.thisPlayer.service.card],
                 ["DealWindow", this.activeDeal],
                 ["HoverWindow", this.cardHover],
             ]
