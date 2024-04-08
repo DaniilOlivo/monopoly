@@ -63,10 +63,16 @@ module.exports = function connect(socket, serverSockets) {
                 game.next()
             },
             "sell": ([idTile]) => game.sell(idTile),
-            "tax": () => game.tax(username),
+            "tax": () => {
+                game.tax(username)
+                game.next()
+            },
             "deal": ([objDeal]) => game.deal(username, objDeal),
             "trade": ([resolve]) => game.trade(username, {clearService: !resolve}),
-            "card": () => game.effectCard(username),
+            "card": () => {
+                game.effectCard(username)
+                game.next()
+            },
             "command": ([stringCommand]) => game.command(stringCommand),
         }
 
