@@ -127,7 +127,7 @@ export default {
 
             if (owner) {
                 if (this.activeDeal) this.addTile({id, owner})
-                else this.selectOwnIndex = tile.index
+                else this.select(tile.index)
             }
         },
 
