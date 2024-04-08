@@ -39,11 +39,11 @@ export default {
         currentWindow() {
             const listWindows = [
                 ["OwnWindow", this.selectThisPlayerOwn],
+                ["DealWindow", this.activeDeal],
                 ["BuyWindow", this.thisPlayer.service.offer],
                 ["RentWindow", this.thisPlayer.service.rent],
                 ["TaxWindow", this.thisPlayer.service.tax],
                 ["CardWindow", this.thisPlayer.service.card],
-                ["DealWindow", this.activeDeal],
                 ["HoverWindow", this.cardHover],
             ]
 
