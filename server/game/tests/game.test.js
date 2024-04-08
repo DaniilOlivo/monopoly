@@ -285,6 +285,57 @@ describe("Core game", () => {
         it("cleaned service", () => assert.isNull(targetPlayer.service.deal))
     })
 
+    describe.only("cards", () => {
+        const useCard = (card) => {
+            game.effectCard(testUsername, {directlyCard: card})
+        }
+
+        it("goTo", () => { 
+            useCard({type: "goTo", location: "blue_2"})
+            assert.equal(game.field.findPlayer(testUsername).id, "blue_2")
+        })
+
+        it("release", () => {
+            useCard({type: "release"})
+            assert.equal(testPlayer.releasePrison, 1)
+        })
+
+        it("money", () => {
+            testPlayer.money = 0
+            useCard({type: "money", amount: 100})
+            assert.equal(testPlayer.money, 100)
+        })
+
+        // it("arrest", () => {
+
+        // })
+
+        it("goToBack", () => {
+            useCard({type: "goToBack", amount: 2})
+            assert.equal(game.field.findPlayer(testUsername).id, "blue_1")
+        })
+
+        it("repairBuilding", () => {
+            const fastBuy = (idTile) => {
+                const [ , tile] = getDataTile(idTile)
+                buyForce(testUsername, tile)
+            }
+
+            for (let i = 1; i <= 3; i++) fastBuy("yellow_" + i)
+            for (let i = 0; i < 5; i++) game.addBuilding("yellow_1", {noMoney: true})
+
+            testPlayer.money = 100
+            useCard({type: "repairBuilding", amount: 50, amountHotel: 100})
+            assert.equal(testPlayer.money, 0)
+        })
+
+        it("happyBirthday", () => {
+            testPlayer.money = 0
+            useCard({type: "happyBirthday", amount: 10})
+            assert.equal(testPlayer.money, 10)
+        })
+    })
+
     describe("command", () => {
         describe("testmode", () => {
             before(() => game.command("testmode false"))
@@ -314,6 +365,6 @@ describe("Core game", () => {
             before(() => game.command("pledge put red_2 true"))
             it("successful pledge", () => assert.isTrue(tile.pledge))
             it("wrong action", () => assert.throw(() => game.command("pledge lol red_2"), "Wrong action"))
-        })        
+        })
     })
 })

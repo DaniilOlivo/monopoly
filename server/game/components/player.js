@@ -8,11 +8,14 @@ class Player {
         this.color = color
         this.money = money
         this.own = []
+        this.releasePrison = 0
+
         this.service = {
             offer: null,
             rent: null,
             deal: null,
-            tax: null
+            tax: null,
+            card: null,
         }
 
         this.monopoly = {}

@@ -109,6 +109,9 @@ class Game {
             else this.next()
         } else if (tile.type == "tax") {
             player.setService("tax", tile.cost)
+        } else if (["community_chest", "chance"].includes(tile.type)) {
+            const deck = tile.type == "chance" ? this.chance : this.chests
+            player.setService("card", deck.get())
         }
         else this.next()
     }
@@ -412,6 +415,51 @@ class Game {
         if (objDeal.moneyIncome > 0) this.pushLog("receives money", username, objDeal.moneyIncome + " M.")
 
         targetPlayer.clearService("deal")
+
+        return true
+    }
+
+    effectCard(username, options={}) {
+        const { directlyCard } = options
+
+        const player = this.players[username]
+        const card = directlyCard ?? player.service.card
+        if (!card) return this.error("The player has no card", username)
+
+        const mapCards = {
+            goTo: () => {
+                const tileTarget = this.field.getById(card.location)
+                const indexTile = this.field.getIndexTile(tileTarget)
+
+                const tilePlayer = this.field.findPlayer(username)
+                const indexTilePlayer = this.field.getIndexTile(tilePlayer)
+
+                this.field.replacePlayer(username, indexTile)
+
+                if (indexTile < indexTilePlayer) player.money += 200
+            },
+            release: () => player.releasePrison += 1,
+            money: () => player.money += card.amount,
+            goToBack: () => this.field.move(username, -card.amount),
+            repairBuilding: () => {
+                let cost = 0
+                for (const idTile of player.own) {
+                    const tile = this.field.getById(idTile)
+                    if (tile.type == "standard") {
+                        if (tile.hotel) cost += card.amountHotel
+                        else cost += tile.building * card.amount
+                    }
+                }
+                player.money -= cost
+            },
+            happyBirthday: () => player.money += (Object.keys(this.players).length - 1) * card.amount
+        }
+
+        const type = card.type
+        if (!(type in mapCards)) return this.error("Not found card type", type)
+
+        mapCards[type]()
+        player.clearService("card")
 
         return true
     }
