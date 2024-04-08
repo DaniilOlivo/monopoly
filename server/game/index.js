@@ -105,7 +105,9 @@ class Game {
 
         if (tile.canBuy) {
             if (!tile.owner) player.setService("offer", tile)
-            else if (tile.owner != usernamePlayer) player.setService("rent", {tile, cost: this._getRent(tile.id)})
+            else if (tile.owner != usernamePlayer && !tile.pledge) {
+                player.setService("rent", {tile, cost: this._getRent(tile.id)})
+            }
             else this.next()
         } else if (tile.type == "tax") {
             player.setService("tax", tile.cost)
@@ -152,6 +154,11 @@ class Game {
     // Special method for special developer commands
     command(commandString) {
         const parseBool = (valString) => valString == "true"
+        const parseUsername = (username) => {
+            const elementsUsername = username.split("_")
+            if (elementsUsername.length == 1) return username
+            else return elementsUsername.join(" ")
+        }
 
         const splitString = commandString.split(" ")
         const command = splitString[0]
@@ -163,8 +170,9 @@ class Game {
         }
 
         if (command == "buy") {
-            const [username, idTile, noMoney] = args
+            const [systemUsername, idTile, noMoney] = args
 
+            const username = parseUsername(systemUsername)
             if (!this._checkUsername(username)) return this.error("Wrong username", username)
             if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
 
@@ -203,7 +211,9 @@ class Game {
         }
 
         if (command == "money") {
-            const [username, value] = args
+            const [systemUsername, value] = args
+
+            const username = parseUsername(systemUsername)
             let valuerNumber = parseInt(value)
 
             if (!this._checkUsername(username)) return this.error("Wrong username", username)
@@ -211,6 +221,19 @@ class Game {
 
             const player = this.players[username]
             player.money += valuerNumber
+        }
+
+        if (command == "move") {
+            const [systemUsername, idTile] = args
+
+            const username = parseUsername(systemUsername)
+
+            if (!this._checkUsername(username)) return this.error("Wrong username", username)
+            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
+
+            const tile = this.field.getById(idTile)
+            const index = this.field.getIndexTile(tile)
+            this.field.replacePlayer(username, index)
         }
     }
 
