@@ -102,10 +102,15 @@ class Game {
         if (newLapBool) player.money += settings["lapMoney"]
         const tile = this.field.findPlayer(usernamePlayer)
         this.pushLog("ends up on the", usernamePlayer, tile.title)
+        this._dispathTile(tile, usernamePlayer)
+    }
+
+    _dispathTile(tile, username) {
+        const player = this.players[username]
 
         if (tile.canBuy) {
             if (!tile.owner) player.setService("offer", tile)
-            else if (tile.owner != usernamePlayer && !tile.pledge) {
+            else if (tile.owner != username && !tile.pledge) {
                 player.setService("rent", {tile, cost: this._getRent(tile.id)})
             }
             else this.next()
@@ -234,6 +239,8 @@ class Game {
             const tile = this.field.getById(idTile)
             const index = this.field.getIndexTile(tile)
             this.field.replacePlayer(username, index)
+
+            this._dispathTile(tile, username)
         }
     }
 
@@ -460,10 +467,16 @@ class Game {
                 this.field.replacePlayer(username, indexTile)
 
                 if (indexTile < indexTilePlayer) player.money += 200
+
+                this._dispathTile(tileTarget, username)
             },
             release: () => player.releasePrison += 1,
             money: () => player.money += card.amount,
-            goToBack: () => this.field.move(username, -card.amount),
+            goToBack: () => {
+                this.field.move(username, -card.amount)
+                const tilePlayer = this.field.findPlayer(username)
+                this._dispathTile(tilePlayer, username)
+            },
             repairBuilding: () => {
                 let cost = 0
                 for (const idTile of player.own) {

@@ -285,7 +285,7 @@ describe("Core game", () => {
         it("cleaned service", () => assert.isNull(targetPlayer.service.deal))
     })
 
-    describe.only("cards", () => {
+    describe("cards", () => {
         const useCard = (card) => {
             game.effectCard(testUsername, {directlyCard: card})
         }
