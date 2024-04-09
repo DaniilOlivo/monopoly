@@ -9,6 +9,7 @@ class Player {
         this.money = money
         this.own = []
         this.releasePrison = 0
+        this.arrested = 0
 
         this.service = {
             offer: null,

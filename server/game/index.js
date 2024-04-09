@@ -92,19 +92,6 @@ class Game {
         return cost
     }
 
-    _rollStandard(dices) {
-        const usernamePlayer = this.tracker.current
-        this.dices = dices
-        const [val1, val2] = dices
-        const player = this.players[usernamePlayer]
-
-        const newLapBool = this.field.move(usernamePlayer, val1 + val2)
-        if (newLapBool) player.money += settings["lapMoney"]
-        const tile = this.field.findPlayer(usernamePlayer)
-        this.pushLog("ends up on the", usernamePlayer, tile.title)
-        this._dispathTile(tile, usernamePlayer)
-    }
-
     _dispathTile(tile, username) {
         const player = this.players[username]
 
@@ -119,6 +106,12 @@ class Game {
         } else if (["community_chest", "chance"].includes(tile.type)) {
             const deck = tile.type == "chance" ? this.chance : this.chests
             player.setService("card", deck.get())
+        } else if (tile.id == "cops") {
+            const tilePrison = this.field.getById("jail")
+            const index = this.field.getIndexTile(tilePrison)
+            this.field.replacePlayer(username, index)
+            player.arrested = 3
+            this.next()
         }
         else this.next()
     }
@@ -128,13 +121,33 @@ class Game {
     roll(dices, username) {
         this.pushLog("roll dices with meaning", username, dices.toString())
         if (this.stage == "start") this._setOrderPlayer(username, dices)
-        else this._rollStandard(dices)
+        else {
+            if (this.tracker.current !== username) return this.error("It's not his turn now", username)
+            this.dices = dices
+            const [val1, val2] = dices
+            const player = this.players[username]
+
+            if (val1 == val2) player.arrested = 0
+
+            if (player.arrested == 0) {
+                const newLapBool = this.field.move(username, val1 + val2)
+                if (newLapBool) player.money += settings["lapMoney"]
+                const tile = this.field.findPlayer(username)
+                this.pushLog("ends up on the", username, tile.title)
+                this._dispathTile(tile, username)
+            } else {
+                player.arrested -= 1
+                this.next()
+            }
+        }
+
         return this.stage
     }
 
     next() {
         const [val1, val2] = this.dices
-        if (val1 == val2) return false
+        const player = this.players[this.tracker.current]
+        if (val1 == val2 && player.arrested == 0) return false
         else {
             this.tracker.next()
             return true
