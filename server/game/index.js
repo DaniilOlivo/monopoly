@@ -106,13 +106,7 @@ class Game {
         } else if (["community_chest", "chance"].includes(tile.type)) {
             const deck = tile.type == "chance" ? this.chance : this.chests
             player.setService("card", deck.get())
-        } else if (tile.id == "cops") {
-            const tilePrison = this.field.getById("jail")
-            const index = this.field.getIndexTile(tilePrison)
-            this.field.replacePlayer(username, index)
-            player.arrested = 3
-            this.next()
-        }
+        } else if (tile.id == "cops") this.arrest(username)
         else this.next()
     }
 
@@ -142,6 +136,15 @@ class Game {
         }
 
         return this.stage
+    }
+
+    arrest(username) {
+        const player = this.players[username]
+        const tilePrison = this.field.getById("jail")
+        const index = this.field.getIndexTile(tilePrison)
+        this.field.replacePlayer(username, index)
+        player.arrested = 3
+        this.next()
     }
 
     next() {
@@ -501,7 +504,8 @@ class Game {
                 }
                 player.money -= cost
             },
-            happyBirthday: () => player.money += (Object.keys(this.players).length - 1) * card.amount
+            happyBirthday: () => player.money += (Object.keys(this.players).length - 1) * card.amount,
+            arrest: () => this.arrest(username)
         }
 
         const type = card.type
