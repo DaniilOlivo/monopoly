@@ -79,15 +79,20 @@ export default {
                     tiles.push(tile)
                 }
                 
-                const listColors = []
+                const playersData = []
                 for (const username of tile.players) {
-                    listColors.push(players[username].color)
+                    const {color, arrested} = players[username]
+                    playersData.push({
+                        username,
+                        color,
+                        arrested
+                    })
                 }
                 
                 tile.index = index
                 index++
                 
-                tile.players = listColors
+                tile.players = playersData
             }
 
             resultObj.lines = {

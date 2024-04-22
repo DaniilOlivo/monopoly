@@ -26,22 +26,26 @@
         </div>
 
         <div class="tile-layout">
-            <div 
-                v-for="color in tile.players"
-                class="player-chip"
-                :style="{'background-color': color}"
-                :key="color" >
-            </div>
+            <PlayerChip
+                v-for="player in tile.players"
+                :key="player.username"
+                :color="player.color"
+                :arrested="player.arrested > 0"></PlayerChip>
         </div>
     </div>
 </template>
 
 <script>
+import PlayerChip from "./PlayerChip.vue"
+
 import buildingImg from "./img/building.png"
 import hotelImg from "./img/hotel.png"
 
 export default {
     name: "FieldTile",
+    components: {
+        PlayerChip
+    },
     props: {
         type: {
             default: "rectangle",
@@ -142,12 +146,6 @@ export default {
     align-items: center;
     justify-content: center;
     gap: 20px;
-}
-
-.player-chip {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
 }
 
 .building-line {
