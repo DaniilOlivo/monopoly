@@ -2,27 +2,29 @@
     <div :class="listClasses" :style="{borderBottomColor: colorPlayer}">
         <div 
             v-if="tile.color"
-            class="tile__color-cap"
+            :class="classColorCap"
             :style="{'background-color': tile.color}" >
         </div>
 
-        <h3 
-            v-if="tile.title"
-            class="tile__title" >
-            {{ tile.title }}
-        </h3>
+        <div class="tile-content">
+            <h3 
+                v-if="tile.title"
+                class="tile-content__title" >
+                {{ tile.title }}
+            </h3>
 
-        <h4
-            v-if="tile.price"
-            class="tile__price" >
-            {{ tile.price }} M.
-        </h4>
+            <h4
+                v-if="tile.price"
+                class="tile-content__price" >
+                {{ tile.price }} M.
+            </h4>
 
-        <div class="building-line">
-            <template v-if="tile.building < 5 && tile.building > 0">
-                <img :src="buildingImg" v-for="number in tile.building" :key="number">
-            </template>
-            <img :src="hotelImg" v-if="tile.hotel">
+            <div class="building-line">
+                <template v-if="tile.building < 5 && tile.building > 0">
+                    <img :src="buildingImg" v-for="number in tile.building" :key="number">
+                </template>
+                <img :src="hotelImg" v-if="tile.hotel">
+            </div>
         </div>
 
         <div class="tile-layout">
@@ -47,15 +49,6 @@ export default {
         PlayerChip
     },
     props: {
-        type: {
-            default: "rectangle",
-            type: String,
-            validator(value) {
-                const result = ["square", "rectangle"].indexOf(value)
-                return result != -1
-            }
-        },
-
         tile: {
             type: Object,
             required: true
@@ -71,11 +64,20 @@ export default {
 
     computed: {
         listClasses() {
-            const arrClasses = ["tile", "tile_" + this.type]
+            const arrClasses = ["tile",]
+
+            if (this.tile.orientation == "horizontal") arrClasses.push("tile_horizontal")
+            if (this.tile.orientation == "vertical") arrClasses.push("tile_vertical")
+
             if (this.tile.owner) arrClasses.push("tile_owner")
             if (this.tile.pledge) arrClasses.push("tile_pledge")
             return arrClasses
         },
+
+        classColorCap() {
+            return "tile__color-cap_" + this.tile.orientation
+        },
+
         colorPlayer() {
             const game = this.$store.state.game
             let color = "black"
@@ -90,14 +92,26 @@ export default {
 
 <style>
 .tile {
-    height: 180px;
     background-color: #C3E8C6;
     border: black solid 2px;
 
     display: flex;
-    flex-direction: column;
 
     position: relative;
+}
+
+.tile_horizontal {
+    flex-direction: column;
+}
+
+.tile_vertical {
+    flex-direction: row;
+}
+
+.tile-content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .tile_pledge {
@@ -108,29 +122,28 @@ export default {
     border-bottom: 6px solid black;
 }
 
-.tile_rectangle {
-    width: 120px;
-}
-
-.tile_square {
-    width: 180px;
-}
-
-.tile__color-cap {
-    height: 30px;
+.tile__color-cap_horizontal {
+    height: 20px;
     border-bottom: 4px solid black;
 }
 
-.tile__title {
-    padding: 10px 5px;
+.tile__color-cap_vertical {
+    width: 20px;
+    height: 100%;
+    border-right: 4px solid black;
+}
+
+.tile-content__title {
+    font-size: 16px;
     text-align: center;
     flex-grow: 1;
 }
 
-.tile__price {
+.tile-content__price {
+    font-size: 14px;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
-    padding: 20px;
+    padding: 10px;
 }
 
 .tile-layout {
@@ -145,7 +158,10 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
     gap: 20px;
+
+    padding: 10px;
 }
 
 .building-line {

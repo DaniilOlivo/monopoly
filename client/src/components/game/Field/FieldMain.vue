@@ -1,27 +1,13 @@
 <template>
     <div class="field">
         <FieldTile
-            v-for="(tile, id) in tiles.special"
-            type="square"
+            v-for="tile in tiles"
             :tile="tile"
-            :key="id" 
-            :id="id" >
+            :key="tile.index"
+            @mouseenter="showCard(tile)"
+            @mouseleave="hideCard()"
+            @click="clickTile(tile)">
         </FieldTile>
-
-        <div
-            v-for="(arrTiles, classLine) of tiles.lines"
-            :class="['line', 'line_'+ classLine]"
-            :key="classLine" >
-            <FieldTile
-                v-for="tile in arrTiles"
-                :key="tile.id"
-                :tile="tile"
-                type="rectangle"
-                @mouseenter="showCard(tile)"
-                @mouseleave="hideCard()"
-                @click="clickTile(tile)" >
-            </FieldTile>
-        </div>
 
         <div class="logo">
             <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
@@ -57,10 +43,11 @@ export default {
 
         tiles() {
             const { field, players } = this.game
-
-            const resultObj = {special: {}, lines: {}}
             
-            const tiles = []
+            // A preliminary array with copies of tiles from the core game
+            // Copies are slightly modified and numbered
+            // This is necessary because in the Grid the tiles will be located differently
+            const preTiles = []
 
             let index = 0
             for (const srcTile of field.tiles) {
@@ -68,16 +55,7 @@ export default {
                 // copy each tile to avoid mutation of the global state
                 const tile = Object.assign({}, srcTile)
 
-                const {id, type} = tile
-                
-                if (type === "special") {
-                    resultObj.special[id] = tile
-                }
-                else {
-                    if (type === "tax") tile.price = tile.cost
-
-                    tiles.push(tile)
-                }
+                if (tile.type === "tax") tile.price = tile.cost
                 
                 const playersData = []
                 for (const username of tile.players) {
@@ -88,21 +66,42 @@ export default {
                         arrested
                     })
                 }
-                
+                tile.players = playersData
+
                 tile.index = index
                 index++
+
+                // Set the default tile orientation. The default is horizontal, like in the original game
+                tile.orientation = "horizontal"
                 
-                tile.players = playersData
+                preTiles.push(tile)
             }
 
-            resultObj.lines = {
-                bottom: tiles.slice(0, 9),
-                left: tiles.slice(9, 18),
-                top: tiles.slice(18, 27),
-                right: tiles.slice(27, 36)
+            // Tiles sorted from the top left corner of the field
+            const sortTiles = []
+
+            // Top row
+            for (let i = 20; i <= 30; i++) {
+                sortTiles.push(preTiles[i])
             }
 
-            return resultObj
+            // Left and right column
+            for (let i = 19; i > 10; i--) {
+                const leftTile = preTiles[i]
+                leftTile.orientation = "vertical"
+                sortTiles.push(leftTile)
+
+                const rightTile = preTiles[50 - i]
+                rightTile.orientation = "vertical"
+                sortTiles.push(rightTile)
+            }
+
+            // Bottom row
+            for (let i = 10; i >= 0; i--) {
+                sortTiles.push(preTiles[i])
+            }
+
+            return sortTiles
         }
     },
 
@@ -149,79 +148,21 @@ export default {
 
 <style>
 .field {
-    width: 1440px;
-    height: 1440px;
+    width: 75vw;
+    height: 100vh;
+
+    display: grid;
+    grid-template-columns: 3fr repeat(9, 2fr) 3fr;
+    grid-template-rows: 3fr repeat(9, 2fr) 3fr;
 
     background-color: #C3E8C6;
-
-    position: relative;
-}
-
-#start {
-    position: absolute;
-    top: 1260px;
-    left: 1260px;
-}
-
-#jail {
-    position: absolute;
-    top: 1260px;
-    left: 0;
-}
-
-#parking {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-#cops {
-    position: absolute;
-    top: 0;
-    left: 1260px;
-}
-
-.line {
-    display: flex;
-
-    position: absolute;
-}
-
-.line_bottom {
-    top: calc(1440px - 180px);
-    left: 180px;
-    flex-direction: row-reverse;
-}
-
-.line_left {
-    transform: rotate(90deg);
-    top: calc(50% - 90px);
-    left: calc(-50% + 270px);
-
-    flex-direction: row-reverse;
-}
-
-.line_top {
-    top: 0;
-    left: 180px;
-}
-
-.line_right {
-    transform: rotate(-90deg);
-    top: calc(50% - 90px);
-    left: calc(1080px - 270px);
-
-    flex-direction: row-reverse;
 }
 
 .logo {
-    position: absolute;
+    grid-row: 2 / 11;
+    grid-column: 2 / 11;
 
-    width: 1080px;
-    height: 1080px;
-
-    top: 180px;
-    left: 180px;
+    position: relative;
 
     display: flex;
     align-items: center;
@@ -237,5 +178,4 @@ export default {
 
     font-size: 80px;
 }
-
 </style>
