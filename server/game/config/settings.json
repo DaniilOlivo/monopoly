@@ -1,6 +1,52 @@
 {
     "colors": [
-        "red", "orange", "yellow", "green", "blue", "violet", "white", "black"
+        {
+            "title": "red",
+            "primary": "#A60000",
+            "secondary": "#750000"
+        },
+
+        {
+            "title": "orange",
+            "primary": "#FF5C00",
+            "secondary": "#B62C00"
+        },
+
+        {
+            "title": "yellow",
+            "primary": "#FFB800",
+            "secondary": "#C78300"
+        },
+
+        {
+            "title": "green",
+            "primary": "#038800",
+            "secondary": "#005914"
+        },
+
+        {
+            "title": "cyan",
+            "primary": "#00DCEA",
+            "secondary": "#0093D2"
+        },
+
+        {
+            "title": "blue",
+            "primary": "#0013BF",
+            "secondary": "#000959"
+        },
+
+        {
+            "title": "violet",
+            "primary": "#6B00BF",
+            "secondary": "#500057"
+        },
+
+        {
+            "title": "white",
+            "primary": "#DBDBDB",
+            "secondary": "#696969"
+        }
     ],
 
     "startMoney": 1500,

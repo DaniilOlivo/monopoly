@@ -32,7 +32,7 @@ export default {
         ...mapGetters("workspace", {tile: "cardHover"}),
 
         colorOwner() {
-            return this.game.players[this.tile.owner].color ?? "black"
+            return this.game.players[this.tile.owner].color.secondary ?? "black"
         },
 
         monopoly() {

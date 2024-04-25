@@ -41,7 +41,7 @@ export default {
                 objLog.id = count
                 let color = "black"
                 const sender = objLog.sender
-                if (sender in players) color = players[sender].color
+                if (sender in players) color = players[sender].color.secondary
                 if (sender === "system") color = "darkblue"
                 if (sender === "error") color = "red"
                 objLog.color = color

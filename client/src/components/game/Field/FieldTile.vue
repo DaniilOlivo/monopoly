@@ -31,6 +31,7 @@
             <PlayerChip
                 v-for="player in tile.players"
                 :key="player.username"
+                :username="player.username"
                 :color="player.color"
                 :arrested="player.arrested > 0"></PlayerChip>
         </div>
@@ -82,7 +83,7 @@ export default {
             const game = this.$store.state.game
             let color = "black"
             if (this.tile.owner) {
-                color = game.players[this.tile.owner].color
+                color = game.players[this.tile.owner].color.primary
             }
             return color
         }

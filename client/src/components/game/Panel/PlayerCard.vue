@@ -1,6 +1,6 @@
 <template>
     <div :class="classList">
-        <div class="player-card__marker" :style="{'background-color': color}"></div>
+        <div class="player-card__marker" :style="{'background-color': color.primary}"></div>
         <p class="player-card__username">{{ username }}</p>
         <p class="player-card__money">{{ money }} М</p>
     </div>
@@ -18,7 +18,7 @@ export default {
             type: Boolean,
             default: true
         },
-        color: String,
+        color: Object,
         username: String,
         money: Number
     },

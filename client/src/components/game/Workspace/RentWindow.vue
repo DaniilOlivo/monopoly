@@ -37,7 +37,7 @@ export default {
 
         colorOwner() {
             const owner = this.rent.tile.owner
-            return this.game.players[owner].color
+            return this.game.players[owner].color.secondary
         },
 
         disableRent() {
