@@ -1,7 +1,9 @@
 <template>
     <div class="container-game-panel">
         <div class="game-panel">
-            <p class="status-text">{{ status }}</p>
+            <p class="status-text" :style="style">
+                {{ status }}
+            </p>
             <PanelPlayersList v-show="stage == 'main'"></PanelPlayersList>
             <PanelRoller></PanelRoller>
             <PanelLog></PanelLog>
@@ -70,6 +72,15 @@ export default {
             return textStatus
         },
 
+        style() {
+            if (this.stage == "start") return {color: "black", backgroundColor: "transparent"}
+            const { players, tracker } = this.game
+            return {
+                color: "white",
+                backgroundColor: players[tracker.current].color.primary
+            }
+        },
+
         stage() {
             return this.game.stage
         }
@@ -87,7 +98,7 @@ export default {
 .game-panel {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 2em;
 
     position: sticky;
     top: 0;
@@ -96,7 +107,9 @@ export default {
 
 .status-text {
     text-align: center;
-    margin-top: 50px;
+    padding: 2em 0;
     font-size: 20px;
+    color: white;
+    font-weight: bold;
 }
 </style>
