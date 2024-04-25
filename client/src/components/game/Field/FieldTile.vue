@@ -1,12 +1,12 @@
 <template>
-    <div :class="listClasses" :style="{borderBottomColor: colorPlayer}">
+    <div :class="listClasses">
         <div 
             v-if="tile.color"
             :class="classColorCap"
             :style="{'background-color': tile.color}" >
         </div>
 
-        <div class="tile-content">
+        <div class="tile-content" :style="{backgroundColor: colorBg}">
             <h3 
                 v-if="tile.title"
                 class="tile-content__title" >
@@ -24,6 +24,11 @@
                     <img :src="buildingImg" v-for="number in tile.building" :key="number">
                 </template>
                 <img :src="hotelImg" v-if="tile.hotel">
+            </div>
+
+            <div class="tile-pledge" :style="{display: tile.pledge ? 'flex' : 'none'}">
+                Заложено
+                <span class="tile-pledge__owner" :style="{color: colorPlayer}">{{ tile.owner }}</span> 
             </div>
         </div>
 
@@ -70,8 +75,6 @@ export default {
             if (this.tile.orientation == "horizontal") arrClasses.push("tile_horizontal")
             if (this.tile.orientation == "vertical") arrClasses.push("tile_vertical")
 
-            if (this.tile.owner) arrClasses.push("tile_owner")
-            if (this.tile.pledge) arrClasses.push("tile_pledge")
             return arrClasses
         },
 
@@ -79,9 +82,14 @@ export default {
             return "tile__color-cap_" + this.tile.orientation
         },
 
+        colorBg() {
+            if (this.tile.owner && !this.tile.pledge) return this.colorPlayer + "99"
+            return null
+        },
+
         colorPlayer() {
             const game = this.$store.state.game
-            let color = "black"
+            let color = null
             if (this.tile.owner) {
                 color = game.players[this.tile.owner].color.primary
             }
@@ -113,14 +121,27 @@ export default {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
+    position: relative;
 }
 
-.tile_pledge {
-    background-color: #718772;
-}
+.tile-pledge {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000000a4;
 
-.tile_owner {
-    border-bottom: 6px solid black;
+    color: white;
+    text-transform: uppercase;
+    font-weight: 700;
+
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2em;
 }
 
 .tile__color-cap_horizontal {
