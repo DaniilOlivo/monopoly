@@ -36,7 +36,7 @@ export default {
                 const objCard = Object.assign({}, players[username])
                 objCard.select = select
                 objCard.username = username
-                objCard.pointer = username != usernameThis
+                objCard.pointer = username != usernameThis && tracker.current == usernameThis
                 arr.push(objCard)
             }
 
@@ -58,11 +58,8 @@ export default {
 
 <style scoped>
 .players-list {
-    padding: 30px 20px 40px;
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.5em;
 }
 </style>
