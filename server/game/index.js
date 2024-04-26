@@ -32,6 +32,9 @@ class Game {
         // Otherwise errors will be added to the log
         this.testMode = false
 
+        // Required for dice throwing animation
+        this.lastAction = ""
+
         this.chests = new Cards(getConfig("chest.json"), "chests")
         this.chance = new Cards(getConfig("chance.json"), "chance")
     }

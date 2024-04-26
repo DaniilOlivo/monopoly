@@ -1,8 +1,8 @@
 <template>
     <div class="roller">
         <div class="container-roller">
-            <img :src="mapDices[valuesDices[0]]" alt="dice" class="dice">
-            <img :src="mapDices[valuesDices[1]]" alt="dice" class="dice">
+            <img :src="mapDices[dices[0]]" alt="dice" class="dice">
+            <img :src="mapDices[dices[1]]" alt="dice" class="dice">
         </div>
         <ButtonMain :disable="disable" @click="roll">Roll</ButtonMain>
     </div>
@@ -38,7 +38,8 @@ export default {
 
     data() {
         return {
-            mapDices
+            mapDices,
+            dices: [1, 1],
         }
     },
 
@@ -71,6 +72,30 @@ export default {
         }
     },
 
+    watch: {
+        game(newGameState, oldGameState) {
+            if (newGameState.lastAction != "roll") return
+
+            const { stage, tracker, dices } = newGameState
+            
+            let currentDices = dices
+            if (stage == "start" || oldGameState.stage == "start") {
+                currentDices = tracker.valuesDices[this.username]
+
+                if (!currentDices || oldGameState.tracker.valuesDices[this.username]) return
+            }
+
+            const interval = setInterval(() => {
+                this.dices = this.randomArr()
+            }, 50);
+
+            setTimeout(() => {
+                clearInterval(interval)
+                this.dices = currentDices
+            }, 800);
+        }
+    },
+
     methods: {
         randomInt() {
             return Math.ceil(Math.random() * 6)
@@ -89,19 +114,30 @@ export default {
 
 <style scoped>
 .roller {
-    padding: 20px;
-    box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
+    align-self: center;
 
+    padding: 0.5em;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 0.5em;
 }
 
 .container-roller {
+    padding: 1em;
+    border: brown solid 6px;
+    box-shadow: 
+        0px 5px 10px 2px rgba(60, 60, 80, 0.6) inset,
+        5px 5px 12px -1px rgba(34, 60, 80, 0.6);
+    
+
+    background-color: rgb(99, 27, 27);
+    
+    background-size: cover;
+
     display: flex;
     justify-content: center;
-    gap: 20px;
+    gap: 1em;
 }
 
 .dice {

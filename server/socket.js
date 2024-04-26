@@ -76,7 +76,10 @@ module.exports = function connect(socket, serverSockets) {
             "command": ([stringCommand]) => game.command(stringCommand),
         }
 
-        if (command in apiGames) apiGames[command](args)
+        if (command in apiGames) {
+            game.lastAction = command
+            apiGames[command](args)
+        }
         else game.error("Invalid command", command)
         updateGame(room)
     })
