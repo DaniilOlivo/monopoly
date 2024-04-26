@@ -49,15 +49,6 @@ export default {
             "previousGame",
             "username"
         ]),
-        
-        valuesDices() {
-            const {stage, tracker, dices} = this.game
-            if (stage == "start" || this.previousGame.stage == "start") {
-                const currentDices = tracker.valuesDices[this.username]
-                if (currentDices) return currentDices
-                else return [1, 1]
-            } else return dices
-        },
 
         disable() {
             const { stage, tracker } = this.game
@@ -66,7 +57,7 @@ export default {
             if (stage == "start") return username in tracker.valuesDices
             else {
                 const service = this.game.players[username].service
-                if (service.offer || service.rent || service.deal) return true
+                if (service.offer || service.rent || service.deal || service.card) return true
                 return tracker.current != username
             } 
         }
