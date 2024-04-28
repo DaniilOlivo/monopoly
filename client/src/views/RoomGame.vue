@@ -1,10 +1,8 @@
 <template>
-    <StatusConnection></StatusConnection>
     <component :is="currentComponent"></component>
 </template>
 
 <script>
-import StatusConnection from '@/components/devComponents/StatusConnection.vue';
 import PlayerRegister from '@/components/services/PlayerRegister.vue';
 import WaitingList from '@/components/services/WaitingList.vue';
 import GameCore from "@/components/game/GameCore.vue";
@@ -16,7 +14,6 @@ import { mapState } from "vuex"
 export default {
     name: "RoomGame",
     components: {
-        StatusConnection,
         PlayerRegister,
         WaitingList,
         GameCore,
