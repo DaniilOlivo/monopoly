@@ -74,14 +74,16 @@ export default {
     width: 100%;
     height: 100%;
 
-    display: none;
     justify-content: center;
     align-items: center;
 
     transition: 200ms;
+
+    opacity: 0;
 }
 
 .workspace_active {
+    opacity: 1;
     display: flex;
     background-color: rgba(30, 30, 30, 0.5);
 }
