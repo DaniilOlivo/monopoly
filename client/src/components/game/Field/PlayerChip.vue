@@ -1,5 +1,5 @@
 <template>
-    <div class="player-chip" :style="style" :class="{'player-chip_active': active}">
+    <div class="player-chip" :style="style" :class="classes">
         <img :src="ArrestIcon" v-if="arrested">
     </div>
 </template>
@@ -15,25 +15,47 @@ export default {
     props: {
         username: String,
         color: Object,
-        arrested: Boolean
+        arrested: Boolean,
+        absolute: {
+            type: Boolean,
+            default: false
+        },
+        pos: Object
     },
 
     data() {
-        return {ArrestIcon}
+        return {
+            ArrestIcon,
+
+        }
     },
 
     computed: {
         ...mapState(["game"]),
 
+        ...mapState("field", {usernameMoved: "username"}),
+
         style() {
-            return {
+            const styleObj = {
                 backgroundColor: this.color.primary,
                 borderColor: this.color.secondary
             }
+
+            if (this.usernameMoved == this.username && !this.absolute) styleObj.display = "none"
+
+            if (this.absolute) {
+                styleObj.left = this.pos.x + "px"
+                styleObj.top = this.pos.y + "px"
+            }
+
+            return styleObj
         },
 
-        active() {
-            return this.game.tracker.current == this.username
+        classes() {
+            return {
+                "player-chip_active": this.game.tracker.current == this.username,
+                "player-chip_absolute": this.absolute
+            }
         }
     }
 }
@@ -69,5 +91,10 @@ export default {
 
 .player-chip_active {
     animation: activeChip infinite 1s;
+}
+
+.player-chip_absolute {
+    position: absolute;
+    transition: 600ms;
 }
 </style>

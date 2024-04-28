@@ -13,12 +13,23 @@
             <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
             <WorkspaceMain></WorkspaceMain>
         </div>
+
+        <!-- Chip necessary for animation of movement -->
+        <PlayerChip
+            v-if="absoluteChip"
+            username=""
+            :color="absoluteChip.color"
+            :arrested="false"
+            :absolute="true"
+            :pos="absoluteChip.pos">
+        </PlayerChip>
     </div>
 </template>
 
 <script>
 import FieldTile from './FieldTile.vue';
 import WorkspaceMain from '../Workspace/WorkspaceMain.vue';
+import PlayerChip from './PlayerChip.vue';
 
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex"
 
@@ -26,11 +37,13 @@ export default {
     name: "FieldMain",
     components: {
         FieldTile,
-        WorkspaceMain
+        WorkspaceMain,
+        PlayerChip
     },
     data() {
         return {
-            countClickLogo: 0
+            countClickLogo: 0,
+            absoluteChip: null
         }
     },
     computed: {
@@ -38,6 +51,9 @@ export default {
             "game",
             "consoleDevOpen"
         ]),
+
+        ...mapState("field", ["color", "startPos", "endPos"]),
+        ...mapGetters("field", ["readyMove"]),
 
         ...mapGetters("deal", ["activeDeal"]),
 
@@ -105,6 +121,25 @@ export default {
         }
     },
 
+    watch: {
+        readyMove(newVal) {
+            if (!newVal) return
+
+            this.absoluteChip = {
+                color: this.color,
+                pos: this.startPos
+            }
+
+            setTimeout(() => {
+                this.absoluteChip.pos = this.endPos
+                setTimeout(() => {
+                    this.absoluteChip = null
+                    this.clear()
+                }, 600)
+            }, 200)
+        }
+    },
+
     methods: {
         ...mapMutations(["setConsole"]),
 
@@ -113,6 +148,8 @@ export default {
             "select",
             "unhover"
         ]),
+
+        ...mapMutations("field", ["clear"]),
 
         ...mapActions("deal", ["addTile"]),
 
@@ -156,6 +193,8 @@ export default {
     grid-template-rows: 3fr repeat(9, 2fr) 3fr;
 
     background-color: #C3E8C6;
+
+    position: relative;
 }
 
 .logo {

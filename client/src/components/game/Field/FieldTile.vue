@@ -1,5 +1,5 @@
 <template>
-    <div :class="listClasses">
+    <div :class="listClasses" ref="tile">
         <div 
             v-if="tile.color"
             :class="classColorCap"
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex"
+
 import PlayerChip from "./PlayerChip.vue"
 
 import buildingImg from "./img/building.png"
@@ -94,6 +96,45 @@ export default {
                 color = game.players[this.tile.owner].color.primary
             }
             return color
+        }
+    },
+
+    watch: {
+        tile(newTile, oldTile) {
+            const newArrPlayers = newTile.players
+            const oldArrPlayers = oldTile.players
+
+            const lenNew = newArrPlayers.length
+            const lenOld = oldArrPlayers.length
+
+            const diff = (largerArr, smallerArr) => {
+                const newArr = largerArr.filter(el1 => !smallerArr.some(el2 => el1.username === el2.username))
+                return newArr[0]
+            } 
+
+            if (lenNew > lenOld) {
+                const diffPlayer = diff(newArrPlayers, oldArrPlayers)
+                this.setEndPos(this.getPosTile())
+                this.setPlayer(diffPlayer)
+            }
+            else if (lenOld > lenNew) {
+                const diffPlayer = diff(oldArrPlayers, newArrPlayers)
+                this.setStartPos(this.getPosTile())
+                this.setPlayer(diffPlayer)
+            }
+        }
+    },
+
+    methods: {
+        ...mapMutations("field", ["setStartPos", "setEndPos", "setPlayer"]),
+
+        getPosTile() {
+            const rect = this.$refs.tile.getBoundingClientRect()
+            // We get the center of the tile, where 15 is half the chip so that it is also centered
+            return {
+                x: rect.x + (rect.width / 2 - 15),
+                y: rect.y + (rect.height / 2 - 15)
+            }
         }
     }
 }

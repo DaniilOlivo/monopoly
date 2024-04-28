@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 import deal from "./deal"
 import workspace from "./workspace"
+import field from './field'
 
 const stages = {
   queue: [
@@ -62,6 +63,7 @@ export default createStore({
   },
   modules: {
     deal,
-    workspace
+    workspace,
+    field
   }
 })
