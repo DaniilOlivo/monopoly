@@ -1,7 +1,7 @@
 <template>
     <div class="game">
         <FieldMain>
-            <LoggerMain></LoggerMain>
+            <PlayerTableMain></PlayerTableMain>
             <WorkspaceMain></WorkspaceMain>
         </FieldMain>
         <PanelMain></PanelMain>
@@ -13,7 +13,7 @@
 import FieldMain from "./Field/FieldMain.vue";
 import PanelMain from "./Panel/PanelMain.vue";
 import WorkspaceMain from "./Workspace/WorkspaceMain.vue";
-import LoggerMain from "./Logger/LoggerMain.vue";
+import PlayerTableMain from "./PlayerTable/PlayerTableMain.vue"
 import ConsoleDev from "../devComponents/ConsoleDev.vue";
 
 export default {
@@ -22,7 +22,7 @@ export default {
         FieldMain,
         PanelMain,
         WorkspaceMain,
-        LoggerMain,
+        PlayerTableMain,
         ConsoleDev
     },
     computed: {

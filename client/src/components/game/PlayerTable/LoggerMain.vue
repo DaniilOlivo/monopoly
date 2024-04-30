@@ -1,18 +1,14 @@
 <template>
-    <div class="log">
-        <div class="log-container">
-            <div class="list-log" ref="listLog">
-                <LogLine
-                    v-for="line in listLogs"
-                    v-bind="line"
-                    :key="line.id"></LogLine>
-            </div>
+    <div class="list-log" ref="listLog">
+        <LogLine
+            v-for="line in listLogs"
+            v-bind="line"
+            :key="line.id"></LogLine>
+    </div>
 
-            <div class="log-input">
-                <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
-                <ButtonMain @click="sendMes">Message</ButtonMain>
-            </div>
-        </div>
+    <div class="log-input">
+        <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
+        <ButtonMain @click="sendMes">Message</ButtonMain>
     </div>
 </template>
 
@@ -73,28 +69,10 @@ export default {
 </script>
 
 <style scoped>
-.log {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    z-index: 20;
-}
-
-.log-container {
-    display: flex;
-    flex-direction: column;
-    width: 70%;
-    height: 70%;
-}
-
 .list-log {
+    grid-row: 1;
+    grid-column: 1;
+
     display: flex;
     flex-direction: column;
     gap: 0.5em;
@@ -123,6 +101,9 @@ export default {
 }
 
 .log-input {
+    grid-row: 2;
+    grid-column: 1;
+
     display: flex;
     gap: 10px;
     padding: 10px 20px;

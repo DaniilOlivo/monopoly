@@ -29,6 +29,10 @@ export default createStore({
   getters: {
     thisPlayer(state) {
       return state.game.players[state.username]
+    },
+
+    thisPlayerTurn(state) {
+      return state.username == state.game.tracker.current
     }
   },
   mutations: {
