@@ -78,6 +78,7 @@ export default {
     gap: 0.5em;
     background-color: rgba(50, 50, 50, 0.95);
     overflow-y: scroll;
+    overflow-x: hidden;
     padding: 15px;
     flex-grow: 1;
     border-radius: 15px 0 0 15px;
