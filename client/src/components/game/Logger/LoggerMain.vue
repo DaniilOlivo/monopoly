@@ -1,27 +1,29 @@
 <template>
     <div class="log">
-        <div class="list-log" ref="listLog">
-            <LogLine
-                v-for="line in listLogs"
-                v-bind="line"
-                :key="line.id"></LogLine>
-        </div>
+        <div class="log-container">
+            <div class="list-log" ref="listLog">
+                <LogLine
+                    v-for="line in listLogs"
+                    v-bind="line"
+                    :key="line.id"></LogLine>
+            </div>
 
-        <div class="log-input">
-            <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
-            <ButtonMain @click="sendMes">Message</ButtonMain>
+            <div class="log-input">
+                <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
+                <ButtonMain @click="sendMes">Message</ButtonMain>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import LogLine from "./LogLine.vue"
+import LogLine from "./LineLogger.vue"
 import ButtonMain from "@/components/common/ButtonMain.vue"
 
 import { gameApi } from "@/socket"
 
 export default {
-    name: "PanelLog",
+    name: "LoggerMain",
     components: {
         LogLine,
         ButtonMain
@@ -39,9 +41,9 @@ export default {
             let count = 0
             logs.forEach((objLog) => {
                 objLog.id = count
-                let color = "black"
+                let color = "white"
                 const sender = objLog.sender
-                if (sender in players) color = players[sender].color.secondary
+                if (sender in players) color = players[sender].color.primary
                 if (sender === "system") color = "darkblue"
                 if (sender === "error") color = "red"
                 objLog.color = color
@@ -71,16 +73,53 @@ export default {
 </script>
 
 <style scoped>
-.list-log {
-    box-sizing: border-box;
-    display: display;
+.log {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 20;
+}
+
+.log-container {
+    display: flex;
     flex-direction: column;
-    height: 25vh;
-    box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.6) inset;
-    gap: 1em;
-    background-color: whitesmoke;
+    width: 70%;
+    height: 70%;
+}
+
+.list-log {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    background-color: rgba(50, 50, 50, 0.95);
     overflow-y: scroll;
     padding: 15px;
+    flex-grow: 1;
+    border-radius: 15px 0 0 15px;
+}
+
+.list-log::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #434343;
+}
+
+.list-log::-webkit-scrollbar
+{
+  width: 8px;
+  background-color: #434343;
+}
+
+.list-log::-webkit-scrollbar-thumb
+{
+  background-color: rgb(114, 32, 32);
 }
 
 .log-input {

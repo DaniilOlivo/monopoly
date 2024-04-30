@@ -11,7 +11,7 @@
 
         <div class="logo">
             <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
-            <WorkspaceMain></WorkspaceMain>
+            <slot></slot>
         </div>
 
         <!-- Chip necessary for animation of movement -->
@@ -28,7 +28,6 @@
 
 <script>
 import FieldTile from './FieldTile.vue';
-import WorkspaceMain from '../Workspace/WorkspaceMain.vue';
 import PlayerChip from './PlayerChip.vue';
 
 import { mapState, mapMutations, mapActions, mapGetters } from "vuex"
@@ -37,7 +36,6 @@ export default {
     name: "FieldMain",
     components: {
         FieldTile,
-        WorkspaceMain,
         PlayerChip
     },
     data() {

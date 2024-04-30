@@ -66,7 +66,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .workspace {
     position: absolute;
     top: 0;
@@ -77,14 +77,17 @@ export default {
     justify-content: center;
     align-items: center;
 
-    transition: 200ms;
+    display: flex;
 
+    transition: 300ms;
+
+    z-index: 10;
     opacity: 0;
 }
 
 .workspace_active {
+    z-index: 30;
     opacity: 1;
-    display: flex;
     background-color: rgba(30, 30, 30, 0.5);
 }
 </style>

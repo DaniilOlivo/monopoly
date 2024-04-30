@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: "LogLine",
+    name: "LineLogger",
     props: {
         sender: {
             type: String,
@@ -28,7 +28,7 @@ export default {
     computed: {
         style() {
             return {
-                color: this.flagError ? "red" : "black"
+                color: this.flagError ? "darkred" : "white"
             }
         }
     }

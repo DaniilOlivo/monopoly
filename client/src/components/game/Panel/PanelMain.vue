@@ -6,7 +6,6 @@
             </p>
             <PanelPlayersList v-show="stage == 'main'"></PanelPlayersList>
             <PanelRoller></PanelRoller>
-            <PanelLog></PanelLog>
         </div>
     </div>
 </template>
@@ -14,7 +13,6 @@
 <script>
 import PanelPlayersList from './PanelPlayersList.vue';
 import PanelRoller from './PanelRoller.vue';
-import PanelLog from './PanelLog.vue';
 
 import { mapState } from "vuex"
 
@@ -32,7 +30,6 @@ export default {
     components: {
         PanelPlayersList,
         PanelRoller,
-        PanelLog
     },
 
     computed: {
