@@ -517,6 +517,8 @@ class Game {
         mapCards[type]()
         player.clearService("card")
 
+        if (!["goToBack", "goTo"].includes(type)) this.next()
+
         return true
     }
 }
