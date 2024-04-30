@@ -6,24 +6,20 @@
             <div class="deal-col">
                 <h3>{{ objDeal.initiator ?? "You" }} give:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="incomeList"></ListComponent>
-                <p>Money: {{ objDeal.moneyIncome }}</p>
+                
                 <div class="deal-col__panel">
+                    <label>Give money:</label>
                     <input type="number" v-model.number="moneyIncome">
-                    <ButtonMain
-                        @click="clickMoneyIncome"
-                        :disable="!!objDeal.initiator">Give money</ButtonMain>
                 </div>
             </div>
             
             <div class="deal-col">
                 <h3>{{ (objDeal.initiator) ? "You" : objDeal.target }} give:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="hostList"></ListComponent>
-                <p>Money: {{ objDeal.moneyHost }}</p>
+                
                 <div class="deal-col__panel">
+                    <label>Get money:</label>
                     <input type="number" v-model.number="moneyHost">
-                    <ButtonMain
-                        @click="clickMoneyHost"
-                        :disable="!!objDeal.initiator">Get money</ButtonMain>
                 </div>
             </div>
         </div>
@@ -63,18 +59,32 @@ export default {
         ButtonMain,
         ListComponent
     },
-    data() {
-        return {
-            moneyIncome: 0,
-            moneyHost: 0
-        }
-    },
     computed: {
         ...mapState([
             "game",
         ]),
 
         ...mapState("deal", {objDeal: "localObjectDeal"}),
+
+        moneyIncome: {
+            get() {
+                return this.objDeal.moneyIncome
+            },
+
+            set(value) {
+                this.setMoney({side: "income", amount: value})
+            }
+        },
+
+        moneyHost: {
+            get() {
+                return this.objDeal.moneyHost
+            },
+
+            set(value) {
+                this.setMoney({side: "host", amount: value})
+            }
+        },
 
         incomeList() {
             return this.getList("income")
@@ -126,16 +136,6 @@ export default {
             }
 
             return listObjs
-        },
-
-        clickMoneyIncome() {
-            this.setMoney({side: "income", amount: this.moneyIncome})
-            this.moneyIncome = 0
-        },
-
-        clickMoneyHost() {
-            this.setMoney({side: "host", amount: this.moneyHost})
-            this.moneyHost = 0
         },
 
         dealSocket() {
