@@ -44,7 +44,7 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
 
-import { mapMutations, mapState } from "vuex"
+import { mapMutations, mapState, mapGetters } from "vuex"
 import { gameApi } from "@/socket"
 
 const mapDesc = {
@@ -66,13 +66,19 @@ export default {
 
         ...mapState("deal", {objDeal: "localObjectDeal"}),
 
+        ...mapGetters(["thisPlayer"]),
+
         moneyIncome: {
             get() {
                 return this.objDeal.moneyIncome
             },
 
             set(value) {
-                this.setMoney({side: "income", amount: value})
+                const moneyThisPlayer = this.thisPlayer.money
+                this.setMoney({
+                    side: "income",
+                    amount: moneyThisPlayer < value ? moneyThisPlayer : value
+                })
             }
         },
 
@@ -82,7 +88,11 @@ export default {
             },
 
             set(value) {
-                this.setMoney({side: "host", amount: value})
+                const moneyPlayerTarget = this.game.players[this.objDeal.target].money
+                this.setMoney({
+                    side: "host",
+                    amount: moneyPlayerTarget < value ? moneyPlayerTarget : value
+                })
             }
         },
 
