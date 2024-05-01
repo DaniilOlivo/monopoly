@@ -4,6 +4,7 @@ class Player {
     constructor(username, color, money) {
         const { tiles } = getConfig("tiles.json")
 
+        this.disable = false
         this.username = username
         this.color = color
         this.money = money

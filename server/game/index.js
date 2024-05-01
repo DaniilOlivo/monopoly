@@ -95,22 +95,64 @@ class Game {
         return cost
     }
 
+    _getRepairBuilding(player, card) {
+        let cost = 0
+        for (const idTile of player.own) {
+            const tile = this.field.getById(idTile)
+            if (tile.type == "standard") {
+                if (tile.hotel) cost += card.amountHotel
+                else cost += tile.building * card.amount
+            }
+        }
+
+        return cost
+    }
+
+    _getCapital(username) {
+        const player = this.players[username]
+        let capital = player.money
+
+        for (const tileId of player.own) {
+            const tile = this.field.getById(tileId)
+            capital += tile.pledge ? tile.price / 2 : tile.price
+            if (tile.building) {
+                capital += tile.building * (tile.priceBuilding / 2)
+            }
+        }
+
+        return capital
+    }
+
     _dispathTile(tile, username) {
         const player = this.players[username]
-
+        let mustPay = 0
+        
         if (tile.canBuy) {
             if (!tile.owner) player.setService("offer", tile)
             else if (tile.owner != username && !tile.pledge) {
-                player.setService("rent", {tile, cost: this._getRent(tile.id)})
+                const cost = this._getRent(tile.id)
+                player.setService("rent", {tile, cost})
+                mustPay += cost
             }
             else this.next()
         } else if (tile.type == "tax") {
             player.setService("tax", tile.cost)
+            mustPay += tile.cost
         } else if (["community_chest", "chance"].includes(tile.type)) {
             const deck = tile.type == "chance" ? this.chance : this.chests
-            player.setService("card", deck.get())
+            const card = deck.get()
+            player.setService("card", card)
+            if ("repairBuilding" == card.type) {
+                mustPay += this._getRepairBuilding(player, card)
+            }
+            if ("money" == card.type && card.amount < 0) {
+                mustPay += -card.amount
+            }
+
         } else if (tile.id == "cops") this.arrest(username)
         else this.next()
+
+        return mustPay
     }
 
     // =================================================================
@@ -131,7 +173,11 @@ class Game {
                 if (newLapBool) player.money += settings["lapMoney"]
                 const tile = this.field.findPlayer(username)
                 this.pushLog("ends up on the", username, tile.title)
-                this._dispathTile(tile, username)
+                
+                const mustPay = this._dispathTile(tile, username)
+                const capital = this._getCapital(username)
+
+                if (capital < mustPay) this.disablePlayer(username)
             } else {
                 player.arrested -= 1
                 this.next()
@@ -139,6 +185,26 @@ class Game {
         }
 
         return this.stage
+    }
+
+    disablePlayer(username) {
+        const player = this.players[username]
+        for (let i = player.own.length - 1; i >= 0; i--) {
+            player.removeOwn(this.field.getById(player.own[i]))
+        }
+        player.disable = true
+        this.checkWin()
+        this.next()
+    }
+
+    checkWin() {
+        const players = Object.values(this.players)
+        const activePlayers = players.filter(p =>!p.disable)
+        if (activePlayers.length == 1) {
+            const winner = activePlayers[0]
+            // this.stage = "end"
+            this.pushLog("win!", winner.username)
+        }
     }
 
     arrest(username) {
@@ -497,14 +563,7 @@ class Game {
                 this._dispathTile(tilePlayer, username)
             },
             repairBuilding: () => {
-                let cost = 0
-                for (const idTile of player.own) {
-                    const tile = this.field.getById(idTile)
-                    if (tile.type == "standard") {
-                        if (tile.hotel) cost += card.amountHotel
-                        else cost += tile.building * card.amount
-                    }
-                }
+                let cost = this._getRepairBuilding(player, card)
                 player.money -= cost
             },
             happyBirthday: () => player.money += (Object.keys(this.players).length - 1) * card.amount,
