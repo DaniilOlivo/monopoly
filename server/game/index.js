@@ -10,6 +10,7 @@ const COLORS = settings["colors"]
 class Game {
     constructor(usernames) {
         this.stage = "start"
+        this.winner = null
         this.players = {}
 
         this.tracker = new Tracker(usernames.length)
@@ -192,6 +193,7 @@ class Game {
         for (let i = player.own.length - 1; i >= 0; i--) {
             player.removeOwn(this.field.getById(player.own[i]))
         }
+        player.resetServices()
         player.disable = true
         this.checkWin()
         this.next()
@@ -201,9 +203,8 @@ class Game {
         const players = Object.values(this.players)
         const activePlayers = players.filter(p =>!p.disable)
         if (activePlayers.length == 1) {
-            const winner = activePlayers[0]
-            // this.stage = "end"
-            this.pushLog("win!", winner.username)
+            this.winner = activePlayers[0]
+            this.stage = "end"
         }
     }
 
@@ -216,14 +217,21 @@ class Game {
         this.next()
     }
 
-    next() {
-        const [val1, val2] = this.dices
-        const player = this.players[this.tracker.current]
-        if (val1 == val2 && player.arrested == 0) return false
-        else {
-            this.tracker.next()
-            return true
+    next(options={}) {
+        const { force } = options
+
+        if (!force) {
+            const [val1, val2] = this.dices
+            const player = this.players[this.tracker.current]
+
+            if (val1 == val2 && player.arrested == 0) return false
         }
+
+        const nextUsername = this.tracker.next()
+        if (this.players[nextUsername].disable) {
+            this.next({force: true})
+        }
+        return true
     }
 
     pushLog(mes, sender="system", bold=null) {
@@ -268,6 +276,23 @@ class Game {
 
             const tile = this.field.getById(idTile)
             this.buyOwn(username, {noMoney: parseBool(noMoney), directlyTile: tile})
+        }
+
+        if (command == "buyAll") {
+            const [ systemUsername ] = args
+            const username = parseUsername(systemUsername)
+            for (const tile of this.field.tiles) {
+                if (tile.owner || !tile.canBuy) continue
+                this.buyOwn(username, {noMoney: true, directlyTile: tile})
+            }
+
+            for (const tile of this.field.tiles) {
+                if (tile.color) {
+                    for (let i = 0; i <= 5; i++) {
+                        this.addBuilding(tile.id, {noMoney: true})
+                    }
+                }
+            }
         }
 
         if (command == "pledge") {

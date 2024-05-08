@@ -7,6 +7,7 @@ import PlayerRegister from '@/components/services/PlayerRegister.vue';
 import WaitingList from '@/components/services/WaitingList.vue';
 import GameCore from "@/components/game/GameCore.vue";
 import OopsWindow from '@/components/services/OopsWindow.vue';
+import EndWindow from '@/components/services/EndWindow.vue'
 
 import { socket } from "@/socket"
 import { mapState } from "vuex"
@@ -17,7 +18,8 @@ export default {
         PlayerRegister,
         WaitingList,
         GameCore,
-        OopsWindow
+        OopsWindow,
+        EndWindow
     },
 
     mounted() {
@@ -39,6 +41,7 @@ export default {
             let currentComponent = mapStage[this.stage]
             if (!currentComponent) return "OopsWindow"
             if (this.stage === "game" && !this.game) return "OopsWindow"
+            if (this.game && this.game.stage === "end") return "EndWindow"
             
             return currentComponent
         }

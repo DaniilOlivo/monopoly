@@ -26,14 +26,16 @@ export default {
         },
         color: Object,
         username: String,
-        money: Number
+        money: Number,
+        disable: Boolean
     },
     computed: {
         classList() {
             return [
                 'player-card',
                 {
-                    'player-card_pointer': this.pointer
+                    'player-card_pointer': this.pointer,
+                    'player-card_disable': this.disable
                 }
             ]
         }
@@ -88,6 +90,10 @@ export default {
 
 .player-card_pointer {
     cursor: pointer;
+}
+
+.player-card_disable {
+    background-color: rgba(30, 30, 30, 0.4);
 }
 
 .player-card__marker {
