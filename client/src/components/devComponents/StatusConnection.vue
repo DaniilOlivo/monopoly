@@ -19,10 +19,12 @@ export default {
     .connection {
         background-color: white;
         box-shadow: 0px 5px 10px 2px rgba(34, 60, 80, 0.2);
-        padding: 20px 30px;
+        padding: 10px 15px;
         border-radius: 10px;
         position: fixed;
         z-index: 20;
+        bottom: 5px;
+        right: 5px;
     }
 
     .con_on {

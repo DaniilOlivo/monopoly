@@ -6,6 +6,7 @@
         </FieldMain>
         <PanelMain></PanelMain>
         <ConsoleDev v-show="showConsole"></ConsoleDev>
+        <StatusConnection></StatusConnection>
     </div>
 </template>
 
@@ -15,6 +16,7 @@ import PanelMain from "./Panel/PanelMain.vue";
 import WorkspaceMain from "./Workspace/WorkspaceMain.vue";
 import PlayerTableMain from "./PlayerTable/PlayerTableMain.vue"
 import ConsoleDev from "../devComponents/ConsoleDev.vue";
+import StatusConnection from "../devComponents/StatusConnection.vue";
 
 export default {
     name: "GameCore",
@@ -23,7 +25,8 @@ export default {
         PanelMain,
         WorkspaceMain,
         PlayerTableMain,
-        ConsoleDev
+        ConsoleDev,
+        StatusConnection
     },
     computed: {
         showConsole() {
