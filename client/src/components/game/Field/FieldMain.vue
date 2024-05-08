@@ -10,7 +10,7 @@
         </FieldTile>
 
         <div class="logo">
-            <h1 class="logo__title" @click="clickLogo">MONOPOLY</h1>
+            <h1 class="logo__title">MONOPOLY</h1>
             <slot></slot>
         </div>
 
@@ -40,15 +40,11 @@ export default {
     },
     data() {
         return {
-            countClickLogo: 0,
             absoluteChip: null
         }
     },
     computed: {
-        ...mapState([
-            "game",
-            "consoleDevOpen"
-        ]),
+        ...mapState(["game"]),
 
         ...mapState("field", ["color", "startPos", "endPos"]),
         ...mapGetters("field", ["readyMove"]),
@@ -139,8 +135,6 @@ export default {
     },
 
     methods: {
-        ...mapMutations(["setConsole"]),
-
         ...mapMutations("workspace", [
             "hover",
             "select",
@@ -168,14 +162,6 @@ export default {
                 if (this.activeDeal) this.addTile({id, owner})
                 else this.select(tile.index)
             }
-        },
-
-        clickLogo() {
-            this.countClickLogo++
-            if (this.countClickLogo >= 5 && !this.consoleDevOpen) {
-                this.countClickLogo = 0
-                this.setConsole(true)
-            } 
         }
     }
 }

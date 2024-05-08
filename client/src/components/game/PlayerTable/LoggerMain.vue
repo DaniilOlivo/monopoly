@@ -8,7 +8,7 @@
 
     <div class="log-input">
         <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
-        <ButtonMain @click="sendMes">Message</ButtonMain>
+        <ButtonMain @click="sendMes" :disable="!mes">Message</ButtonMain>
     </div>
 </template>
 
@@ -52,7 +52,8 @@ export default {
     },
     methods: {
         sendMes() {
-            gameApi("message", this.mes)
+            if (this.mes == "console_active") this.$store.commit("setConsole", true)
+            else gameApi("message", this.mes)
             this.mes = ""
         },
 
