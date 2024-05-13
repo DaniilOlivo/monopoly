@@ -29,10 +29,6 @@ class Game {
 
         this.logs = []
 
-        // If test mode is running, logical errors in the game core will cause exceptions
-        // Otherwise errors will be added to the log
-        this.testMode = false
-
         // Required for dice throwing animation
         this.lastAction = ""
 
@@ -40,36 +36,7 @@ class Game {
         this.chance = new Cards(getConfig("chance.json"), "chance")
     }
 
-    // =================================================================
-    // System methods    
-    _checkUsername(username) {
-        const listPlayers = Object.values(this.players).map(p => p.username)
-        return listPlayers.includes(username)
-    }
-
-    _checkIdTile(idTile) {
-        const tiles = this.field.tiles
-        return tiles.map(tile => tile.id).includes(idTile)
-    }
-
-    _checkValidObjDeal(obj) {
-        const { initiator, target, income, host, moneyIncome, moneyHost } = obj
-        return (
-            income &&
-            host &&
-            moneyIncome >= 0 &&
-            moneyHost >= 0 &&
-            this._checkUsername(initiator) &&
-            this._checkUsername(target) 
-        )
-    }
-
-    _setOrderPlayer(username, dices) {
-        const result = this.tracker.setOrder(username, dices)
-        if (result) this.stage = "main"
-    }
-
-    _getRent(idTile) {
+    getRent(idTile) {
         const tile = this.field.getById(idTile)
 
         const playerOwner = this.players[tile.owner]
@@ -96,7 +63,7 @@ class Game {
         return cost
     }
 
-    _getRepairBuilding(player, card) {
+    getRepairBuilding(player, card) {
         let cost = 0
         for (const idTile of player.own) {
             const tile = this.field.getById(idTile)
@@ -109,7 +76,7 @@ class Game {
         return cost
     }
 
-    _getCapital(username) {
+    getCapital(username) {
         const player = this.players[username]
         let capital = player.money
 
@@ -124,14 +91,14 @@ class Game {
         return capital
     }
 
-    _dispathTile(tile, username) {
+    dispathTile(tile, username) {
         const player = this.players[username]
         let mustPay = 0
         
         if (tile.canBuy) {
             if (!tile.owner) player.setService("offer", tile)
             else if (tile.owner != username && !tile.pledge) {
-                const cost = this._getRent(tile.id)
+                const cost = this.getRent(tile.id)
                 player.setService("rent", {tile, cost})
                 mustPay += cost
             }
@@ -144,7 +111,7 @@ class Game {
             const card = deck.get()
             player.setService("card", card)
             if ("repairBuilding" == card.type) {
-                mustPay += this._getRepairBuilding(player, card)
+                mustPay += this.getRepairBuilding(player, card)
             }
             if ("money" == card.type && card.amount < 0) {
                 mustPay += -card.amount
@@ -156,38 +123,6 @@ class Game {
         return mustPay
     }
 
-    // =================================================================
-    // Main methods
-    roll(dices, username) {
-        this.pushLog("roll dices with meaning", username, dices.toString())
-        if (this.stage == "start") this._setOrderPlayer(username, dices)
-        else {
-            if (this.tracker.current !== username) return this.error("It's not his turn now", username)
-            this.dices = dices
-            const [val1, val2] = dices
-            const player = this.players[username]
-
-            if (val1 == val2) player.arrested = 0
-
-            if (player.arrested == 0) {
-                const newLapBool = this.field.move(username, val1 + val2)
-                if (newLapBool) player.money += settings["lapMoney"]
-                const tile = this.field.findPlayer(username)
-                this.pushLog("ends up on the", username, tile.title)
-                
-                const mustPay = this._dispathTile(tile, username)
-                const capital = this._getCapital(username)
-
-                if (capital < mustPay) this.disablePlayer(username)
-            } else {
-                player.arrested -= 1
-                this.next()
-            }
-        }
-
-        return this.stage
-    }
-
     disablePlayer(username) {
         const player = this.players[username]
         for (let i = player.own.length - 1; i >= 0; i--) {
@@ -196,7 +131,6 @@ class Game {
         player.resetServices()
         player.disable = true
         this.checkWin()
-        this.next()
     }
 
     checkWin() {
@@ -209,11 +143,8 @@ class Game {
     }
 
     arrest(username) {
-        const player = this.players[username]
-        const tilePrison = this.field.getById("jail")
-        const index = this.field.getIndexTile(tilePrison)
-        this.field.replacePlayer(username, index)
-        player.arrested = 3
+        this.field.moveById(username, "jail")
+        this.players[username].arrested = 3
         this.next()
     }
 
@@ -228,9 +159,7 @@ class Game {
         }
 
         const nextUsername = this.tracker.next()
-        if (this.players[nextUsername].disable) {
-            this.next({force: true})
-        }
+        if (this.players[nextUsername].disable) this.next({force: true})
         return true
     }
 
@@ -240,370 +169,6 @@ class Game {
 
     pushError(mes, bold=null) {
         this.pushLog(mes, "error", bold)
-    }
-
-    error(mes, detail=null) {
-        let textError = mes
-        if (detail) textError = mes + ": " + detail
-        if (this.testMode) throw new Error(textError)
-        else this.pushError(mes, detail)
-    }
-
-    // Special method for special developer commands
-    command(commandString) {
-        const parseBool = (valString) => valString == "true"
-        const parseUsername = (username) => {
-            const elementsUsername = username.split("_")
-            if (elementsUsername.length == 1) return username
-            else return elementsUsername.join(" ")
-        }
-
-        const splitString = commandString.split(" ")
-        const command = splitString[0]
-        const args = splitString.slice(1)
-
-        if (command == "testmode") {
-            const [val] = args
-            this.testMode = parseBool(val)
-        }
-
-        if (command == "buy") {
-            const [systemUsername, idTile, noMoney] = args
-
-            const username = parseUsername(systemUsername)
-            if (!this._checkUsername(username)) return this.error("Wrong username", username)
-            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
-
-            const tile = this.field.getById(idTile)
-            this.buyOwn(username, {noMoney: parseBool(noMoney), directlyTile: tile})
-        }
-
-        if (command == "buyAll") {
-            const [ systemUsername ] = args
-            const username = parseUsername(systemUsername)
-            for (const tile of this.field.tiles) {
-                if (tile.owner || !tile.canBuy) continue
-                this.buyOwn(username, {noMoney: true, directlyTile: tile})
-            }
-
-            for (const tile of this.field.tiles) {
-                if (tile.color) {
-                    for (let i = 0; i <= 5; i++) {
-                        this.addBuilding(tile.id, {noMoney: true})
-                    }
-                }
-            }
-        }
-
-        if (command == "pledge") {
-            const [action, idTile, noMoney] = args
-
-            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
-
-            const options = { noMoney: parseBool(noMoney) }
-            if (action == "put") this.putPledge(idTile, options)
-            else if (action == "redeem") this.redeemPledge(idTile, options)
-            else return this.error("Wrong action", action)
-        }
-
-        if (command == "build") {
-            const [action, idTile, noMoney] = args
-
-            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
-
-            const options = { noMoney: parseBool(noMoney) }
-            if (action == "add") this.addBuilding(idTile, options)
-            else if (action == "remove") this.removeBuilding(idTile, options)
-            else return this.error("Wrong action", action)
-        }
-
-        if (command == "sell") {
-            const [idTile, noMoney] = args
-
-            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
-
-            this.sell(idTile, { noMoney: parseBool(noMoney) })
-        }
-
-        if (command == "money") {
-            const [systemUsername, value] = args
-
-            const username = parseUsername(systemUsername)
-            let valuerNumber = parseInt(value)
-
-            if (!this._checkUsername(username)) return this.error("Wrong username", username)
-            if (Number.isNaN(valuerNumber)) return this.error("Value must be an integer", value)
-
-            const player = this.players[username]
-            player.money += valuerNumber
-        }
-
-        if (command == "move") {
-            const [systemUsername, idTile] = args
-
-            const username = parseUsername(systemUsername)
-
-            if (!this._checkUsername(username)) return this.error("Wrong username", username)
-            if (!this._checkIdTile(idTile)) return this.error("Wrong id tile", idTile)
-
-            const tile = this.field.getById(idTile)
-            const index = this.field.getIndexTile(tile)
-            this.field.replacePlayer(username, index)
-
-            this._dispathTile(tile, username)
-        }
-    }
-
-    // =================================================================
-    // Services methods
-    ping(username) {
-        this.pushLog("ping", username)
-        return true
-    }
-
-    buyOwn(username, options={}) {
-        const { noMoney, directlyTile, clearService } = options
-
-        const player = this.players[username]
-        if (clearService) {
-            player.clearService("offer")
-            return true
-        }
-        let tile = player.service.offer
-        if (directlyTile) tile = directlyTile 
-        let price = tile.price
-        if (noMoney) price = 0
-
-        if (!tile) return this.error("There is no offer for this tile", tile.id)
-        if (!tile.canBuy) return this.error("This tile cannot be bought", tile.id)
-        if (price > player.money) return this.error("The player does not have enough money", username)
-        if (tile.owner) return this.error("Already has an owner", tile.owner)
-
-        player.money -= price
-        player.addOwn(tile)
-        player.clearService("offer")
-        this.pushLog("buys", username, tile.title)
-        return true
-    }
-
-    putPledge(idTile, options={}) {
-        const { noMoney } = options
-
-        const tile = this.field.getById(idTile)
-        const owner = tile.owner
-
-        if (!owner) return this.error("Property has no owner", idTile)
-        if (tile.pledge) return this.error("The property is already mortgaged", idTile)
-
-        tile.pledge = true
-        this.players[owner].money += noMoney ? 0 : tile.price / 2
-        return true
-    }
-
-    redeemPledge(idTile, options={}) {
-        const { noMoney } = options
-
-        const tile = this.field.getById(idTile)
-        const cost = noMoney ? 0 : tile.price / 2
-        const owner = tile.owner
-        
-        if (!owner) return this.error("Property has no owner", idTile)
-        if (!tile.pledge) return this.error("The property is not mortgaged", idTile)
-
-        const player = this.players[owner]
-        if (player.money < cost) return this.error("The player does not have enough money", username)
-
-        player.money -= cost
-        tile.pledge = false
-
-        return true
-    }
-
-    addBuilding(idTile, options = {}) {
-        const { noMoney } = options
-
-        const tile = this.field.getById(idTile)
-        const color = tile.color
-        const owner = tile.owner
-
-        if (!owner) return this.error("Property has no owner", idTile)
-        if (!color) return this.error("You can't build buildings", idTile)
-
-        const player = this.players[owner]
-        if (player.monopoly[color] != tile.numberTilesArea) {
-            return this.error("There is no monopoly on this area", idTile)
-        }
-        
-        const cost = noMoney ? 0 : tile.priceBuilding
-        if (cost > player.money) return this.error("The player does not have enough money", username)
-
-        player.money -= cost
-        tile.addBuilding()
-        return true
-    }
-
-    removeBuilding(idTile, options = {}) {
-        const { noMoney } = options
-
-        const tile = this.field.getById(idTile)
-        const owner = tile.owner
-
-        if (!owner) return this.error("Property has no owner", idTile)
-
-        const player = this.players[owner]
-        
-        player.money += noMoney ? 0 : tile.priceBuilding / 2
-        tile.removeBuilding()
-        return true
-    }
-
-    rent(username, options={}) {
-        let { noMoney, directlyTile } = options
-
-        const player = this.players[username]
-
-        if (directlyTile) directlyTile = {tile: directlyTile, cost: this._getRent(directlyTile.id)}
-        const { tile, cost } = directlyTile ?? player.service.rent
-        if (!tile) return this.error("The player does not owe rent to anyone", username)
-        let price = noMoney ? 0 : cost
-
-        if (!tile.owner) return this.error("Property has no owner", tile.id)
-        if (price > player.money) return this.error("The player does not have enough money", username)
-
-        const owner = this.players[tile.owner]
-
-        player.money -= price
-        owner.money += price
-        player.clearService("rent")
-
-        this.pushLog("pays rent", username, price + " M.")
-
-        return true
-    }
-
-    sell(idTile, options={}) {
-        const { noMoney } = options
-        const tile = this.field.getById(idTile)
-        if (!tile.owner) return this.error("Property has no owner", tile.id)
-        let money = (tile.pledge) ? tile.price / 2 : tile.price
-        if (noMoney) money = 0
-        const player = this.players[tile.owner]
-        player.money += money
-        player.removeOwn(tile)
-        if (tile.pledge) tile.pledge = false
-        return true
-    }
-
-    tax(username, options={}) {
-        const { directlyTax } = options
-        const player = this.players[username]
-        const cost = directlyTax ?? player.service.tax
-
-        if (!cost) return this.error("The player has no tax", username)
-        if (cost > player.money) return this.error("The player does not have enough money", username)
-        
-        player.money -= cost
-        player.clearService("tax")
-        this.pushLog("pays", username, cost + " M.")
-        return true
-    }
-
-    deal(username, objDeal) {
-        objDeal.initiator = username
-        const target = objDeal.target
-        if (!this._checkValidObjDeal(objDeal)) return this.error("Invalid object deal", JSON.stringify(objDeal))
-        this.players[target].setService("deal", objDeal)
-        return true
-    }
-
-    trade(username, options={}) {
-        const { clearService } = options
-
-        const targetPlayer = this.players[username]
-
-        if (clearService) {
-            targetPlayer.clearService("deal")
-            return true
-        }
-
-        const objDeal = this.players[username].service.deal
-        if (!this._checkValidObjDeal(objDeal)) return this.error("Invalid object deal", JSON.stringify(objDeal))
-        const initiatorPlayer = this.players[objDeal.initiator]
-
-        this.pushLog("made a deal", objDeal.initiator, username)
-
-        const swapMoney = (fromPlayer, toPlayer, value) => {
-            fromPlayer.money -= value
-            toPlayer.money += value
-        }
-
-        for (const idTile of objDeal.income) {
-            const tile = this.field.getById(idTile)
-            initiatorPlayer.transfer(tile, targetPlayer)
-            this.pushLog("receives property", username, tile.title)
-        }
-        swapMoney(initiatorPlayer, targetPlayer, objDeal.moneyIncome)
-
-        for (const idTile of objDeal.host) {
-            const tile = this.field.getById(idTile)
-            targetPlayer.transfer(tile, initiatorPlayer)
-            this.pushLog("receives property", objDeal.initiator, tile.title)
-        }
-        swapMoney(targetPlayer, initiatorPlayer, objDeal.moneyHost)
-
-        if (objDeal.moneyHost > 0) this.pushLog("receives money", objDeal.initiator, objDeal.moneyHost + " M.")
-        if (objDeal.moneyIncome > 0) this.pushLog("receives money", username, objDeal.moneyIncome + " M.")
-
-        targetPlayer.clearService("deal")
-
-        return true
-    }
-
-    effectCard(username, options={}) {
-        const { directlyCard } = options
-
-        const player = this.players[username]
-        const card = directlyCard ?? player.service.card
-        if (!card) return this.error("The player has no card", username)
-
-        const mapCards = {
-            goTo: () => {
-                const tileTarget = this.field.getById(card.location)
-                const indexTile = this.field.getIndexTile(tileTarget)
-
-                const tilePlayer = this.field.findPlayer(username)
-                const indexTilePlayer = this.field.getIndexTile(tilePlayer)
-
-                this.field.replacePlayer(username, indexTile)
-
-                if (indexTile < indexTilePlayer) player.money += 200
-
-                this._dispathTile(tileTarget, username)
-            },
-            release: () => player.releasePrison += 1,
-            money: () => player.money += card.amount,
-            goToBack: () => {
-                this.field.move(username, -card.amount)
-                const tilePlayer = this.field.findPlayer(username)
-                this._dispathTile(tilePlayer, username)
-            },
-            repairBuilding: () => {
-                let cost = this._getRepairBuilding(player, card)
-                player.money -= cost
-            },
-            happyBirthday: () => player.money += (Object.keys(this.players).length - 1) * card.amount,
-            arrest: () => this.arrest(username)
-        }
-
-        const type = card.type
-        if (!(type in mapCards)) return this.error("Not found card type", type)
-
-        mapCards[type]()
-        player.clearService("card")
-
-        if (!["goToBack", "goTo"].includes(type)) this.next()
-
-        return true
     }
 }
 
