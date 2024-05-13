@@ -7,6 +7,13 @@ describe("Component Field", () => {
     const usernameTest = "Scorpion"
     let field = new Field(listPlayers)
 
+    const resetField = () => field = new Field(listPlayers)
+
+    const getIndexTile = () => {
+        const tile = field.findPlayer(usernameTest)
+        return field.getIndexTile(tile)
+    }
+
     describe("Create field", () => {
         it("generated id standard tiles", () => {
             const redTiles = field.tiles.filter((tile) => tile.color == "red")
@@ -62,14 +69,7 @@ describe("Component Field", () => {
     })
 
     describe("move", () => {
-        const getIndexTile = () => {
-            const tile = field.findPlayer(usernameTest)
-            return field.getIndexTile(tile)
-        }
-
-        afterEach(() => {
-            field = new Field(listPlayers)
-        })
+        afterEach(resetField)
 
         it("fail move", () => {
             assert.throw(() => field.move(usernameTest, -10), "Invalid index -10")
@@ -86,6 +86,23 @@ describe("Component Field", () => {
             const newLapBool = field.move(usernameTest, 22)
             assert.equal(getIndexTile(), 2)
             assert.isTrue(newLapBool) 
+        })
+    })
+
+    describe("move by id", () => {
+        afterEach(resetField)
+
+        it("move by id", () => {
+            const newLapBool = field.moveById(usernameTest, "green_1")
+            assert.equal(getIndexTile(), 31)
+            assert.isFalse(newLapBool)
+        })
+
+        it("move by new lap", () => {
+            field.move(usernameTest, 20)
+            const newLapBool = field.moveById(usernameTest, "brown_1")
+            assert.equal(getIndexTile(), 1)
+            assert.isTrue(newLapBool)
         })
     })
 })

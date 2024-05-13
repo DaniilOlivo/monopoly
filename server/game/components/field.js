@@ -85,6 +85,18 @@ class Field {
 
         return newLapBool
     }
+
+    moveById(username, idTile) {
+        const targetTile = this.getById(idTile)
+        const indexTargetTile = this.getIndexTile(targetTile)
+
+        const tilePlayer = this.findPlayer(username)
+        const indexTilePlayer = this.getIndexTile(tilePlayer)
+        
+        this.replacePlayer(username, indexTargetTile)
+
+        return indexTargetTile < indexTilePlayer
+    }
 }
 
 module.exports = Field
