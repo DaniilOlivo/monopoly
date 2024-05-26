@@ -213,7 +213,6 @@ describe("Socket", () => {
             })
 
             it("Money added", () => {
-                console.log(game.logs)
                 const money = game.players["Jade"].money
                 assert.equal(money, 2500)
             })

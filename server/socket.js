@@ -4,8 +4,6 @@ const Controller = require("./game/contoller")
 const mapSockets = {}
 
 module.exports = function connect(socket, serverSockets) {
-    console.log("Connect socket")
-
     const updateGame = (room) => {
         serverSockets.to(room.title).emit("updateGame", room.game)
     }
@@ -44,20 +42,17 @@ module.exports = function connect(socket, serverSockets) {
     })
 
     socket.on('disconnecting', () => {
-        if (mapSockets[socket.id]) {
-            const {username, room} = mapSockets[socket.id]
-            const titleRoom = room.title
+        if (!(socket.id in mapSockets)) return
 
-            room.removePlayerByName(username)
-            socket.to(titleRoom).emit("dataRoom", room.players)
-            socket.leave(titleRoom)
-            console.log(`Disconnect ${username} player`)
+        const {username, room} = mapSockets[socket.id]
+        const titleRoom = room.title
 
-            if (0 == room.getCountPlayers()) {
-                roomManager.deleteRoom(titleRoom)
-            }
-        } else {
-            console.log("Disconnect anonymous socket")
+        room.removePlayerByName(username)
+        socket.to(titleRoom).emit("dataRoom", room.players)
+        socket.leave(titleRoom)
+
+        if (0 == room.getCountPlayers()) {
+            roomManager.deleteRoom(titleRoom)
         }
     })
 }
