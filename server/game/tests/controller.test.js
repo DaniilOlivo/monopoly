@@ -1,53 +1,42 @@
 const { assert } = require('chai')
 
-const Core = require("../index")
-const Control = require("../control")
+const Core = require("../core")
+const Contoller = require("../contoller")
 
 const arrPlayers = ["Scorpion", "Sub Zero"]
 
-function createControl(core, username) {
-    const control = new Control(core, username)
-    control.testMode = true
-    return control
-}
-
 describe("Start game", () => {
     let core = new Core(arrPlayers)
-    let controlScorpion = createControl(core, "Scorpion")
-    let controlSubZero = createControl(core, "Sub Zero")
-
+    let controller = new Contoller(core)
+    controller.catchErrors = false
 
     before(() => {
-        controlScorpion.use("roll", {dices: [2, 2]})
-        controlSubZero.use("roll", {dices: [3, 4]})
+        controller.execute("Scorpion", "roll", {dices: [2, 2]})
+        controller.execute("Sub Zero", "roll", {dices: [3, 4]})
     })
 
     it("players order", () => assert.deepEqual(core.tracker.order, ["Sub Zero", "Scorpion"]))
     it("change stage", () => assert.equal(core.stage, "main"))
 })
 
-describe("Control methods", () => {
+describe("Executor methods", () => {
     let core = new Core(arrPlayers)
-
-    let controlScorpion = createControl(core, "Scorpion")
-    let controlSubZero = createControl(core, "Sub Zero")
+    let controller = new Contoller(core)
+    controller.catchErrors = false
 
     // Reset the core state for convenient testing
     // Scorpion always goes first because he is cooler
     const resetCore = () => {
         core = new Core(arrPlayers)
-        controlScorpion.core = core
-        controlSubZero.core = core
-
-        controlScorpion.use("roll", {dices: [4, 2]})
-        controlSubZero.use("roll", {dices: [1, 1]})
+        controller.core = core
+        controller.execute("Scorpion", "roll", {dices: [4, 2]})
+        controller.execute("Sub Zero", "roll", {dices: [1, 1]})
     }
 
     const getTile = (idTile) => {
         return core.field.getById(idTile)
     }
-
-    const simpleBuy = (control, tile) => control.use("buy", {free: true, tile})
+    const simpleBuy = (username, tile) => controller.execute(username, "buy", {free: true, tile})
 
     describe("roll", () => {
         before(resetCore)
@@ -55,7 +44,7 @@ describe("Control methods", () => {
         // 10 index = jail
         // 19 index = orange_3        
         describe("main", () => {
-            before(() => controlScorpion.use("roll", {dices: [6, 4]}))
+            before(() => controller.execute("Scorpion", "roll", {dices: [6, 4]}))
 
             it("position changed", () => assert.equal(core.field.findPlayer("Scorpion").id, "jail"))
             it("tracker next", () => assert.equal(core.tracker.current, "Sub Zero"))
@@ -64,16 +53,16 @@ describe("Control methods", () => {
         describe("special cases", () => {
             it("although the wrong player", () => {
                 assert.throw(
-                    () => controlScorpion.use("roll", {dices: [6, 4]}),
+                    () => controller.execute("Scorpion", "roll", {dices: [6, 4]}),
                     "It's not his turn now"
                 )
             })
             it("roll with double", () => {
-                controlSubZero.use("roll", {dices: [5, 5]})
+                controller.execute("Sub Zero", "roll", {dices: [5, 5]})
                 assert.equal(core.tracker.current, "Sub Zero")
             })
             it("move to work tile (service)", () => {
-                controlSubZero.use("roll", {dices: [6, 3]})
+                controller.execute("Sub Zero", "roll", {dices: [6, 3]})
                 assert.equal(core.field.findPlayer("Sub Zero").id, "orange_3")
             })
         })
@@ -87,7 +76,7 @@ describe("Control methods", () => {
             tile = getTile("brown_1")
             player = core.players["Scorpion"]
             player.setService("offer", tile)
-            controlScorpion.use("buy")
+            controller.execute("Scorpion", "buy")
         })
 
         it("money paid", () => assert.equal(player.money, 1500 - tile.price))
@@ -104,18 +93,18 @@ describe("Control methods", () => {
             resetCore()
             tile = getTile("cyan_1")
             player = core.players["Scorpion"]
-            simpleBuy(controlScorpion, tile)
+            simpleBuy("Scorpion", tile)
         })
 
         describe("put", () => {
-            before(() => controlScorpion.use("pledge", {type: "put", idTile: "cyan_1"}))
+            before(() => controller.execute("Scorpion", "pledge", {type: "put", idTile: "cyan_1"}))
 
             it("money received", () => assert.equal(player.money, 1500  + tile.price / 2))
             it("tile has a flag", () => assert.isTrue(tile.pledge))
         })
 
         describe("redeem", () => {
-            before(() => controlScorpion.use("pledge", {type: "redeem", idTile: "cyan_1"}))
+            before(() => controller.execute("Scorpion", "pledge", {type: "redeem", idTile: "cyan_1"}))
 
             it("money paid", () => assert.equal(player.money, 1500))
             it("tile has no flag", () => assert.isFalse(tile.pledge))
@@ -130,13 +119,13 @@ describe("Control methods", () => {
             tile1 = getTile("blue_1")
             tile2 = getTile("blue_2")
             player = core.players["Scorpion"]
-            simpleBuy(controlScorpion, tile1)
-            simpleBuy(controlScorpion, tile2)
+            simpleBuy("Scorpion", tile1)
+            simpleBuy("Scorpion", tile2)
         })
 
         describe("add", () => {
             describe("one building", () => {
-                before(() => controlScorpion.use("build", {type: "add", idTile: "blue_1"}))
+                before(() => controller.execute("Scorpion", "build", {type: "add", idTile: "blue_1"}))
 
                 it("building is added", () => assert.equal(tile1.building, 1))
                 it("money paid", () => assert.equal(player.money, 1500 - tile1.priceBuilding))
@@ -145,7 +134,7 @@ describe("Control methods", () => {
             describe("hotel", () => {
                 before(() => {
                     for (let i = 0; i < 4; i++)
-                        controlScorpion.use("build", {type: "add", idTile: "blue_1"})
+                        controller.execute("Scorpion", "build", {type: "add", idTile: "blue_1"})
                 })
 
                 it("number of buildings", () => assert.equal(tile1.building, 5))
@@ -156,7 +145,7 @@ describe("Control methods", () => {
         describe("remove", () => {
             before(() => {
                 player.money = 1500
-                controlScorpion.use("build", {type: "remove", idTile: "blue_1"})
+                controller.execute("Scorpion", "build", {type: "remove", idTile: "blue_1"})
             })
 
             it("money received", () => assert.equal(player.money, 1500 + tile1.priceBuilding / 2))
@@ -174,9 +163,9 @@ describe("Control methods", () => {
             tile = getTile("cyan_1")
             player = core.players["Scorpion"]
             owner = core.players["Sub Zero"]
-            simpleBuy(controlSubZero, tile)
-            controlScorpion.use("roll", {dices: [5, 1]})
-            controlScorpion.use("rent")
+            simpleBuy("Sub Zero", tile)
+            controller.execute("Scorpion", "roll", {dices: [5, 1]})
+            controller.execute("Scorpion", "rent")
         })
 
         it("player paid", () => assert.equal(player.money, 1500 - tile.rent_basic))
@@ -191,8 +180,8 @@ describe("Control methods", () => {
             resetCore()
             tile = getTile("brown_1")
             player = core.players["Scorpion"]
-            simpleBuy(controlScorpion, tile)
-            controlScorpion.use("sell", {idTile: "brown_1"})
+            simpleBuy("Scorpion", tile)
+            controller.execute("Scorpion", "sell", {idTile: "brown_1"})
         })
 
         it("property has no owner", () => assert.isNull(tile.owner))
@@ -207,7 +196,7 @@ describe("Control methods", () => {
         before(() => {
             resetCore()
             player = core.players["Scorpion"]
-            controlScorpion.use("tax", {value: 100})
+            controller.execute("Scorpion", "tax", {value: 100})
         })
 
         it("money paid", () => assert.equal(player.money, 1400))
@@ -222,7 +211,7 @@ describe("Control methods", () => {
             playerInitiator = core.players["Scorpion"]
             playerTarget = core.players["Sub Zero"]
             tile = getTile("brown_1")
-            simpleBuy(controlScorpion, tile)
+            simpleBuy("Scorpion", tile)
             objDeal = {
                 target: "Sub Zero",
                 income: ["brown_1",],
@@ -230,8 +219,8 @@ describe("Control methods", () => {
                 moneyIncome: 0,
                 moneyHost: 100,
             }
-            controlScorpion.use("deal", {objDeal})
-            controlSubZero.use("trade")
+            controller.execute("Scorpion", "deal", {objDeal})
+            controller.execute("Sub Zero", "trade")
         })
 
         it("transfer money", () => {
@@ -249,7 +238,7 @@ describe("Control methods", () => {
     describe("cards", () => {
         let player
 
-        const useCard = (card) => controlScorpion.use("card", {card})
+        const useCard = (card) => controller.execute("Scorpion", "card", {card})
 
         before(() => {
             resetCore()
@@ -279,10 +268,10 @@ describe("Control methods", () => {
         it("repairBuilding", () => {
             for (let i = 1; i <= 3; i++) {
                 let tile = getTile("yellow_" + i)
-                simpleBuy(controlScorpion, tile)
+                simpleBuy("Scorpion", tile)
             }
             for (let i = 0; i < 5; i++)
-                controlScorpion.use("build", {type: "add", free: true, idTile: "yellow_1"})
+                controller.execute("Scorpion", "build", {type: "add", free: true, idTile: "yellow_1"})
 
             player.money = 100
             useCard({type: "repairBuilding", amount: 50, amountHotel: 100})

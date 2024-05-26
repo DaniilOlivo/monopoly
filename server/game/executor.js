@@ -1,78 +1,16 @@
 const { settings } = require("./utils")
+const Core = require("./core")
+const Validator = require("./validator")
 
-const Core = require("./index")
-
-class ErrorControl extends Error {
-    constructor(message, detail=null) {
-        let textError = message
-        if (detail) textError = message + ": " + detail
-
-        super(textError)
-        this.name = "ErrorControl"
-        this.objLog = {message, detail}
-    }
-}
-
-class Control {
-    constructor(core=new Core([]), username) {
-        this.core = core
+class Executor {
+    constructor(username, core=new Core(), validator=new Validator()) {
         this.username = username
-
-        // If test mode is running, logical errors in the game core will cause exceptions
-        // Otherwise errors will be added to the log
-        this.testMode = false
+        this.core = core
+        this.validator = validator
     }
 
     _log(message, detail=null) {
         this.core.pushLog(message, this.username, detail)
-    }
-
-    _validate(condition, message, detail=null) {
-        if (condition) throw new ErrorControl(message, detail)
-    }
-
-    _validateHasOwner(tile) {
-        this._validate(!tile.owner, "Property has no owner", tile.id)
-    }
-
-    _validateIdTile(idTile) {
-        this._validate(
-            !this.core.field.tiles.find(tile => tile.id == idTile),
-            "No such id tile",
-            idTile
-        )
-    }
-
-    _validateMoney(cost, money) {
-        this._validate(
-            cost > money,
-            "The player does not have enough money",
-            cost + " > " + money
-        )
-    }
-
-    _validateUsername(username) {
-        this._validate(
-           !this.core.players[username],
-            "No such username",
-            username
-        )
-    }
-
-    _validateObjDeal(obj) {
-        const { initiator, target, income, host, moneyIncome, moneyHost } = obj
-        this._validate(
-            (
-                income &&
-                host &&
-                moneyIncome >= 0 &&
-                moneyHost >= 0 &&
-                this._validateUsername(initiator) &&
-                this._validateUsername(target) 
-            ),
-            "Invalid object deal",
-            JSON.stringify(obj)
-        )
     }
 
     _getPlayer(username=null) {
@@ -80,27 +18,15 @@ class Control {
     }
 
     _getTile(idTile) {
-        this._validateIdTile(idTile)
+        this.validator.checkIdTile(idTile)
         return this.core.field.getById(idTile)
     }
 
-    passNewLap(boolNewLap) {
+    _passNewLap(boolNewLap) {
         if (!boolNewLap) return
         const lapMoney = settings["lapMoney"]
         this._log("passes tile 'Go' and receives", lapMoney + 'M.')
         this._getPlayer().money += lapMoney
-    }
-
-    use(action, options) {
-        try {
-            this._validate(!(action in this), "Invalid action", action)
-            this.core.lastAction = action
-            this[action](options)
-        } catch (error) {
-            if (this.testMode) throw error
-            const { mes, detail } = error.objLog
-            this.core.pushError(mes, detail)
-        }
     }
 
     ping() {
@@ -120,8 +46,8 @@ class Control {
             return
         }
 
-        this._validate(
-            this.core.tracker.current !== this.username,
+        this.validator.check(
+            this.core.tracker.current == this.username,
             "It's not his turn now",
             this.username
         )
@@ -143,7 +69,7 @@ class Control {
         }
 
         const newLapBool = this.core.field.move(this.username, val1 + val2)
-        this.passNewLap(newLapBool)
+        this._passNewLap(newLapBool)
 
         const tile = this.core.field.findPlayer(this.username)
         this._log("ends up on the", tile.title)
@@ -163,7 +89,7 @@ class Control {
 
         let tile = player.service.offer
         if (options.tile) tile = options.tile
-        this._validate(!tile, "Offer service is null")
+        this.validator.check(tile, "Offer service is null")
         player.clearService("offer")
 
         if (options.refuse) return this._log("refused buy", tile.title)
@@ -171,9 +97,17 @@ class Control {
         let price = tile.price
         if (options.free) price = 0
 
-        this._validate(!tile.canBuy, "This tile cannot be bought", tile.id)
-        this._validateMoney(price, player.money)
-        this._validate(tile.owner, "Already has an owner", tile.owner)
+        this.validator.check(
+            tile.canBuy,
+            "This tile cannot be bought",
+            tile.id
+        )
+        this.validator.checkMoney(price, player.money)
+        this.validator.check(
+            !tile.owner,
+            "Already has an owner",
+            tile.owner
+        )
 
         player.money -= price
         player.addOwn(tile)
@@ -185,47 +119,55 @@ class Control {
 
         const tile = this._getTile(idTile)
 
-        this._validateHasOwner(tile)
+        this.validator.checkHasOwner(tile)
         const playerOwner = this._getPlayer(tile.owner)
 
         if (type === "put") {
-            this._validate(tile.pledge, "The property is already mortgaged", idTile)
+            this.validator.check(
+                !tile.pledge,
+                "The property is already mortgaged",
+                idTile
+            )
             tile.pledge = true
             playerOwner.money += free ? 0 : tile.price / 2
             this._log("put pledges", tile.title)
         }
         else if (type == "redeem") {
             const cost = free ? 0 : tile.price / 2
-            this._validate(!tile.pledge, "The property is not mortgaged", idTile)
-            this._validateMoney(cost, playerOwner.money)
+            this.validator.check(
+                tile.pledge,
+                "The property is not mortgaged",
+                idTile
+            )
+            this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.pledge = false
             this._log("redeem pledge", tile.title)
         }
-        else throw new ErrorControl("Invalid type pledge", type)
+        else this.validator.throwError("Invalid type pledge", type)
     }
 
     build(options={}) {
         const { type, idTile, free } = options
         const tile = this._getTile(idTile)
 
-        this._validateHasOwner(tile)
+        this.validator.checkHasOwner(tile)
         const playerOwner = this._getPlayer(tile.owner)
 
-        this._validate(
-            !tile.color,
+        this.validator.check(
+            tile.color,
             "You can't build buildings",
             idTile
         )
-        this._validate(
-            playerOwner.monopoly[tile.color] != tile.numberTilesArea,
+        this.validator.check(
+            playerOwner.monopoly[tile.color] == tile.numberTilesArea,
             "There is no monopoly on this area",
             idTile
         )
 
         if (type === "add") {
             const cost = free ? 0 : tile.priceBuilding
-            this._validateMoney(cost, playerOwner.money)
+            this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.addBuilding()
             this._log(`built ${tile.hotel ? "hotel" : "building"}`, tile.title)
@@ -235,7 +177,7 @@ class Control {
             tile.removeBuilding()
             this._log(`removed ${tile.hotel ? "hotel" : "building"}`, tile.title)
         }
-        else throw new ErrorControl("Invalid type build")
+        else this.validator.throwError("Invalid type build", type)
     }
 
     rent(options={}) {
@@ -245,15 +187,15 @@ class Control {
         let objRent = tile ? 
             {tile, cost: this.core.getRent(tile.id)} :
             player.service.rent
-        this._validate(
-            !objRent,
+        this.validator.check(
+            objRent,
             "The player does not owe rent to anyone",
             this.username
         )
-        this._validateHasOwner(objRent.tile)
+        this.validator.checkHasOwner(objRent.tile)
 
         let price = free ? 0 : objRent.cost
-        this._validateMoney(price, player.money)
+        this.validator.checkMoney(price, player.money)
 
         const ownerPlayer = this._getPlayer(objRent.tile.owner)
         player.money -= price
@@ -265,7 +207,7 @@ class Control {
     sell(options={}) {
         const { free, idTile } = options
         const tile = this._getTile(idTile)
-        this._validateHasOwner(tile)
+        this.validator.checkHasOwner(tile)
         let money = tile.pledge ? tile.price / 2 : tile.price
         if (free) money = 0
         const playerOwner = this._getPlayer(tile.owner)
@@ -280,8 +222,8 @@ class Control {
         const player = this._getPlayer()
         const cost = value ?? player.service.tax
 
-        this._validate(!cost, "The player has no tax", this.username)
-        this._validateMoney(cost, player.money)
+        this.validator.check(cost, "The player has no tax", this.username)
+        this.validator.checkMoney(cost, player.money)
 
         player.money -= cost
         player.clearService("tax")
@@ -291,7 +233,7 @@ class Control {
     deal(options={}) {
         const { objDeal } = options
         objDeal.initiator = this.username
-        this._validateObjDeal(objDeal)
+        this.validator.checkObjDeal(objDeal)
         const player = this._getPlayer(objDeal.target)
         player.setService("deal", objDeal)
         this._log("proposed a deal", objDeal.target)
@@ -307,7 +249,7 @@ class Control {
         this._log("made a deal with the player", objDeal.initiator)
 
         const swapMoney = (fromPlayer, toPlayer, value) => {
-            this._validateMoney(value, fromPlayer.money)
+            this.validator.checkMoney(value, fromPlayer.money)
             fromPlayer.money -= value
             toPlayer.money += value
         }
@@ -337,14 +279,14 @@ class Control {
     card(options={}) {
         const player = this._getPlayer()
         const card = options.card ?? player.service.card
-        this._validate(!card, "The player has no card", this.username)
+        this.validator.check(card, "The player has no card", this.username)
         player.clearService("card")
 
         const mapCards = {
             goTo: () => {
                 const newBoolLap = this.core.field.moveById(this.username, card.location)
-                this.passNewLap(newBoolLap)
-                const newTile = this.core.field.getById(card.location)
+                this._passNewLap(newBoolLap)
+                const newTile = this._getTile(card.location)
                 this.core.dispathTile(newTile, this.username)
                 this._log("goes on tile", newTile.title)
             },
@@ -392,9 +334,9 @@ class Control {
         }
 
         const type = card.type
-        this._validate(!(type in mapCards), "Not found card type", type)
+        this.validator.check(type in mapCards, "Not found card type", type)
         mapCards[type]()
     }
 }
 
-module.exports = Control
+module.exports = Executor
