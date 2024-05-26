@@ -1,4 +1,5 @@
 const { roomManager } = require("./rooms")
+const Controller = require("./game/contoller")
 
 const mapSockets = {}
 
@@ -35,49 +36,10 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
-    socket.on("game", (command, ...args) => {
+    socket.on("game", (command, options) => {
         const {username, room} = mapSockets[socket.id]
-        const game = room.game
-
-        const apiGames = {
-            "ping": () => game.ping(username),
-            "message": ([mes]) => game.pushLog(mes, username),
-            "roll": ([dices]) => game.roll(dices, username),
-            "next": game.next,
-            "buy": ([resolve]) => {
-                game.buyOwn(username, {clearService: !resolve})
-                game.next()
-            },
-            "pledge": ([action, idTile]) => {
-                if (action == "put") game.putPledge(idTile)
-                else if (action == "redeem") game.redeemPledge(idTile)
-                else game.error("Invalid action", action)
-            },
-            "building": ([action, idTile]) => {
-                if (action == "add") game.addBuilding(idTile)
-                else if (action == "remove") game.removeBuilding(idTile)
-                else game.error("Invalid action", action)
-            },
-            "rent": () => {
-                game.rent(username)
-                game.next()
-            },
-            "sell": ([idTile]) => game.sell(idTile),
-            "tax": () => {
-                game.tax(username)
-                game.next()
-            },
-            "deal": ([objDeal]) => game.deal(username, objDeal),
-            "trade": ([resolve]) => game.trade(username, {clearService: !resolve}),
-            "card": () => game.effectCard(username),
-            "command": ([stringCommand]) => game.command(stringCommand),
-        }
-
-        if (command in apiGames) {
-            game.lastAction = command
-            apiGames[command](args)
-        }
-        else game.error("Invalid command", command)
+        const controller = new Controller(room.game)
+        controller.execute(username, command, options)
         updateGame(room)
     })
 

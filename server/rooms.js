@@ -1,4 +1,4 @@
-const Game = require("./game")
+const Game = require("./game/core")
 
 class Room {
     constructor(title) {

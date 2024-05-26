@@ -208,7 +208,7 @@ describe("Socket", () => {
             let game = null
 
             before(async () => {
-                socketMelina.emit("game", "command", "money Jade 1000")
+                socketMelina.emit("game", "command", {commandString: "money Jade 1000"})
                 game = await waitGame(socketMelina, "updateGame")
             })
 
