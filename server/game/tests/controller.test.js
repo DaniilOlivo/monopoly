@@ -22,13 +22,13 @@ describe("Start game", () => {
 describe("Executor methods", () => {
     let core = new Core(arrPlayers)
     let controller = new Contoller(core)
-    controller.catchErrors = false
 
     // Reset the core state for convenient testing
     // Scorpion always goes first because he is cooler
     const resetCore = () => {
         core = new Core(arrPlayers)
-        controller.core = core
+        controller = new Contoller(core)
+        controller.catchErrors = false
         controller.execute("Scorpion", "roll", {dices: [4, 2]})
         controller.execute("Sub Zero", "roll", {dices: [1, 1]})
     }
@@ -289,6 +289,36 @@ describe("Executor methods", () => {
         it("arrest", () => {
             useCard({type: "arrest"})
             assert.equal(player.arrested, 3)
+        })
+    })
+
+    describe("command", () => {
+        const getLastMes = () => {
+            return core.logs[core.logs.length - 1]
+        }
+
+        before(resetCore)
+        it("command execute", () => {
+            controller.execute(
+                "Scorpion",
+                "command",
+                {commandString: "echo Scorpion Hi"}
+            )
+
+            const lastMes = getLastMes()
+            assert.equal(lastMes.sender, "Scorpion")
+            assert.equal(lastMes.mes, "Hi")
+        })
+
+        it("invalid username", () => {
+            assert.throw(() => {
+                controller.execute(
+                    "Scorpion",
+                    "command",
+                    {commandString: "echo SCCCorp What"}
+                ),
+                "No such username"
+            })
         })
     })
 })
