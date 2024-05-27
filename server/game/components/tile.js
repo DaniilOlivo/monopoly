@@ -58,6 +58,7 @@ class Tile {
     resetBuilding() {
         this.building = 0
         this.hotel = false
+        this.pledge = false
     }
 }
 
