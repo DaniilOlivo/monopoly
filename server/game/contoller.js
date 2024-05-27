@@ -24,9 +24,9 @@ class Controller {
                     "Invalid action",
                     action
                 )
-                this.core.lastAction = action
                 executor[action](options)
             }
+            this.core.lastAction = action
         } catch (error) {
             if (!this.catchErrors) throw error
             if (error.name == "ErrorGame") {
