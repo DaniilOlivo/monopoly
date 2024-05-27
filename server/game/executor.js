@@ -29,6 +29,10 @@ class Executor {
         this._getPlayer().money += lapMoney
     }
 
+    _next(options) {
+        if (options && options.next) this.core.next()
+    }
+
     ping() {
         this._log("ping")
     }
@@ -92,7 +96,11 @@ class Executor {
         this.validator.check(tile, "Offer service is null")
         player.clearService("offer")
 
-        if (options.refuse) return this._log("refused buy", tile.title)
+        if (options.refuse) {
+            this._log("refused buy", tile.title)
+            this._next(options)
+            return
+        }
 
         let price = tile.price
         if (options.free) price = 0
@@ -112,6 +120,7 @@ class Executor {
         player.money -= price
         player.addOwn(tile)
         this._log("buys", tile.title)
+        this._next(options)
     }
 
     pledge(options={}) {
@@ -202,6 +211,7 @@ class Executor {
         ownerPlayer.money += price
         player.clearService("rent")
         this._log("paid rent", price + "M.")
+        this._next(options)
     }
 
     sell(options={}) {
@@ -228,6 +238,7 @@ class Executor {
         player.money -= cost
         player.clearService("tax")
         this._log("paid tax", cost + "M.")
+        this._next(options)
     }
 
     deal(options={}) {
@@ -336,6 +347,7 @@ class Executor {
         const type = card.type
         this.validator.check(type in mapCards, "Not found card type", type)
         mapCards[type]()
+        if (!["goToBack", "goTo"].includes(type)) this._next(options)
     }
 }
 
