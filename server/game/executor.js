@@ -303,7 +303,7 @@ class Executor {
             },
             release: () => {
                 player.releasePrison += 1
-                this._log("arrested!")
+                this._log("got released from prison")
             },
             money: () => {
                 player.money += card.amount
@@ -347,7 +347,7 @@ class Executor {
         const type = card.type
         this.validator.check(type in mapCards, "Not found card type", type)
         mapCards[type]()
-        if (!["goToBack", "goTo"].includes(type)) this._next(options)
+        if (!["goToBack", "goTo", "arrest"].includes(type)) this._next(options)
     }
 }
 
