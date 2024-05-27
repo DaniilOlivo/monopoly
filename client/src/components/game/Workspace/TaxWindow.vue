@@ -37,7 +37,7 @@ export default {
     },
     methods: {
         clickPay() {
-            gameApi("tax")
+            gameApi("tax", {next: true})
         }
     }
 }

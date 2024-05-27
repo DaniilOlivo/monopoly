@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         clickRent() {
-            gameApi("rent")
+            gameApi("rent", {next: true})
         }
     }
 }

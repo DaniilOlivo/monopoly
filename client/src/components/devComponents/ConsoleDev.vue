@@ -32,7 +32,7 @@ export default {
             if (this.currentCommand == "") return
             if (command == "exit") return this.$store.commit("setConsole", false)
             this.logs.push(command)
-            gameApi("command", command)
+            gameApi("command", {commandString: command})
             this.currentCommand = ""
         }
     }

@@ -65,7 +65,7 @@ export default {
 
     methods: {
         clickBtn() {
-            gameApi("card")
+            gameApi("card", {next: true})
         }
     }
 }

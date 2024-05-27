@@ -149,17 +149,17 @@ export default {
         },
 
         dealSocket() {
-            gameApi("deal", this.objDeal)
+            gameApi("deal", {objDeal: this.objDeal})
             this.closeDeal()
         },
 
         refuse() {
-            gameApi("trade", false)
+            gameApi("trade", {refuse: true})
             this.closeDeal()
         },
 
         accept() {
-            gameApi("trade", true)
+            gameApi("trade")
             this.closeDeal()
         },
 

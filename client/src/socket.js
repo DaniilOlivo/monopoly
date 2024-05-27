@@ -5,8 +5,8 @@ export const socket = io({
     autoConnect: false,
 })
 
-export function gameApi(command, ...args) {
-    socket.emit("game", command, ...args)
+export function gameApi(command, options={}) {
+    socket.emit("game", command, options)
 }
 
 socket.on("registerResponse", (username, status, desc) => {

@@ -97,7 +97,7 @@ export default {
         },
 
         roll() {
-            gameApi("roll", this.randomArr())
+            gameApi("roll", {dices: this.randomArr()})
         }
     }
 }

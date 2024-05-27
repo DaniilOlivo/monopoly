@@ -45,11 +45,11 @@ export default {
     },
     methods: {
         buy() {
-            gameApi("buy", true)
+            gameApi("buy", {next: true})
         },
 
         refuse() {
-            gameApi("buy", false)
+            gameApi("buy", {refuse: true, next: true})
         }
     }
 }

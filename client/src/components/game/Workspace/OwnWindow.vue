@@ -68,19 +68,19 @@ export default {
         ...mapMutations("workspace", ["unselect"]),
 
         clickSell() {
-            gameApi("sell", this.tile.id)
+            gameApi("sell", {idTile: this.tile.id})
         },
         clickPutPledge() {
-            gameApi("pledge", "put", this.tile.id)
+            gameApi("pledge", {idTile: this.tile.id, type: "put"})
         },
         clickRedeemPledge() {
-            gameApi("pledge", "redeem", this.tile.id)
+            gameApi("pledge", {idTile: this.tile.id, type: "redeem"})
         },
         clickAddBuilding() {
-            gameApi("building", "add", this.tile.id)
+            gameApi("building", {idTile: this.tile.id, type: "add"})
         },
         clickRemoveBuilding() {
-            gameApi("building", "remove", this.tile.id)
+            gameApi("building", {idTile: this.tile.id, type: "remove"})
         }
     }
 }
