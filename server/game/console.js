@@ -120,13 +120,15 @@ class Console {
 
         const tile = this._getTile(idTile)
 
+        const systemUsername = this._parseUsername(username)
+
         this.core.field.moveById(
-            this._parseUsername(username),
+            systemUsername,
             idTile
         )
 
         if (this._parseBool(dispath))
-            this.core.dispathTile(tile, username)
+            this.core.dispathTile(tile, systemUsername)
     }
 }
 
