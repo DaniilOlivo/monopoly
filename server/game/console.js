@@ -73,8 +73,10 @@ class Console {
             exec.buy({tile, free: true})
         }
 
+        const player = exec._getPlayer()
+
         for (const tile of this.core.field.tiles) {
-            if (tile.color) {
+            if (tile.color && tile.numberTilesArea == player.monopoly[tile.color]) {
                 for (let i = 0; i <= 5; i++) {
                     exec.build({type: "add", idTile: tile.id, free: true})
                 }
