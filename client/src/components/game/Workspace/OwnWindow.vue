@@ -77,10 +77,10 @@ export default {
             gameApi("pledge", {idTile: this.tile.id, type: "redeem"})
         },
         clickAddBuilding() {
-            gameApi("building", {idTile: this.tile.id, type: "add"})
+            gameApi("build", {idTile: this.tile.id, type: "add"})
         },
         clickRemoveBuilding() {
-            gameApi("building", {idTile: this.tile.id, type: "remove"})
+            gameApi("build", {idTile: this.tile.id, type: "remove"})
         }
     }
 }
