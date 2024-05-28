@@ -20,7 +20,11 @@ export default {
             type: Boolean,
             default: false
         },
-        pos: Object
+        pos: Object,
+        disable: {
+            type: Boolean,
+            default: false
+        }
     },
 
     data() {
@@ -41,7 +45,8 @@ export default {
                 borderColor: this.color.secondary
             }
 
-            if (this.usernameMoved == this.username && !this.absolute) styleObj.display = "none"
+            if ((this.usernameMoved == this.username && !this.absolute) || this.disable)
+                styleObj.display = "none"
 
             if (this.absolute) {
                 styleObj.left = this.pos.x + "px"

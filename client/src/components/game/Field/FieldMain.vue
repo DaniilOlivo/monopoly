@@ -69,12 +69,7 @@ export default {
                 
                 const playersData = []
                 for (const username of tile.players) {
-                    const {color, arrested} = players[username]
-                    playersData.push({
-                        username,
-                        color,
-                        arrested
-                    })
+                    playersData.push(players[username])
                 }
                 tile.players = playersData
 

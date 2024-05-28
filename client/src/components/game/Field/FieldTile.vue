@@ -38,7 +38,8 @@
                 :key="player.username"
                 :username="player.username"
                 :color="player.color"
-                :arrested="player.arrested > 0"></PlayerChip>
+                :arrested="player.arrested > 0"
+                :disable="player.disable"></PlayerChip>
         </div>
     </div>
 </template>
