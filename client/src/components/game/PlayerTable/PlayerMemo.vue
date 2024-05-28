@@ -21,7 +21,6 @@
                 </div>
 
                 <ButtonMain v-if="arrested" @click="clickJailbreak" :disable="thisPlayer.releasePrison == 0">Use Jailbreak</ButtonMain>
-                <ButtonMain @click="clickGiveUp">Give up</ButtonMain>
             </div>
         </div>
     </div>
@@ -31,7 +30,7 @@
 import ButtonMain from "@/components/common/ButtonMain.vue";
 
 import { gameApi } from "@/socket";
-import { mapGetters, mapMutations } from "vuex"
+import { mapGetters } from "vuex"
 
 export default {
     name: "PlayerMemo",
@@ -67,14 +66,8 @@ export default {
     },
 
     methods: {
-        ...mapMutations("workspace", ["showDialog"]),
-
         clickJailbreak() {
             gameApi("jailbreak")
-        },
-
-        clickGiveUp() {
-            this.showDialog("SurrenderWindow")
         }
     }
 }

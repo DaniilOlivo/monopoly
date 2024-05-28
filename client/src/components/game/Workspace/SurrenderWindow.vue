@@ -21,10 +21,10 @@ export default {
         ButtonMain
     },
     methods: {
-        ...mapMutations("workspace", ["closeDialog"]),
+        ...mapMutations("workspace", ["showDialog", "closeDialog"]),
 
         clickCancel() {
-            this.closeDialog()
+            this.showDialog("PlayerWindow")
         },
 
         clickGiveUp() {

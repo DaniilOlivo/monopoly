@@ -5,8 +5,8 @@
             <p class="player-card__username">{{ username }}</p>
             <p class="player-card__money">{{ money }} М</p>
 
-            <div class="player_card__deal" v-show="pointer">
-                Offer a deal
+            <div class="player_card__hover" v-show="pointer">
+                {{ labelHover }}
             </div>
         </div>
     </div>
@@ -27,7 +27,8 @@ export default {
         color: Object,
         username: String,
         money: Number,
-        disable: Boolean
+        disable: Boolean,
+        labelHover: String,
     },
     computed: {
         classList() {
@@ -62,7 +63,7 @@ export default {
     position: relative;
 }
 
-.player_card__deal {
+.player_card__hover {
     position: absolute;
     top: 0;
     left: 0;
@@ -80,7 +81,7 @@ export default {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
-.player_card__deal:hover {
+.player_card__hover:hover {
     opacity: 1;
 }
 

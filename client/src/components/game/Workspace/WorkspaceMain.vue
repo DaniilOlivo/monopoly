@@ -6,6 +6,7 @@
 
 <script>
 import SurrenderWindow from "./SurrenderWindow.vue";
+import PlayerWindow from "./PlayerWindow.vue";
 import BuyWindow from "./BuyWindow.vue"
 import HoverWindow from './HoverWindow.vue';
 import OwnWindow from './OwnWindow.vue';
@@ -20,6 +21,7 @@ export default {
     name: "WorkspaceMain",
     components: {
         SurrenderWindow,
+        PlayerWindow,
         BuyWindow,
         HoverWindow,
         OwnWindow,

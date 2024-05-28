@@ -4,7 +4,8 @@
             v-for="player in listPlayers"
             :key="player.username"
             v-bind="player"
-            @click="openDealWindow(player.username)" >
+            :labelHover="player.username === username ? 'Open player info' : 'Offer a deal'"
+            @click="clickCard(player.username)" >
         </PlayerCard>
     </div>
 </template>
@@ -36,7 +37,7 @@ export default {
                 const objCard = Object.assign({}, players[username])
                 objCard.select = select
                 objCard.username = username
-                objCard.pointer = username != usernameThis && tracker.current == usernameThis
+                objCard.pointer = username == usernameThis || tracker.current == usernameThis
                 arr.push(objCard)
             }
 
@@ -45,12 +46,16 @@ export default {
     },
     methods: {
         ...mapMutations("deal", ["openDeal"]),
+        ...mapMutations("workspace", ["showDialog"]),
 
-        openDealWindow(target) {
-            if (this.username === target) return
-            const currnetPlayer = this.game.tracker.current
-            if (currnetPlayer !== this.username) return
-            this.openDeal(target)
+        clickCard(username) {
+            if (this.username === username) {
+                this.showDialog("PlayerWindow")
+            } else {
+                const currnetPlayer = this.game.tracker.current
+                if (currnetPlayer !== this.username) return
+                this.openDeal(username)
+            }
         }
     }
 }
