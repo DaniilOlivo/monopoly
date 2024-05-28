@@ -349,6 +349,12 @@ class Executor {
         mapCards[type]()
         if (!["goToBack", "goTo", "arrest"].includes(type)) this._next(options)
     }
+
+    surrender() {
+        this._log("gave up!")
+        this.core.disablePlayer(this.username)
+        if (this.core.tracker.current == this.username) this.core.next()
+    }
 }
 
 module.exports = Executor

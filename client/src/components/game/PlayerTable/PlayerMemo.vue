@@ -13,16 +13,24 @@
                         <li>Roll the dice (after this your turn is over)</li>
                     </ul>
                 </div>
+
+                <ButtonMain @click="clickGiveUp">Give up</ButtonMain>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
+import ButtonMain from "@/components/common/ButtonMain.vue";
+
+import { mapGetters, mapMutations } from "vuex"
 
 export default {
     name: "PlayerMemo",
+
+    components: {
+        ButtonMain
+    },
 
     data() {
         return {
@@ -43,6 +51,14 @@ export default {
             } else {
                 this.display = false;
             }
+        }
+    },
+
+    methods: {
+        ...mapMutations("workspace", ["showDialog"]),
+
+        clickGiveUp() {
+            this.showDialog("SurrenderWindow")
         }
     }
 }

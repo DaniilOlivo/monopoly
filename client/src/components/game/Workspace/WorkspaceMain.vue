@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import SurrenderWindow from "./SurrenderWindow.vue";
 import BuyWindow from "./BuyWindow.vue"
 import HoverWindow from './HoverWindow.vue';
 import OwnWindow from './OwnWindow.vue';
@@ -13,11 +14,12 @@ import DealWindow from './DealWindow.vue';
 import TaxWindow from './TaxWindow.vue';
 import CardWindow from './CardWindow.vue';
 
-import { mapGetters } from "vuex"
+import { mapGetters, mapState } from "vuex"
 
 export default {
     name: "WorkspaceMain",
     components: {
+        SurrenderWindow,
         BuyWindow,
         HoverWindow,
         OwnWindow,
@@ -36,8 +38,11 @@ export default {
             "cardHover",
         ]),
 
+        ...mapState("workspace", ["dialogWindow"]),
+
         currentWindow() {
             const listWindows = [
+                [this.dialogWindow, this.dialogWindow],
                 ["OwnWindow", this.selectThisPlayerOwn],
                 ["DealWindow", this.activeDeal],
                 ["BuyWindow", this.thisPlayer.service.offer],

@@ -3,6 +3,7 @@ export default {
     state: {
         selectOwnIndex: -1,
         cardHoverIndex: -1,
+        dialogWindow: null,
     },
 
     getters: {
@@ -36,6 +37,14 @@ export default {
 
         unselect(state) {
             state.selectOwnIndex = -1
+        },
+
+        showDialog(state, nameWindow) {
+            state.dialogWindow = nameWindow
+        },
+
+        closeDialog(state) {
+            state.dialogWindow = null
         }
     },
     actions: {
