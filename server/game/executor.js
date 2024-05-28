@@ -355,6 +355,12 @@ class Executor {
         this.core.disablePlayer(this.username)
         if (this.core.tracker.current == this.username) this.core.next()
     }
+
+    jailbreak() {
+        this._log("uses jailbreak")
+        const player = this._getPlayer()
+        player.arrested = 0
+    }
 }
 
 module.exports = Executor

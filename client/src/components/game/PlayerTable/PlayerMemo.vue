@@ -5,15 +5,22 @@
                 <h1 class="player-memo-content__title">Your move</h1>
 
                 <div class="player-memo-content-text">
+                    <p v-if="arrested">You are under arrest!</p>
                     <p>Here's what you can do:</p>
 
-                    <ul class="player-memo-content-text__list">
+                    <ul v-if="arrested" class="player-memo-content-text__list">
+                        <li>Use your jailbreak (if you have one)</li>
+                        <li>Roll a double on the dice</li>
+                        <li>If none of this works, then sit and wait</li>
+                    </ul>
+                    <ul v-else class="player-memo-content-text__list">
                         <li>Offer a deal to another player. (By clicking on his card on the right)</li>
                         <li>Manage your property (by clicking on one of your cells)</li>
                         <li>Roll the dice (after this your turn is over)</li>
                     </ul>
                 </div>
 
+                <ButtonMain v-if="arrested" @click="clickJailbreak" :disable="thisPlayer.releasePrison == 0">Use Jailbreak</ButtonMain>
                 <ButtonMain @click="clickGiveUp">Give up</ButtonMain>
             </div>
         </div>
@@ -23,6 +30,7 @@
 <script>
 import ButtonMain from "@/components/common/ButtonMain.vue";
 
+import { gameApi } from "@/socket";
 import { mapGetters, mapMutations } from "vuex"
 
 export default {
@@ -39,7 +47,11 @@ export default {
     },
 
     computed: {
-        ...mapGetters(["thisPlayerTurn"]),
+        ...mapGetters(["thisPlayerTurn", "thisPlayer"]),
+
+        arrested() {
+            return this.thisPlayer.arrested > 0
+        }
     },
 
     watch: {
@@ -56,6 +68,10 @@ export default {
 
     methods: {
         ...mapMutations("workspace", ["showDialog"]),
+
+        clickJailbreak() {
+            gameApi("jailbreak")
+        },
 
         clickGiveUp() {
             this.showDialog("SurrenderWindow")
