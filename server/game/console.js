@@ -132,6 +132,24 @@ class Console {
         if (this._parseBool(dispath))
             this.core.dispathTile(tile, systemUsername)
     }
+
+    arrest(args) {
+        const [username] = args
+
+        const systemUsername = this._parseUsername(username)
+        let flagNext = false
+        if (systemUsername == this.core.tracker.current) flagNext = true 
+        this.core.arrest(systemUsername, flagNext)
+    }
+
+    add(args) {
+        const [username, obj] = args
+
+        if (obj == "jailbreak") {
+            const exec = this._createExecutor(username)
+            exec.card({card: {type: "release"}})
+        } else this.validator.throwError("invalid object", obj)
+    }
 }
 
 module.exports = Console

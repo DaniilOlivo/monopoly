@@ -142,10 +142,10 @@ class Game {
         }
     }
 
-    arrest(username) {
+    arrest(username, next=true) {
         this.field.moveById(username, "jail")
         this.players[username].arrested = 3
-        this.next()
+        if (next) this.next()
     }
 
     next(options={}) {
