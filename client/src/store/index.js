@@ -33,6 +33,22 @@ export default createStore({
 
     thisPlayerTurn(state) {
       return state.username == state.game.tracker.current
+    },
+
+    tilesMonopoly: (state) => color => {
+      return state.game.field.tiles.filter(tile => tile.color == color)
+    },
+
+    monopolyAnyBuilding: (state, getters) => color => {
+      const tiles = getters.tilesMonopoly(color)
+      let flag = false
+      for (const tile of tiles) {
+        if (tile.building > 0) {
+          flag = true
+          break
+        }
+      }
+      return flag
     }
   },
   mutations: {

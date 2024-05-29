@@ -6,7 +6,7 @@
         </div>
         <template v-slot:btns>
             <ButtonMain @click="unselect">Close</ButtonMain>
-            <ButtonMain @click="clickSell" :disable="disableBtns || tile.building > 0">Sell</ButtonMain>
+            <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">Sell</ButtonMain>
             <ButtonMain @click="clickRedeemPledge" v-if="tile.pledge" :disable="disableBtns">Redeem Pledge</ButtonMain>
             <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Put Pledge</ButtonMain>
             <template v-if="monopoly">
@@ -45,7 +45,7 @@ export default {
             "game"
         ]),
 
-        ...mapGetters(["thisPlayer"]),
+        ...mapGetters(["thisPlayer", "monopolyAnyBuilding"]),
 
         ...mapGetters("workspace", {tile: "selectOwn"}),
 
@@ -61,6 +61,11 @@ export default {
 
         notEnoughMoney() {
             return this.tile.priceBuilding > this.thisPlayer.money 
+        },
+
+        anyBuilding() {
+            if (!this.tile.color) return false
+            return this.monopolyAnyBuilding(this.tile.color)
         }
     },
 

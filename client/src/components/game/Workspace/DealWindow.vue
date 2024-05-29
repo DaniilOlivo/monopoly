@@ -66,7 +66,7 @@ export default {
 
         ...mapState("deal", {objDeal: "localObjectDeal"}),
 
-        ...mapGetters(["thisPlayer"]),
+        ...mapGetters(["thisPlayer", "tilesMonopoly", "monopolyAnyBuilding"]),
 
         moneyIncome: {
             get() {
@@ -123,10 +123,8 @@ export default {
             "setDeal"
         ]),
 
-        getTitle(idTile) {
-            const tile = this.game.field.tiles.find((tile) => tile.id == idTile)
-            if (tile) return tile.title
-            else return ""
+        getTile(idTile) {
+            return this.game.field.tiles.find((tile) => tile.id == idTile)
         },
 
         getList(side) {
@@ -135,17 +133,30 @@ export default {
             const editable = !this.objDeal.initiator
 
             for (let i = 0; i < sourceList.length; i++) {
+                const tile = this.getTile(sourceList[i])
+                if (!tile) continue
                 if (editable) {
                     listObjs.push({
-                        title: this.getTitle(sourceList[i]),
-                        click: () => this.dealDeleteTile({side, index: i})
+                        title: tile.title,
+                        click: () => this.removeElList(tile, side, i)
                     })
                 } else {
-                    listObjs.push(this.getTitle(sourceList[i]))
+                    listObjs.push(tile.title)
                 }
             }
 
             return listObjs
+        },
+
+        removeElList(tile, side, index) {
+            if (tile.color && this.monopolyAnyBuilding) {
+                const tiles = this.tilesMonopoly(tile.color)
+                for (const t of tiles) {
+                    const i = this.objDeal[side].indexOf(t.id)
+                    if (i == -1) continue
+                    this.dealDeleteTile({side, index: i})
+                }
+            } else this.dealDeleteTile({side, index})
         },
 
         dealSocket() {

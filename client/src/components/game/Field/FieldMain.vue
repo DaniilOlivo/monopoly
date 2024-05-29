@@ -45,6 +45,7 @@ export default {
     },
     computed: {
         ...mapState(["game"]),
+        ...mapGetters(["monopolyAnyBuilding", "tilesMonopoly"]),
 
         ...mapState("field", ["color", "startPos", "endPos"]),
         ...mapGetters("field", ["readyMove"]),
@@ -154,7 +155,14 @@ export default {
             const { id, owner } = tile
 
             if (owner) {
-                if (this.activeDeal) this.addTile({id, owner})
+                if (this.activeDeal) {
+                    if (tile.color && this.monopolyAnyBuilding(tile.color)) {
+                        const tiles = this.tilesMonopoly(tile.color)
+                        for (const t of tiles) {
+                            this.addTile({id: t.id, owner: t.owner})
+                        }
+                    } else this.addTile({id, owner})
+                }
                 else this.select(tile.index)
             }
         }
