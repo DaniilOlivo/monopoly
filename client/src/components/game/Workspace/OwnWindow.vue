@@ -77,6 +77,7 @@ export default {
         },
         clickPutPledge() {
             gameApi("pledge", {idTile: this.tile.id, type: "put"})
+            this.unselect()
         },
         clickRedeemPledge() {
             gameApi("pledge", {idTile: this.tile.id, type: "redeem"})
