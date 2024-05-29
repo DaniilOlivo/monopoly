@@ -17,8 +17,6 @@ import WindowComponent from '@/components/common/WindowComponent.vue'
 import ButtonMain from '../common/ButtonMain.vue'
 import { socket } from "@/socket"
 
-import { skipRegister } from "@/components/devComponents/skip"
-
 export default {
     name: "PlayerRegister",
     components: {
@@ -43,10 +41,6 @@ export default {
             const room = this.$router.currentRoute.value.params.room
             socket.emit("register", this.username, room)
         }
-    },
-
-    mounted() {
-        skipRegister()
     }
 }
 
