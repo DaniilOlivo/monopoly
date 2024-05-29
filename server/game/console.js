@@ -150,6 +150,14 @@ class Console {
             exec.card({card: {type: "release"}})
         } else this.validator.throwError("invalid object", obj)
     }
+
+    monopoly(args) {
+        const [username, color, free] = args
+        const firstTile = this._getTile(color + "_1")
+        for (let i = 1; i <= firstTile.numberTilesArea; i++) {
+            this.buy([username, color + "_" + i, free])
+        }
+    }
 }
 
 module.exports = Console
