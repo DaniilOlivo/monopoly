@@ -29,6 +29,17 @@ class Executor {
         this._getPlayer().money += lapMoney
     }
 
+    _dispathTile(tile, next=true) {
+        const mustPay = this.core.dispathTile(tile, this.username)
+        const capital = this.core.getCapital(this.username)
+
+        if (capital < mustPay) {
+            this._log("becomes bankrupt and drops out of the game")
+            this.core.disablePlayer(this.username)
+            if (next) this.core.next()
+        }
+    }
+
     _next(options) {
         if (options && options.next) this.core.next()
     }
@@ -78,14 +89,7 @@ class Executor {
         const tile = this.core.field.findPlayer(this.username)
         this._log("ends up on the", tile.title)
 
-        const mustPay = this.core.dispathTile(tile, this.username)
-        const capital = this.core.getCapital(this.username)
-
-        if (capital < mustPay) {
-            this._log("becomes bankrupt and drops out of the game")
-            this.core.disablePlayer(this.username)
-            this.core.next()
-        }
+        this._dispathTile(tile)
     }
 
     buy(options={}) {
@@ -298,8 +302,8 @@ class Executor {
                 const newBoolLap = this.core.field.moveById(this.username, card.location)
                 this._passNewLap(newBoolLap)
                 const newTile = this._getTile(card.location)
-                this.core.dispathTile(newTile, this.username)
                 this._log("goes on tile", newTile.title)
+                this._dispathTile(newTile, false)
             },
             release: () => {
                 player.releasePrison += 1
@@ -315,8 +319,8 @@ class Executor {
             goToBack: () => {
                 this.core.field.move(this.username, -card.amount)
                 const newTile = this.core.field.findPlayer(this.username)
-                this.core.dispathTile(newTile, this.username)
                 this._log("goes on tile", newTile.title)
+                this._dispathTile(newTile, false)
             },
             repairBuilding: () => {
                 const cost = this.core.getRepairBuilding(player, card)
