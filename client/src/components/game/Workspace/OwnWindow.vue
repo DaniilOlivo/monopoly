@@ -7,7 +7,10 @@
         <template v-slot:btns>
             <ButtonMain @click="unselect">Close</ButtonMain>
             <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">Sell</ButtonMain>
-            <ButtonMain @click="clickRedeemPledge" v-if="tile.pledge" :disable="disableBtns">Redeem Pledge</ButtonMain>
+            <ButtonMain
+                @click="clickRedeemPledge"
+                v-if="tile.pledge"
+                :disable="disableBtns || tile.price / 2 > thisPlayer.money">Redeem Pledge</ButtonMain>
             <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Put Pledge</ButtonMain>
             <template v-if="monopoly">
                 <ButtonMain 
