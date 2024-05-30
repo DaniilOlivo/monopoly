@@ -1,9 +1,18 @@
 const dotenv = require("dotenv")
 const http = require("http")
+const express = require("express")
+const path = require("path")
 const { Server } = require("socket.io")
+
+const staticFolderPath = path.join(__dirname, "client", "dist")
 
 const app = require("./server/app")
 const connectSocket = require("./server/socket")
+
+app.use(express.static(staticFolderPath))
+app.get("/", (req, res) => {
+    res.sendFile(path.join(staticFolderPath, "index.html"))
+})
 
 dotenv.config()
 
