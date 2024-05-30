@@ -25,10 +25,10 @@ export default {
     computed: {
         mapRent() {
             return {
-                "Rent": 25,
-                "2 stations": 50,
-                "3 stations": 100,
-                "4 stations": 200
+                "Рента": 25,
+                "2 станции": 50,
+                "3 станции": 100,
+                "4 станции": 200
             }
         }
     }

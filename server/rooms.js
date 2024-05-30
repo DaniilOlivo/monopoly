@@ -21,8 +21,8 @@ class Room {
     addPlayer(username, idSocket) {
         const count = this.getCountPlayers()
 
-        if (count >= 8) return [false, "Room overflow"]
-        if (username in this.players) return [false, "Such a player already exists"]
+        if (count >= 8) return [false, "Комната переполнена"]
+        if (username in this.players) return [false, "Игрок с таким именем уже есть"]
         
 
         this.players[username] = {idSocket}

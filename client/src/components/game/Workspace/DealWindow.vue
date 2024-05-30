@@ -4,21 +4,21 @@
 
         <div class="deal-window-workspace">
             <div class="deal-col">
-                <h3>{{ objDeal.initiator ?? "You" }} give:</h3>
+                <h3>{{ (objDeal.initiator) ? objDeal.initiator + "дает" : "Вы даете" }}:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="incomeList"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>Give money:</label>
+                    <label>Дать денег:</label>
                     <input type="number" v-model.number="moneyIncome">
                 </div>
             </div>
             
             <div class="deal-col">
-                <h3>{{ (objDeal.initiator) ? "You" : objDeal.target }} give:</h3>
+                <h3>{{ (objDeal.initiator) ? "Вы даете" : objDeal.target + " дает" }}:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="hostList"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>Get money:</label>
+                    <label>Получить деньги:</label>
                     <input type="number" v-model.number="moneyHost">
                 </div>
             </div>
@@ -26,14 +26,14 @@
 
         <template v-slot:btns>
             <template v-if="objDeal.initiator">
-                <ButtonMain @click="refuse">Refuse</ButtonMain>
-                <ButtonMain @click="change">Change deal</ButtonMain>
-                <ButtonMain @click="accept">Accept</ButtonMain>
+                <ButtonMain @click="refuse">Отказаться</ButtonMain>
+                <ButtonMain @click="change">Изменить сделку</ButtonMain>
+                <ButtonMain @click="accept">Принять</ButtonMain>
             </template>
 
             <template v-else>
-                <ButtonMain @click="closeDeal">Cancel</ButtonMain>
-                <ButtonMain @click="dealSocket">Offer deal</ButtonMain>
+                <ButtonMain @click="closeDeal">Отмена</ButtonMain>
+                <ButtonMain @click="dealSocket">Предложить</ButtonMain>
             </template>
         </template>
     </WindowComponent>
@@ -48,8 +48,8 @@ import { mapMutations, mapState, mapGetters } from "vuex"
 import { gameApi } from "@/socket"
 
 const mapDesc = {
-    "create": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them",
-    "income": "Another player wants to offer you a deal. You can refuse, agree or change the terms of the transaction by offering the amended agreement to the initiator of the transaction",
+    "create": "Укажите условия сделки. Кликните по полям которые хотите отдать или получить, чтобы добавить их в сделку. Если хотите их удалить из сделки, то кликните по их названию в списке",
+    "income": "Другой игрок предложил вам сделку",
 }
 
 export default {
@@ -106,8 +106,8 @@ export default {
 
         titleWindow() {
             const target = this.objDeal.target
-            if (this.objDeal.initiator) return target + " offers you a deal"
-            else return "Offer a deal " + target
+            if (this.objDeal.initiator) return target + " предлагает сделку"
+            else return "Предложить сделку " + target
         },
 
         descWindow() {

@@ -5,7 +5,7 @@
 
         <template v-slot:btns>
             <ButtonMain @click="clickBtn" :disable="disableBtn">
-                {{ cardPayble ? "Pay" : "Ok" }}
+                {{ cardPayble ? "Заплатить" : "Ок" }}
             </ButtonMain>
         </template>
     </WindowComponent>
@@ -34,8 +34,8 @@ export default {
         },
 
         titleWindow() {
-            if (this.card.typeDeck == "chance") return "Chance"
-            else return "Community chest"
+            if (this.card.typeDeck == "chance") return "Шанс"
+            else return "Общественная казна"
         },
 
         cardPayble() {

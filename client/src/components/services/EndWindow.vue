@@ -1,17 +1,17 @@
 <template>
     <WindowComponent :fullscreen="true">
         <h1>
-           Win
+           Победил
            <span class="winner" :style="{color: winner.color.primary}">
                 {{ winner.username }}
             </span> 
         </h1>
 
-        <p>Congratulations! You won! They ruined all the players and turned out to be the most important asshole monopolist</p>
+        <p>Поздравляем! Вы победили! Вы разорили всех игроков и оказались самым главным монополистом мудаком</p>
 
         <template v-slot:btns>
             <RouterLink to="/">
-                <ButtonMain>Main Menu</ButtonMain>
+                <ButtonMain>Главное меню</ButtonMain>
             </RouterLink>
         </template>
     </WindowComponent>

@@ -1,11 +1,11 @@
 <template>
-    <WindowComponent :fullscreen="true" title="List room">
+    <WindowComponent :fullscreen="true" title="Список комнат">
         <ListComponent :elements="list" :clickable="true">
         </ListComponent>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickBack">Back</ButtonMain>
-            <ButtonMain @click="updateList">Update</ButtonMain>
+            <ButtonMain @click="clickBack">Назад</ButtonMain>
+            <ButtonMain @click="updateList">Обновить</ButtonMain>
         </template>
     </WindowComponent>
     

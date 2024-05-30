@@ -1,13 +1,13 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Come up with username">
+    <WindowComponent :fullscreen="true" title="Придумайте имя">
         <div class="input-line">
-            <label>Username:</label>
+            <label>Имя игрока:</label>
             <input type="text" v-model="username">
         </div>
         <p class="warning" v-show="warning">{{ warning }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickRegister">Join room</ButtonMain>
+            <ButtonMain @click="clickRegister">Присоединится</ButtonMain>
         </template>
     </WindowComponent>
 </template>

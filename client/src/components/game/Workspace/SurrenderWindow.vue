@@ -1,8 +1,8 @@
 <template>
-    <WindowComponent title="Do you really want to give up?">
+    <WindowComponent title="Вы действительно хотите сдаться?">
         <template v-slot:btns>
-            <ButtonMain @click="clickCancel">Cancel</ButtonMain>
-            <ButtonMain @click="clickGiveUp">Give Up</ButtonMain>
+            <ButtonMain @click="clickCancel">Отмена</ButtonMain>
+            <ButtonMain @click="clickGiveUp">Сдаться</ButtonMain>
         </template>
     </WindowComponent>
 </template>

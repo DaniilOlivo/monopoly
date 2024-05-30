@@ -1,13 +1,13 @@
 <template>
-    <WindowComponent title="Do you want to buy property?">
+    <WindowComponent title="Вы хотите приобрести эту собственность?">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
-            <p>Price: <span class="info__cost">{{ tile.price }} M</span></p>
+            <p>Цена: <span class="info__cost">{{ tile.price }} M</span></p>
             <p>{{ desc }}</p>
         </div>
         <template v-slot:btns>
-            <ButtonMain @click="refuse">Refuse</ButtonMain>
-            <ButtonMain @click="buy" :disable="!canBuy">Buy</ButtonMain>
+            <ButtonMain @click="refuse">Отказаться</ButtonMain>
+            <ButtonMain @click="buy" :disable="!canBuy">Купить</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -39,8 +39,8 @@ export default {
         },
 
         desc() {
-            if (this.canBuy) return "This property is available for purchase"
-            else return "You don't have money to buy"
+            if (this.canBuy) return "Вы можете ее приобрести"
+            else return "У вас не хватает денег"
         }
     },
     methods: {

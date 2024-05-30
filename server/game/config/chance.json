@@ -1,109 +1,109 @@
 [
     {
-        "text": "Go to Mayfajr",
+        "text": "Идите на поле Гостиница",
         "type": "goTo",
         "location": "blue_2"
     },
 
     {
-        "text": "Go to Start",
+        "text": "Отпраляйтесь на поле GO",
         "type": "goTo",
         "location": "start"
     },
 
     {
-        "text": "Release from prison",
-        "desc": "The card can be used later or sold",
+        "text": "Освобождение из тюрьмы",
+        "desc": "Эту карту можно использовать позже или обменять",
         "type": "release"
     },
 
     {
-        "text": "Collection for street repairs",
-        "desc": "40 M. for each house. 115 M. for each hotel",
+        "text": "Сбор на ремонт улиц",
+        "desc": "40 M. за каждый дом. 115 M. за каждый отель",
         "type": "repairBuilding",
         "amount": 40,
         "amountHotel": 115
     },
 
     {
-        "text": "Go to Strand",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "text": "Отправляйтесь в Ресторан",
+        "desc": "Если вы проходите поле GO, то получите 200 M.",
         "type": "goTo",
         "location": "red_1"
     },
 
     {
-        "text": "Speeding fine",
-        "desc": "Pay 15 M.",
+        "text": "Превышение скорости",
+        "desc": "Заплатите 15 M.",
         "type": "money",
         "amount": -15
     },
 
     {
-        "text": "Loan repayment",
-        "desc": "Get 150 M.",
+        "text": "Погашение кредита",
+        "desc": "Получите 150 M.",
         "type": "money",
         "amount": 150
     },
 
     {
-        "text": "You were arrested",
-        "desc": "Go to jail",
+        "text": "Вы арестованы!",
+        "desc": "Отправляйтесь в тюрьму",
         "type": "arrest"
     },
 
     {
-        "text": "Major renovation",
-        "desc":"25 M. for each house. 100 M. for each hotel",
+        "text": "Капитальный ремонт",
+        "desc":"25 M. за каждый дом. 100 M. за каждый отель",
         "type": "repairBuilding",
         "amount": 25,
         "amountHotel": 100
     },
 
     {
-        "text": "Go to Fenchurch St. Station",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "text": "Отправляйтесь на Северную станцию",
+        "desc": "Если вы проходите поле GO, то получите 200 M.",
         "type": "goTo",
         "location": "station_3"
     },
 
     {
-        "text": "Bank dividends",
-        "desc": "Get 50 M.",
+        "text": "Дивиденты из банка",
+        "desc": "Получите 50 M.",
         "type": "money",
         "amount": 50
     },
 
     {
-        "text": "Drunk driving",
-        "desc": "Pay 20 M.",
+        "text": "Вождение в нетрезвом виде",
+        "desc": "Заплатите 20 M.",
         "type": "money",
         "amount": -20
     },
 
     {
-        "text": "Payment for driver courses",
-        "desc": "Pay 150 M.",
+        "text": "Оплата курсов водителей",
+        "desc": "Заплатите 150 M.",
         "type": "money",
         "amount": -150
     },
 
     {
-        "text": "You won the chess championship",
-        "desc": "Get 100 M.",
+        "text": "Вы выиграли чемпионат по шахматам",
+        "desc": "Получите 100 M.",
         "type": "money",
         "amount": 100
     },
 
     {
-        "text": "Go to The Angel, Islington",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "text": "Отправляйтесь в Аквапарк",
+        "desc": "Если вы проходите поле GO, то получите 200 M.",
         "type": "goTo",
         "location": "cyan_1"
     },
 
     {
-        "text": "Go back three squares",
+        "text": "Вернитесь на три поля назад",
         "type": "goToBack",
         "amount": 3
     }

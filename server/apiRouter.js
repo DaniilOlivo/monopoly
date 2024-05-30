@@ -7,8 +7,8 @@ const router = express.Router()
 router.post("/create", (req, res) => {
     const title = req.body.title
     const result = roomManager.createRoom(title)
-    let responseData = {ok: false, desc: "There is already a room with that name"}
-    if (result) responseData = {ok: true, desc: "Room created"}
+    let responseData = {ok: false, desc: "Комната с таким названием уже существует"}
+    if (result) responseData = {ok: true, desc: "Комната создана"}
     res.send(JSON.stringify(responseData))
 })
 
@@ -20,8 +20,8 @@ router.get("/list", (req, res) => {
 router.post("/delete", (req, res) => {
     const title = req.body.title
     const result = roomManager.deleteRoom(title)
-    let responseData = {ok: false, desc: "There is no such room"}
-    if (result) responseData = {ok: true, desc: "Room deleted"}
+    let responseData = {ok: false, desc: "Комната не найдена"}
+    if (result) responseData = {ok: true, desc: "Комната удалена"}
     res.send(JSON.stringify(responseData))
 })
 

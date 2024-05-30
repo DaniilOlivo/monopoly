@@ -25,7 +25,7 @@ class Executor {
     _passNewLap(boolNewLap) {
         if (!boolNewLap) return
         const lapMoney = settings["lapMoney"]
-        this._log("passes tile 'Go' and receives", lapMoney + 'M.')
+        this._log("проходит поле GO и получает", lapMoney + 'M.')
         this._getPlayer().money += lapMoney
     }
 
@@ -34,7 +34,7 @@ class Executor {
         const capital = this.core.getCapital(this.username)
 
         if (capital < mustPay) {
-            this._log("becomes bankrupt and drops out of the game")
+            this._log("становится банкротом и выбывает из игры")
             this.core.disablePlayer(this.username)
             if (next) this.core.next()
         }
@@ -53,7 +53,7 @@ class Executor {
     }
 
     roll({ dices }) {
-        this._log("roll dices with meaning", dices.toString())
+        this._log("кидает кубики с значением", dices.toString())
         
         if (this.core.stage == "start") {
             const result = this.core.tracker.setOrder(this.username, dices)
@@ -73,13 +73,13 @@ class Executor {
         
         if (val1 == val2 && player.arrested > 0) {
             player.arrested = 0
-            this._log("throws a double and escapes from prison")
+            this._log("выбрасывает дубль и сбегает из тюрьмы")
         }
 
         if (player.arrested > 0) {
             player.arrested -= 1
             this.core.next()
-            this._log("are still in prison.", player.arrested + " moves left")
+            this._log("остается в тюрьме.", player.arrested + " ходов осталось")
             return
         }
 
@@ -87,7 +87,7 @@ class Executor {
         this._passNewLap(newLapBool)
 
         const tile = this.core.field.findPlayer(this.username)
-        this._log("ends up on the", tile.title)
+        this._log("останавливается на", tile.title)
 
         this._dispathTile(tile)
     }
@@ -101,7 +101,7 @@ class Executor {
         player.clearService("offer")
 
         if (options.refuse) {
-            this._log("refused buy", tile.title)
+            this._log("отказывается от покупки", tile.title)
             this._next(options)
             return
         }
@@ -123,7 +123,7 @@ class Executor {
 
         player.money -= price
         player.addOwn(tile)
-        this._log("buys", tile.title)
+        this._log("покупает", tile.title)
         this._next(options)
     }
 
@@ -143,7 +143,7 @@ class Executor {
             )
             tile.pledge = true
             playerOwner.money += free ? 0 : tile.price / 2
-            this._log("put pledges", tile.title)
+            this._log("закладывает", tile.title)
         }
         else if (type == "redeem") {
             const cost = free ? 0 : tile.price / 2
@@ -155,7 +155,7 @@ class Executor {
             this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.pledge = false
-            this._log("redeem pledge", tile.title)
+            this._log("выкупает", tile.title)
         }
         else this.validator.throwError("Invalid type pledge", type)
     }
@@ -183,12 +183,12 @@ class Executor {
             this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.addBuilding()
-            this._log(`built ${tile.hotel ? "hotel" : "building"}`, tile.title)
+            this._log(`строит ${tile.hotel ? "отель" : "дом"} на`, tile.title)
         }
         else if (type == "remove") {
             playerOwner.money += free ? 0 : tile.priceBuilding / 2
             tile.removeBuilding()
-            this._log(`removed ${tile.hotel ? "hotel" : "building"}`, tile.title)
+            this._log(`сносит ${tile.hotel ? "отель" : "дом"} на`, tile.title)
         }
         else this.validator.throwError("Invalid type build", type)
     }
@@ -214,7 +214,7 @@ class Executor {
         player.money -= price
         ownerPlayer.money += price
         player.clearService("rent")
-        this._log("paid rent", price + "M.")
+        this._log("платит аренду в размере", price + "M.")
         this._next(options)
     }
 
@@ -228,6 +228,7 @@ class Executor {
         playerOwner.money += money
         playerOwner.removeOwn(tile)
         if (tile.pledge) tile.pledge = false
+        this._log("продал", tile.title)
     }
 
     tax(options={}) {
@@ -241,7 +242,7 @@ class Executor {
 
         player.money -= cost
         player.clearService("tax")
-        this._log("paid tax", cost + "M.")
+        this._log("платит налог в размере", cost + "M.")
         this._next(options)
     }
 
@@ -251,7 +252,7 @@ class Executor {
         this.validator.checkObjDeal(objDeal)
         const player = this._getPlayer(objDeal.target)
         player.setService("deal", objDeal)
-        this._log("proposed a deal", objDeal.target)
+        this._log("предлагает сделку", objDeal.target)
     }
 
     trade(options={}) {
@@ -259,9 +260,9 @@ class Executor {
         const targetPlayer = this._getPlayer()
         const objDeal = targetPlayer.service.deal
         targetPlayer.clearService("deal")
-        if (refuse) return this._log("refused the deal with the player", objDeal.initiator)
+        if (refuse) return this._log("отказывается от сделки с", objDeal.initiator)
         const initiatorPlayer = this._getPlayer(objDeal.initiator)
-        this._log("made a deal with the player", objDeal.initiator)
+        this._log("заключает сделку с", objDeal.initiator)
 
         const swapMoney = (fromPlayer, toPlayer, value) => {
             this.validator.checkMoney(value, fromPlayer.money)
@@ -273,7 +274,7 @@ class Executor {
             for (const idTile of arrTiles) {
                 const tile = this._getTile(idTile)
                 fromPlayer.transfer(tile, toPlayer)
-                this.core.pushLog("receives property", toPlayer.username, tile.title)
+                this.core.pushLog("получает собственность", toPlayer.username, tile.title)
             }
         }
 
@@ -286,9 +287,9 @@ class Executor {
         swapMoney(targetPlayer, initiatorPlayer, moneyHost)
 
         if (objDeal.moneyHost > 0)
-            this.core.pushLog("receives money", objDeal.initiator, moneyHost + " M.")
+            this.core.pushLog("получает деньги", objDeal.initiator, moneyHost + " M.")
         if (objDeal.moneyIncome > 0)
-            this.core.pushLog("receives money", objDeal.host, moneyIncome + " M.")
+            this.core.pushLog("получает деньги", objDeal.host, moneyIncome + " M.")
     }
 
     card(options={}) {
@@ -302,34 +303,34 @@ class Executor {
                 const newBoolLap = this.core.field.moveById(this.username, card.location)
                 this._passNewLap(newBoolLap)
                 const newTile = this._getTile(card.location)
-                this._log("goes on tile", newTile.title)
+                this._log("отправляется на поле", newTile.title)
                 this._dispathTile(newTile, false)
             },
             release: () => {
                 player.releasePrison += 1
-                this._log("got released from prison")
+                this._log("получает освобождение из тюрьмы")
             },
             money: () => {
                 player.money += card.amount
                 this._log(
-                    `${card.amount >= 0 ? "receives" : "spends"} money`,
+                    `${card.amount >= 0 ? "получает" : "платит"}`,
                     card.amount + " M."
                 )
             },
             goToBack: () => {
                 this.core.field.move(this.username, -card.amount)
                 const newTile = this.core.field.findPlayer(this.username)
-                this._log("goes on tile", newTile.title)
+                this._log("отправляется на клетку", newTile.title)
                 this._dispathTile(newTile, false)
             },
             repairBuilding: () => {
                 const cost = this.core.getRepairBuilding(player, card)
                 player.money -= cost
-                this._log("pays for his buildings", cost + " M.")
+                this._log("платит за здания", cost + " M.")
             },
             arrest: () => {
                 this.core.arrest(this.username)
-                this._log("arrested!")
+                this._log("арестован!")
             },
             happyBirthday: () => {
                 const amount = card.amount
@@ -344,7 +345,7 @@ class Executor {
                         birthdayBoy.money += amount
                     }
                 }
-                this._log("player's birthday! Everyone chips in", amount + " M.")
+                this._log("День рождения! Каждый скидывается по", amount + " M.")
             }
         }
 
@@ -355,13 +356,13 @@ class Executor {
     }
 
     surrender() {
-        this._log("gave up!")
+        this._log("сдается!")
         this.core.disablePlayer(this.username)
         if (this.core.tracker.current == this.username) this.core.next()
     }
 
     jailbreak() {
-        this._log("uses jailbreak")
+        this._log("использует освобождение из тюрьмы")
         const player = this._getPlayer()
         player.arrested = 0
     }

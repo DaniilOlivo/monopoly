@@ -14,8 +14,8 @@ class Tile {
             this.hotel = false
         }
         if (type == "communal") this.desc = desc.communal
-        if (type == "chance") this.title = "Chance"
-        if (type == "community_chest") this.title = "Community chest"
+        if (type == "chance") this.title = "Шанс"
+        if (type == "community_chest") this.title = "Общественная казна"
 
         this.players = []
         this.owner = null

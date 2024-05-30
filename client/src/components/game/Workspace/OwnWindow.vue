@@ -1,26 +1,26 @@
 <template>
-    <WindowComponent title="Property management">
+    <WindowComponent title="Управление собственностью">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
-            <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
+            <p class="info_warning" v-if="tile.pledge">Собственность заложена</p>
         </div>
         <template v-slot:btns>
-            <ButtonMain @click="unselect">Close</ButtonMain>
-            <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">Sell</ButtonMain>
+            <ButtonMain @click="unselect">Закрыть</ButtonMain>
+            <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">Продать</ButtonMain>
             <ButtonMain
                 @click="clickRedeemPledge"
                 v-if="tile.pledge"
-                :disable="disableBtns || tile.price / 2 > thisPlayer.money">Redeem Pledge</ButtonMain>
-            <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Put Pledge</ButtonMain>
+                :disable="disableBtns || tile.price / 2 > thisPlayer.money">Выкупить</ButtonMain>
+            <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Заложить</ButtonMain>
             <template v-if="monopoly">
                 <ButtonMain 
                     @click="clickAddBuilding"
                     :disable="disableBtns || tile.hotel || notEnoughMoney"
-                     >{{ (tile.building == 4) ? 'Buy hotel' : 'Buy building' }}</ButtonMain>
+                     >{{ (tile.building == 4) ? 'Купить отель' : 'Купить дом' }}</ButtonMain>
                 <ButtonMain 
                     @click="clickRemoveBuilding"
                     :disable="disableBtns || tile.building == 0"
-                    >{{ (tile.hotel) ? 'Sell hotel' : 'Sell building' }}</ButtonMain>
+                    >{{ (tile.hotel) ? 'Продать отель' : 'Продать дом' }}</ButtonMain>
             </template>
         </template>
     </WindowComponent>

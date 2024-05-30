@@ -1,109 +1,109 @@
 [
     {
-        "text": "Banking error in your favor",
-        "desc": "Get 200 M.",
+        "text": "Банковская ошибка в вашу пользу",
+        "desc": "Получите 200 M.",
         "type": "money",
         "amount": 200
     },
 
     {
-        "text": "Profitable sale of shares",
-        "desc": "Get 25 M.",
+        "text": "Выгодная продажа акций",
+        "desc": "Получите 25 M.",
         "type": "money",
         "amount": 25
     },
 
     {
-        "text": "Release from prison",
-        "desc": "The card can be used later or sold",
+        "text": "Освобождение из тюрьмы",
+        "desc": "Эту карту можно использовать позже или обменять",
         "type": "release"
     },
 
     {
-        "text": "You won at the casino",
-        "desc": "Get 150 M.",
+        "text": "Вы выиграли в казино",
+        "desc": "Получите 150 M.",
         "type": "money",
         "amount": 150
     },
 
     {
-        "text": "You received an inheritance",
-        "desc": "Get 100 M.",
+        "text": "Вы получили наследство",
+        "desc": "Получите 100 M.",
         "type": "money",
         "amount": 100
     },
 
     {
-        "text": "Tax refund",
-        "desc":"Get 25 M.",
+        "text": "Возврат налога",
+        "desc":"Получите 25 M.",
         "type": "money",
         "amount": 25
     },
 
     {
-        "text": "You were arrested",
-        "desc": "Go to jail",
+        "text": "Вас арестовали",
+        "desc": "Отправляйтесь в тюрьму",
         "type": "arrest"
     },
 
     {
-        "text": "Payment for insurance",
-        "desc": "Pay 50 M.",
+        "text": "Оплата страховки",
+        "desc": "Заплатите 50 M.",
         "type": "money",
         "amount": -50
     },
 
     {
-        "text": "You took second place in a beauty contest",
-        "desc": "Get 10 M.",
+        "text": "Вы заняли второе место на конкурсе красоты",
+        "desc": "Получите 10 M.",
         "type": "money",
         "amount": 10
     },
 
     {
-        "text": "Profitable sale of bonds",
-        "desc": "Get 50 M.",
+        "text": "Выгодная продажа облигаций",
+        "desc": "Получите 50 M.",
         "type": "money",
         "amount": 50
     },
 
     {
-        "text": "Payment for treatment",
-        "desc": "Pay 100 M.",
+        "text": "Оплата лечения",
+        "desc": "Заплатите 100 M.",
         "type": "money",
         "amount": -100
     },
 
     {
-        "text": "Return to Old Kent Road",
+        "text": "Вернитесь на Старую дорогу",
         "type": "goTo",
         "location": "brown_1"
     },
 
     {
-        "text": "Rent collection",
-        "desc":"Get 100 M.",
+        "text": "Сбор ренты",
+        "desc":"Получите 100 M.",
         "type": "money",
         "amount": 100
     },
 
     {
-        "text": "Happy birthday!",
-        "desc": "Get 10 M. from each player",
+        "text": "День рождения!",
+        "desc": "Получите 10 M. от каждого игрока",
         "type": "happyBirthday",
         "amount": 10
     },
 
     {
-        "text": "Pay the fine",
-        "desc": "Pay 10 M.",
+        "text": "Оплатите штраф",
+        "desc": "Заплатите 10 M.",
         "type": "money",
         "amount": -10
     },
 
     {
-        "text": "Payment for doctor's services",
-        "desc": "Pay 50 M.",
+        "text": "Оплата услуг врача",
+        "desc": "Заплатите 50 M.",
         "type": "money",
         "amount": -50
     }

@@ -1,7 +1,7 @@
 <template>
     <WindowComponent :fullscreen="true">
-        <RouterLink to="/create"><ButtonMain>Create room</ButtonMain></RouterLink>
-        <RouterLink to="/list"><ButtonMain>List rooms</ButtonMain></RouterLink>
+        <RouterLink to="/create"><ButtonMain>Создать комнату</ButtonMain></RouterLink>
+        <RouterLink to="/list"><ButtonMain>Список комнат</ButtonMain></RouterLink>
     </WindowComponent>
 </template>
 

@@ -1,14 +1,14 @@
 <template>
-    <WindowComponent title="Rent">
+    <WindowComponent title="Рента">
         <p>
-            You have to pay <span class="rent-window__cost">{{ rent.cost }} М.</span>
-            player <span
+            Вам надо заплатить <span class="rent-window__cost">{{ rent.cost }} М.</span>
+            игроку <span
                 class="rent-window__owner"
                 :style="{color: colorOwner}">{{ rent.tile.owner }}</span>
         </p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickRent" :disable="disableRent">Rent</ButtonMain>
+            <ButtonMain @click="clickRent" :disable="disableRent">Заплатить</ButtonMain>
         </template>
     </WindowComponent>
 </template>

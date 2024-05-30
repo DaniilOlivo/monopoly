@@ -1,12 +1,12 @@
 <template>
-    <WindowComponent title="Player card">
+    <WindowComponent title="Карточка игрока">
         <p>
-            Cards jailbreaks: {{ thisPlayer.releasePrison }}
+            Карты освобождения из тюрьмы: {{ thisPlayer.releasePrison }}
         </p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickClose">Close</ButtonMain>
-            <ButtonMain @click="clickGiveUp">Give up</ButtonMain>
+            <ButtonMain @click="clickClose">Закрыть</ButtonMain>
+            <ButtonMain @click="clickGiveUp">Сдаться</ButtonMain>
         </template>
     </WindowComponent>
 </template>

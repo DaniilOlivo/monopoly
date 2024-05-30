@@ -1,14 +1,14 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Create Room">
+    <WindowComponent :fullscreen="true" title="Создание комнаты">
         <div class="input-line">
-            <label>Title room:</label>
+            <label>Название комнаты:</label>
             <input type="text" v-model="title">
         </div>
         <p class="warning" v-show="warning">{{ warning }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickBack">Back</ButtonMain>
-            <ButtonMain @click="clickCreate(title)">Create room</ButtonMain>
+            <ButtonMain @click="clickBack">Назад</ButtonMain>
+            <ButtonMain @click="clickCreate(title)">Создать комнату</ButtonMain>
         </template>
     </WindowComponent>
 </template>

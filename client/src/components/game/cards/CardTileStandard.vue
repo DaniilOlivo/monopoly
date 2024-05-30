@@ -3,7 +3,7 @@
         <div
             class="card__header"
             :style="{'background-color': tile.color}" >
-            <p>Owner card</p>
+            <p>Карта собственности</p>
             <h3>{{ tile.title }}</h3>
         </div>
 
@@ -16,12 +16,12 @@
 
         <div class="cost-block">
             <div class="block-line">
-                <span>Cost house</span>
+                <span>Цена дома</span>
                 <span class="block-line__money">M {{ tile.priceBuilding }}</span>
             </div>
 
             <div class="block-line">
-                <span>Cost hotel</span>
+                <span>Цена отеля</span>
                 <span class="block-line__money">M {{ tile.priceBuilding }}</span>
             </div>
         </div>
@@ -42,13 +42,13 @@ export default {
     computed: {
         mapRent() {
             return {
-                "Rent": this.tile.rent_basic,
-                "Rent with full set": this.tile.rent_basic * 2,
-                "1 house": this.tile.rent_1_house,
-                "2 house": this.tile.rent_2_house,
-                "3 house": this.tile.rent_3_house,
-                "4 house": this.tile.rent_4_house,
-                "Hotel": this.tile.rent_hotel
+                "Рента": this.tile.rent_basic,
+                "Все карточки этого цвета": this.tile.rent_basic * 2,
+                "1 дом": this.tile.rent_1_house,
+                "2 дома": this.tile.rent_2_house,
+                "3 дома": this.tile.rent_3_house,
+                "4 дома": this.tile.rent_4_house,
+                "Отель": this.tile.rent_hotel
             }
         }
     }
@@ -75,9 +75,12 @@ export default {
 .block-line {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 1em;
 }
 
 .block-line__money {
     font-weight: bold;
+    white-space: nowrap;
 }
 </style>

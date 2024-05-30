@@ -17,12 +17,12 @@ import PanelRoller from './PanelRoller.vue';
 import { mapState } from "vuex"
 
 const mapStatus = {
-    firstRoll: "Roll the dice to determine the order of the players",
-    waitPlayers: "Waiting for the other players",
-    waitMove: "It's your move, ",
-    waitOffer: " thinking about buying",
-    waitRent: " must pay rent",
-    waitDeal: "We are waiting for a decision ",
+    firstRoll: "Бросьте кубики, чтобы определить порядок игроков",
+    waitPlayers: "Ждем других игроков",
+    waitMove: "Твой ход, ",
+    waitOffer: " думает о покупке",
+    waitRent: " должен заплатить ренту",
+    waitDeal: "Ждем решение сделки от ",
 }
 
 export default {
