@@ -18,8 +18,6 @@ import ListComponent from '../common/ListComponent.vue';
 import { socket } from "@/socket"
 import { mapState } from "vuex"
 
-import { skipStartGame } from "@/components/devComponents/skip"
-
 export default {
     name: "WaitingList",
     components: {
@@ -59,12 +57,6 @@ export default {
         clickStartGame() {
             socket.emit("startGame")
         },
-    },
-
-    watch: {
-        list(value) {
-            skipStartGame(value)
-        }
     }
 }
 </script>
