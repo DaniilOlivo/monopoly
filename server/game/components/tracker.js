@@ -7,18 +7,21 @@ class Tracker {
         this.valuesDices = {}
     }
 
-    setOrder(username, dices) {
-        const valuesDices = this.valuesDices
-        valuesDices[username] = dices
-        const players = Object.keys(valuesDices)
+    setOrder() {
+        const players = Object.keys(this.valuesDices)
         if (players.length == this.countPlayers) {
             const sum = (arr) => arr.reduce((s, a) => s + a, 0)
-            this.order = players.sort((a, b) => sum(valuesDices[b]) - sum(valuesDices[a]))
+            this.order = players.sort((a, b) => sum(this.valuesDices[b]) - sum(this.valuesDices[a]))
             this.current = this.order[0]
             return true
         }
 
         return false
+    }
+
+    setDiceValue(username, dices) {
+        this.valuesDices[username] = dices
+        return this.setOrder()
     }
 
     next() {

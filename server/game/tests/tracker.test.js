@@ -8,14 +8,14 @@ describe("Component Tracker", () => {
     
     describe("setOrder", () => {
         it("add player", () => {
-            const result = tracker.setOrder("Scorpion", [1, 1])
+            const result = tracker.setDiceValue("Scorpion", [1, 1])
             assert.isFalse(result)
             assert.isNull(tracker.current)
         })
 
         it("add all players", () => {
-            tracker.setOrder("Sub Zero", [6, 5])
-            const result = tracker.setOrder("Sonya Blade", [3, 2])
+            tracker.setDiceValue("Sub Zero", [6, 5])
+            const result = tracker.setDiceValue("Sonya Blade", [3, 2])
             assert.isTrue(result)
             assert.equal(tracker.current, "Sub Zero")
             assert.deepEqual(tracker.order, listPlayers)

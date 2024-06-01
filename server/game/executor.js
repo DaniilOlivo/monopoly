@@ -56,7 +56,7 @@ class Executor {
         this._log("roll dices with meaning", dices.toString())
         
         if (this.core.stage == "start") {
-            const result = this.core.tracker.setOrder(this.username, dices)
+            const result = this.core.tracker.setDiceValue(this.username, dices)
             if (result) this.core.stage = "main"
             return
         }
