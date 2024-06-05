@@ -3,9 +3,15 @@
         <ListComponent :elements="list">
         </ListComponent>
 
+        <p v-if="isPlayerHost && !activeButton">A minimum of two players are required to start the game.</p>
+        <p v-if="!isPlayerHost">We are waiting for the host of the room to start the game</p>
+
         <template v-slot:btns>
             <ButtonMain @click="clickLeave">Leave</ButtonMain>
-            <ButtonMain @click="clickStartGame" :disable="!activeButton">Start game</ButtonMain>
+            <ButtonMain
+                v-if="isPlayerHost"
+                @click="clickStartGame"
+                :disable="!activeButton">Start game</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -36,15 +42,13 @@ export default {
             return Object.keys(this.objectPlayers)
         },
 
-        activeButton() {
-            if (this.objectPlayers) {
-                const host = this.objectPlayers[this.username].host
-                const lenPlayers = this.list.length
-                
-                return host && lenPlayers >= 2
-            }
-            
-            return false
+        isPlayerHost() {
+            if (!this.objectPlayers) return false
+            return this.objectPlayers[this.username].host
+        },
+
+        activeButton() {        
+            return this.list.length >= 2
         }
     },
 
