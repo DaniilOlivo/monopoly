@@ -287,7 +287,7 @@ class Executor {
         if (objDeal.moneyHost > 0)
             this.core.pushLog("receives money", objDeal.initiator, moneyHost + " M.")
         if (objDeal.moneyIncome > 0)
-            this.core.pushLog("receives money", objDeal.host, moneyIncome + " M.")
+            this.core.pushLog("receives money", this.username, moneyIncome + " M.")
     }
 
     card(options={}) {

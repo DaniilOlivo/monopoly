@@ -4,12 +4,12 @@
 
         <div class="deal-window-workspace">
             <div class="deal-col">
-                <h3>{{ objDeal.initiator ?? "You" }} give:</h3>
+                <h3>{{ objDeal.initiator ?? "You"  }} give:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="incomeList"></ListComponent>
                 
                 <div class="deal-col__panel">
                     <label>Give money:</label>
-                    <input type="number" v-model.number="moneyIncome">
+                    <input type="number" v-model.number="moneyIncome" :disabled="objDeal.initiator">
                 </div>
             </div>
             
@@ -19,7 +19,7 @@
                 
                 <div class="deal-col__panel">
                     <label>Get money:</label>
-                    <input type="number" v-model.number="moneyHost">
+                    <input type="number" v-model.number="moneyHost" :disabled="objDeal.initiator">
                 </div>
             </div>
         </div>

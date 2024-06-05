@@ -1,8 +1,8 @@
 function getEmptyObjectDeal() {
     return {
       active: false,
-      initiator: "",
-      target: "",
+      initiator: null,
+      target: null,
       income: [],
       host: [],
       moneyIncome: 0,
