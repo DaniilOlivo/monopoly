@@ -10,7 +10,7 @@ import OopsWindow from '@/components/services/OopsWindow.vue';
 import EndWindow from '@/components/services/EndWindow.vue'
 
 import { socket } from "@/socket"
-import { mapState } from "vuex"
+import { mapGetters } from "vuex"
 
 export default {
     name: "RoomGame",
@@ -24,24 +24,23 @@ export default {
 
     mounted() {
         socket.connect()
+        // We check if the game is already running, in case we reconnect
+        socket.emit("pingGame", this.$router.currentRoute.value.params.room)
     },
 
     computed: {
-        ...mapState([
-            "stage",
-            "game"
-        ]),
+        ...mapGetters(["stage"]),
+
         currentComponent() {
             const mapStage = {
                 "register": "PlayerRegister",
-                "waiting": "WaitingList",
-                "game": "GameCore"
+                "lobby": "WaitingList",
+                "game": "GameCore",
+                "end": "EndWindow"
             }
 
             let currentComponent = mapStage[this.stage]
             if (!currentComponent) return "OopsWindow"
-            if (this.stage === "game" && !this.game) return "OopsWindow"
-            if (this.game && this.game.stage === "end") return "EndWindow"
             
             return currentComponent
         }

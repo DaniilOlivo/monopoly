@@ -4,20 +4,10 @@ import deal from "./deal"
 import workspace from "./workspace"
 import field from './field'
 
-const stages = {
-  queue: [
-    "register",
-    "waiting",
-    "game"
-  ],
-  cursor: 0
-}
-
 export default createStore({
   state: {
     connection: false,
     username: "",
-    stage: "register",
     service: {
       "register": "",
       "waiting": null
@@ -27,6 +17,16 @@ export default createStore({
     consoleDevOpen: false,
   },
   getters: {
+    stage(state) {
+      const { username, game } = state
+      if (username && game) {
+        return (game.stage == "end") ? "end" : "game"
+      }
+      if (username && !game) return "lobby"
+      if (!username && game) return "reconnect"
+      if (!username && !game) return "register"
+    },
+
     thisPlayer(state) {
       return state.game.players[state.username]
     },
@@ -60,13 +60,6 @@ export default createStore({
       state.username = val
     },
 
-    nextStage(state) {
-      const newCursor = stages.cursor + 1
-      if (newCursor >= stages.queue.length) return
-      stages.cursor = newCursor
-      state.stage = stages.queue[newCursor]
-    },
-
     setService(state, { service, value }) {
       state.service[service] = value
     },
@@ -75,6 +68,7 @@ export default createStore({
       state.previousGame = state.game
       state.game = game
     },
+
     setConsole(state, isOpen) {
       state.consoleDevOpen = isOpen
     }

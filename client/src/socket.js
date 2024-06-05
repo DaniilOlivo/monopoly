@@ -12,7 +12,6 @@ export function gameApi(command, options={}) {
 socket.on("registerResponse", (username, status, desc) => {
     if (status) {
         store.commit("setUsername", username)
-        store.commit("nextStage")
     } else {
         store.commit("setService", {
             service: "register",
@@ -28,14 +27,16 @@ socket.on("dataRoom", (players) => {
     })
 })
 
-socket.on("initGame", () => {
-    store.commit("nextStage")
-})
-
 socket.on("updateGame", (game) => {
     store.commit("setGame", game)
-    const objDeal = store.getters.thisPlayer.service.deal
-    if (objDeal) store.commit("deal/setDeal", objDeal)
+    if (store.getters.stage == "game") {
+        const objDeal = store.getters.thisPlayer.service.deal
+        if (objDeal) store.commit("deal/setDeal", objDeal)
+    }
+})
+
+socket.on("reconnect", (username) => {
+    store.commit("setUsername", username)
 })
 
 socket.on("connect", () => store.commit("setConnection", true))

@@ -10,7 +10,7 @@ const app = require("./server/app")
 const connectSocket = require("./server/socket")
 
 app.use(express.static(staticFolderPath))
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
     res.sendFile(path.join(staticFolderPath, "index.html"))
 })
 

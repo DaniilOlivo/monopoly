@@ -27,12 +27,36 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     }
 
+    socket.on("pingGame", (titleRoom) => {
+        const room = roomManager.rooms[titleRoom]
+        if (room && room.game) {
+            const entry = Object.entries(mapSockets).find(entry => entry[1].timer)
+            if (entry) {
+                const [idSocket, objSocket] = entry
+                
+                delete mapSockets[idSocket]
+                socket.leave(idSocket)
+
+                clearTimeout(objSocket.timer)
+                delete objSocket.timer
+
+                mapSockets[socket.id] = objSocket
+                socket.join(titleRoom)
+
+                socket.emit("reconnect", objSocket.username)
+                useGame("message", {message: "reconnect"})
+            }
+
+            socket.emit("updateGame", room.game)
+        }
+    })
+
     socket.on("register", (username, title) => {
         const room = roomManager.rooms[title]
         let status = false
         let desc = ""
         if (room) {
-            [status, desc] = room.addPlayer(username, socket.id)
+            [status, desc] = room.addPlayer(username)
         } else {
             desc = "This room does not exist. Try connecting to another"
         }
@@ -49,7 +73,6 @@ module.exports = function connect(socket, serverSockets) {
     socket.on("startGame", () => {
         const {room} = mapSockets[socket.id]
         room.startGame()
-        serverSockets.to(room.title).emit("initGame")
         updateGame(room)
     })
 
