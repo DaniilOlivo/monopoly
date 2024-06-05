@@ -29,14 +29,13 @@ class Executor {
         this._getPlayer().money += lapMoney
     }
 
-    _dispathTile(tile, next=true) {
+    _dispathTile(tile) {
         const mustPay = this.core.dispathTile(tile, this.username)
         const capital = this.core.getCapital(this.username)
 
         if (capital < mustPay) {
             this._log("becomes bankrupt and drops out of the game")
             this.core.disablePlayer(this.username)
-            if (next) this.core.next()
         }
     }
 
@@ -303,7 +302,7 @@ class Executor {
                 this._passNewLap(newBoolLap)
                 const newTile = this._getTile(card.location)
                 this._log("goes on tile", newTile.title)
-                this._dispathTile(newTile, false)
+                this._dispathTile(newTile)
             },
             release: () => {
                 player.releasePrison += 1
@@ -320,7 +319,7 @@ class Executor {
                 this.core.field.move(this.username, -card.amount)
                 const newTile = this.core.field.findPlayer(this.username)
                 this._log("goes on tile", newTile.title)
-                this._dispathTile(newTile, false)
+                this._dispathTile(newTile)
             },
             repairBuilding: () => {
                 const cost = this.core.getRepairBuilding(player, card)
@@ -338,11 +337,12 @@ class Executor {
                     const username = player.username
                     if (this.username == username) continue
                     
-                    if (player.money < amount) this.core.disablePlayer(username)
-                    else {
-                        player.money -= amount
-                        birthdayBoy.money += amount
+                    if (player.money < amount) {
+                        this.core.disablePlayer(username)
+                        break
                     }
+                    player.money -= amount
+                    birthdayBoy.money += amount
                 }
                 this._log("player's birthday! Everyone chips in", amount + " M.")
             }
@@ -357,13 +357,17 @@ class Executor {
     surrender() {
         this._log("gave up!")
         this.core.disablePlayer(this.username)
-        if (this.core.tracker.current == this.username) this.core.next()
     }
 
     jailbreak() {
         this._log("uses jailbreak")
         const player = this._getPlayer()
         player.arrested = 0
+    }
+
+    disconnect() {
+        this.core.disablePlayer(this.username)
+        this._log("disconnect")
     }
 }
 

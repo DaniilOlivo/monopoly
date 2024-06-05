@@ -125,12 +125,24 @@ class Game {
 
     disablePlayer(username) {
         const player = this.players[username]
-        for (let i = player.own.length - 1; i >= 0; i--) {
-            player.removeOwn(this.field.getById(player.own[i]))
+
+        if (this.stage == "start") {
+            const result = this.tracker.removePlayer(username)
+            if (result) this.stage = "main"
         }
-        player.resetServices()
+
+        if (this.stage == "main") {
+            for (let i = player.own.length - 1; i >= 0; i--) {
+                player.removeOwn(this.field.getById(player.own[i]))
+            }
+
+            player.resetServices()
+        }
+
         player.disable = true
         this.checkWin()
+
+        if (this.tracker.current == username) this.next()
     }
 
     checkWin() {
@@ -148,18 +160,14 @@ class Game {
         if (next) this.next()
     }
 
-    next(options={}) {
-        const { force } = options
+    next() {
+        const [val1, val2] = this.dices
+        const player = this.players[this.tracker.current]
 
-        if (!force) {
-            const [val1, val2] = this.dices
-            const player = this.players[this.tracker.current]
-
-            if (val1 == val2 && player.arrested == 0) return false
-        }
+        if (val1 == val2 && player.arrested == 0 && !player.disable) return false
 
         const nextUsername = this.tracker.next()
-        if (this.players[nextUsername].disable) this.next({force: true})
+        if (this.players[nextUsername].disable && this.stage != "end") this.next()
         return true
     }
 

@@ -7,7 +7,7 @@ class Tracker {
         this.valuesDices = {}
     }
 
-    setOrder() {
+    _setOrder() {
         const players = Object.keys(this.valuesDices)
         if (players.length == this.countPlayers) {
             const sum = (arr) => arr.reduce((s, a) => s + a, 0)
@@ -19,9 +19,15 @@ class Tracker {
         return false
     }
 
+    removePlayer(username) {
+        this.countPlayers -= 1
+        delete this.valuesDices[username]
+        return this._setOrder()
+    }
+
     setDiceValue(username, dices) {
         this.valuesDices[username] = dices
-        return this.setOrder()
+        return this._setOrder()
     }
 
     next() {

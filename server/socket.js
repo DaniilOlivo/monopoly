@@ -8,6 +8,25 @@ module.exports = function connect(socket, serverSockets) {
         serverSockets.to(room.title).emit("updateGame", room.game)
     }
 
+    const disconnectPlayer = (room) => {
+        room.removePlayerById(socket.id)
+        socket.to(room.title).emit("dataRoom", room.players)
+        socket.leave(room.title)
+
+        if (0 == room.getCountPlayers()) {
+            roomManager.deleteRoom(room.title)
+        }
+
+        delete mapSockets[socket.id]
+    }
+
+    const useGame = (command, options) => {
+        const {username, room} = mapSockets[socket.id]
+        const controller = new Controller(room.game)
+        controller.execute(username, command, options)
+        updateGame(room)
+    }
+
     socket.on("register", (username, title) => {
         const room = roomManager.rooms[title]
         let status = false
@@ -34,26 +53,23 @@ module.exports = function connect(socket, serverSockets) {
         updateGame(room)
     })
 
-    socket.on("game", (command, options) => {
-        const {username, room} = mapSockets[socket.id]
-        const controller = new Controller(room.game)
-        controller.execute(username, command, options)
-        updateGame(room)
-    })
+    socket.on("game", useGame)
 
     socket.on('disconnecting', () => {
         if (!(socket.id in mapSockets)) return
 
-        const {username, room} = mapSockets[socket.id]
-        const titleRoom = room.title
+        const {room} = mapSockets[socket.id]
 
-        room.removePlayerByName(username)
-        socket.to(titleRoom).emit("dataRoom", room.players)
-        socket.leave(titleRoom)
+        const game = room.game
+        if (game) {
+            useGame("message", {message: "connection lost. Trying to reconnect"})
+            mapSockets[socket.id].timer = setTimeout(() => {
+                useGame("disconnect")
+                disconnectPlayer(room)
+            }, 8000)
 
-        if (0 == room.getCountPlayers()) {
-            roomManager.deleteRoom(titleRoom)
-        }
+
+        } else disconnectPlayer(room)  
     })
 }
 
