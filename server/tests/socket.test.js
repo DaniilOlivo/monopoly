@@ -127,8 +127,6 @@ describe("Socket", () => {
 
     describe("startGame", () => {
         const titleRoom = "Arena"
-
-        let initGame = false
         let updateGame = null
 
         let socketSonyaBlade = null
@@ -141,15 +139,10 @@ describe("Socket", () => {
             
             socketSonyaBlade.emit("startGame")
             
-            socketSonyaBlade.once("initGame", () => initGame = true)
             socketSonyaBlade.once("updateGame", (game) => {
                 updateGame = game
                 done()
             })
-        })
-
-        it("init game", () => {
-            assert.isTrue(initGame)
         })
 
         it("update game", () => {

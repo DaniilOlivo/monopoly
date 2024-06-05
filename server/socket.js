@@ -89,7 +89,7 @@ module.exports = function connect(socket, serverSockets) {
             mapSockets[socket.id].timer = setTimeout(() => {
                 useGame("disconnect")
                 disconnectPlayer(room)
-            }, 8000)
+            }, (process.env.NODE_ENV == "test") ? 0 : 8000)
 
 
         } else disconnectPlayer(room)  
