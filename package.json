@@ -1,25 +1,31 @@
 {
   "name": "monopoly",
-  "version": "0.1.0",
-  "description": "Implementation of a famous game using Node Js and React",
+  "version": "1.0.0",
+  "description": "Implementation of a famous game using Node Js and Vue",
   "main": "app.js",
   "scripts": {
-    "server-dev": "node index.js",
+    "server-dev": "nodemon index.js",
     "client-dev": "cd client && npm run serve",
+    "dev": "cd client && npm run build && cd .. && npm run server-dev",
+    "fast-dev": "npm run server-dev",
     "test": "mocha server/**/tests/*.test.js"
   },
   "keywords": [],
   "author": "DaniilOlivo",
   "license": "MIT",
   "dependencies": {
-    "chai": "^4.3.10",
-    "chai-http": "^4.4.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "mocha": "^10.2.0",
     "morgan": "^1.10.0",
+    "socket.io": "^4.7.2"
+    
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.3",
+    "chai": "^4.3.10",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
     "request": "^2.88.2",
-    "socket.io": "^4.7.2",
     "socket.io-client": "^4.7.2"
   }
 }
