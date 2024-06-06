@@ -51,6 +51,7 @@ export default {
                     let cost = 0
                     for (const idTile of this.thisPlayer.own) {
                         const tile = this.game.field.tiles.find(tile => tile.id === idTile)
+                        if (tile.type != "standard") continue
                         if (tile.hotel) cost += this.card.amountHotel
                         else cost += this.card.amount * tile.building
                     }
