@@ -56,7 +56,7 @@ module.exports = function connect(socket, serverSockets) {
         let status = false
         let desc = ""
         if (room) {
-            [status, desc] = room.addPlayer(username)
+            [status, desc] = room.addPlayer(username, socket.id)
         } else {
             desc = "This room does not exist. Try connecting to another"
         }

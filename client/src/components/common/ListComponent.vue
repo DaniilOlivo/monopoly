@@ -1,12 +1,14 @@
 <template>
-    <ul class="list">
-        <li :class="['list__el', {'list__el_clickable': clickable}]"
-            v-for="el in list" 
-            :key="el.id" 
+    <div class="list">
+        <div
+            v-for="(el, index) in elements"
+            :key="index"
+            :class="['list-line', {'list-line_clickable': clickable, 'list-line_center': !el.detail}]"
             @click="el.click">
-            {{ el.title }}
-        </li>
-    </ul>
+            <span>{{ el.label }}</span>
+            <span v-if="el.detail">{{ el.detail }}</span>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -23,30 +25,12 @@ export default {
             type: Boolean,
             default: false
         }
-    },
-    computed: {
-        list() {
-            let list = this.elements
-            if (!this.clickable) {
-                list = list.map(title => {
-                    return {
-                        title: title,
-                        click: () => {}
-                    }
-                }) 
-            }
-
-            list.forEach((el, i) => el.id = i)
-            return list
-        }
     }
 }
 </script>
 
 <style scoped>
-
 .list {
-    list-style-type: none;
     padding: 0px;
     position: relative;
     min-width: 200px;
@@ -64,21 +48,26 @@ export default {
     pointer-events: none;
 }
 
-.list__el {
-    padding: 0.8em 3em;
-    text-align: center;
+.list-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 1em;
 }
 
-.list__el_clickable {
+.list-line_clickable {
     cursor: pointer;
     transition: 200ms;
 }
 
-.list__el:nth-child(odd) {
+.list-line_center {
+    justify-content: center;
+}
+
+.list-line:nth-child(odd) {
     background-color: whitesmoke;
 }
 
-.list__el_clickable:hover {
+.list-line_clickable:hover {
     background-color: brown;
 }
 </style>

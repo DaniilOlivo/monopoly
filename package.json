@@ -4,7 +4,7 @@
   "description": "Implementation of a famous game using Node Js and Vue",
   "main": "app.js",
   "scripts": {
-    "server-dev": "nodemon index.js",
+    "server-dev": "cross-env NODE_ENV=test nodemon index.js",
     "client-dev": "cd client && npm run serve",
     "dev": "cd client && npm run build && cd .. && npm run server-dev",
     "fast-dev": "npm run server-dev",

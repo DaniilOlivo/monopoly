@@ -135,14 +135,9 @@ export default {
             for (let i = 0; i < sourceList.length; i++) {
                 const tile = this.getTile(sourceList[i])
                 if (!tile) continue
-                if (editable) {
-                    listObjs.push({
-                        title: tile.title,
-                        click: () => this.removeElList(tile, side, i)
-                    })
-                } else {
-                    listObjs.push(tile.title)
-                }
+                const obj = {label: tile.title}
+                if (editable) obj.click = () => this.removeElList(tile, side, i)
+                listObjs.push(obj)
             }
 
             return listObjs

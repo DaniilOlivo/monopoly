@@ -39,7 +39,9 @@ export default {
 
         list() {
             if (!this.objectPlayers) return []
-            return Object.keys(this.objectPlayers)
+            return Object.keys(this.objectPlayers).map(username => {
+                return {label: username}
+            })
         },
 
         isPlayerHost() {

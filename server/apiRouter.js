@@ -1,6 +1,6 @@
 const express = require("express")
 
-const { roomManager } = require("./rooms")
+const { roomManager, LIMIT_ROOM } = require("./rooms")
 
 const router = express.Router()
 
@@ -13,8 +13,9 @@ router.post("/create", (req, res) => {
 })
 
 router.get("/list", (req, res) => {
-    const listRooms = roomManager.getTitles()
-    res.send(JSON.stringify(listRooms))
+    const list = roomManager.getDataRooms()
+    const filterList = list.filter(room => room.count < LIMIT_ROOM && room.status == "lobby")
+    res.send(JSON.stringify(filterList))
 })
 
 router.post("/delete", (req, res) => {

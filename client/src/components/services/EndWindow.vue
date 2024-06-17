@@ -10,9 +10,7 @@
         <p>Congratulations! You won! They ruined all the players and turned out to be the most important asshole monopolist</p>
 
         <template v-slot:btns>
-            <RouterLink to="/">
-                <ButtonMain>Main Menu</ButtonMain>
-            </RouterLink>
+            <ButtonMain @click="clickLeave">Main Menu</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -21,6 +19,7 @@
 import WindowComponent from '@/components/common/WindowComponent.vue'
 import ButtonMain from '@/components/common/ButtonMain.vue'
 
+import { socket } from "@/socket"
 import { mapState } from "vuex"
 
 export default {
@@ -32,6 +31,13 @@ export default {
 
     computed: mapState({
         winner: (state) => state.game.winner
-    })
+    }),
+
+    methods: {
+        clickLeave() {
+            socket.disconnect()
+            this.$router.push("/")
+        }
+    }
 }
 </script>

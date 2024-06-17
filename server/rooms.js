@@ -1,5 +1,7 @@
 const Game = require("./game/core")
 
+const LIMIT_ROOM = 8
+
 class Room {
     constructor(title) {
         this.title = title
@@ -21,7 +23,7 @@ class Room {
     addPlayer(username, idSocket) {
         const count = this.getCountPlayers()
 
-        if (count >= 8) return [false, "Room overflow"]
+        if (count >= LIMIT_ROOM) return [false, "Room overflow"]
         if (username in this.players) return [false, "Such a player already exists"]
         
 
@@ -60,13 +62,15 @@ class RoomManager {
     }
 
     getDataRooms() {
-        const resultObject = {}
+        const resultList = []
         for (const [title, room] of Object.entries(this.rooms)) {
-            resultObject[title] = {
-                count: room.getCountPlayers()
-            }
+            resultList.push({
+                title,
+                count: room.getCountPlayers(),
+                status: room.game ? "gameOn" : "lobby"
+            })
         }
-        return resultObject
+        return resultList
     }
 
     findPlayer(id) {
@@ -98,5 +102,6 @@ class RoomManager {
 module.exports = {
     Room,
     RoomManager,
-    roomManager: new RoomManager()
+    roomManager: new RoomManager(),
+    LIMIT_ROOM
 }

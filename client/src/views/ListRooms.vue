@@ -36,10 +36,11 @@ export default {
     methods: {
         async updateList() {
             const list = await getListRooms()
-            this.list = list.map(title => {
+            this.list = list.map(objRoom => {
                 return {
-                    title,
-                    click: () => this.selectRoom(title)
+                    label: objRoom.title,
+                    detail: objRoom.count + "/" + "8",
+                    click: () => this.selectRoom(objRoom.title)
                 }
             })
         },
