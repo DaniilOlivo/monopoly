@@ -109,7 +109,13 @@ describe("Rooms logic", () => {
             it("get data rooms", () => {
                 manager.rooms["Room test"].addPlayer("Scorpion", "123")
                 const data = manager.getDataRooms()
-                assert.deepEqual(data, {"Room test": {count: 1}})
+                assert.deepEqual(data, [
+                    {
+                        count: 1,
+                        status: "lobby",
+                        title: "Room test"
+                    }
+                ])
             })
         })
 

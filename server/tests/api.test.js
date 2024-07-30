@@ -50,7 +50,13 @@ describe("api http", () => {
                     assert.isNull(err)
                     assert.equal(res.status, 200)
                     const list = JSON.parse(res.text)
-                    assert.deepEqual(list, [titleRoom])
+                    assert.deepEqual(list, [
+                        {
+                            count: 0,
+                            status: "lobby",
+                            title: "Hell"
+                        }
+                    ])
                     done()
                 })
         })
