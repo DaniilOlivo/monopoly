@@ -13,3 +13,14 @@ Monopoly game in online format. Thanks to web socket technology, you can play a 
 * Add authorization and profiles
 * Setting up the game for special rules
 * Add other variations of the game (like auction, casino, etc.)
+
+## Commands
+In file `package.json` contains the following commands:
+* `server-serve` - launching server part using `nodemon` in test mode
+* `client-serve` - launching client part using the built-in development server `vue-cli`
+* `client-build` - client part assembly. Necessary for correct operation `websockets`
+* `dev` - client part assembly and simultaneous server part launch
+* `test` - running tests
+
+## Test mode
+If `NODE_ENV=test` is set, the server will not wait for reconnection with the websocket and will immediately kick the player

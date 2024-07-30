@@ -4,10 +4,10 @@
   "description": "Implementation of a famous game using Node Js and Vue",
   "main": "app.js",
   "scripts": {
-    "server-dev": "cross-env NODE_ENV=test nodemon index.js",
-    "client-dev": "cd client && npm run serve",
-    "dev": "cd client && npm run build && cd .. && npm run server-dev",
-    "fast-dev": "npm run server-dev",
+    "server-serve": "cross-env NODE_ENV=test nodemon index.js",
+    "client-serve": "cd client && npm run serve",
+    "client-build": "cd client && npm run build",
+    "dev": "npm run client-build && npm run server-serve",
     "test": "cross-env NODE_ENV=test mocha server/**/tests/*.test.js"
   },
   "keywords": [],
