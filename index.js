@@ -7,7 +7,7 @@ const { Server } = require("socket.io")
 const staticFolderPath = path.join(__dirname, "client", "dist")
 
 const app = require("./server/app")
-const connectSocket = require("./server/socket")
+const WrapSocket = require("./server/socket")
 
 app.use(express.static(staticFolderPath))
 app.get("*", (req, res) => {
@@ -19,7 +19,7 @@ dotenv.config()
 const server = http.createServer(app)
 const io = new Server(server)
 
-io.on("connection", (socket) => connectSocket(socket, io))
+io.on("connection", (socket) => new WrapSocket(socket, io))
 
 const PORT = process.env.PORT ?? 5500
 server.listen(PORT, () => console.log("Server start http://127.0.0.1:" + PORT))

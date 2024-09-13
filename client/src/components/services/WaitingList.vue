@@ -21,7 +21,7 @@ import WindowComponent from '../common/WindowComponent.vue';
 import ButtonMain from '../common/ButtonMain.vue';
 import ListComponent from '../common/ListComponent.vue';
 
-import { socket } from "@/socket"
+import { socket, leave } from "@/socket"
 import { mapState } from "vuex"
 
 export default {
@@ -56,7 +56,7 @@ export default {
 
     methods: {
         clickLeave() {
-            socket.disconnect()
+            leave()
             this.$router.push("/")
         },
 

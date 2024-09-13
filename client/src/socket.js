@@ -1,21 +1,41 @@
 import { io } from "socket.io-client"
 import store from "./store"
+import router from "./router"
 
-export const socket = io({
-    autoConnect: false,
-})
+export const socket = io()
 
 export function gameApi(command, options={}) {
     socket.emit("game", command, options)
 }
 
-socket.on("registerResponse", (username, status, desc) => {
-    if (status) {
-        store.commit("setUsername", username)
+export function leave(options={}) {
+    socket.emit("leaveLobby", options)
+    store.commit("setGame", null)
+    store.commit("setUsername", "")
+}
+
+socket.on("responseCreateRoom", (res) => {
+    if (res.status) router.push({
+        name: "game",
+        params: {room: res.title}
+    })
+    else store.commit("setService", {
+        service: "create",
+        value: res.desc
+    })
+})
+
+socket.on("listRooms", (list) => {
+    store.commit("setListRooms", list)
+})
+
+socket.on("responseEntryLobby", (res) => {
+    if (res.status) {
+        store.commit("setUsername", res.username)
     } else {
         store.commit("setService", {
             service: "register",
-            value: desc
+            value: res.desc
         })
     }
 })
@@ -41,5 +61,3 @@ socket.on("reconnect", (username) => {
 
 socket.on("connect", () => store.commit("setConnection", true))
 socket.on("disconnect", () => store.commit("setConnection", false))
-
-window.onunload = () => socket.disconnect()

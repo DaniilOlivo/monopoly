@@ -1,99 +1,150 @@
-const { roomManager } = require("./rooms")
+const { Socket, Server } = require("socket.io")
+const { roomManager, LIMIT_ROOM } = require("./rooms")
 const Controller = require("./game/contoller")
 
-const mapSockets = {}
+// Special group for sockets looking for rooms
+const FINDING_ROOMS = "findingRooms"
 
-module.exports = function connect(socket, serverSockets) {
-    const updateGame = (room) => {
-        serverSockets.to(room.title).emit("updateGame", room.game)
-    }
-
-    const disconnectPlayer = (room) => {
-        room.removePlayerById(socket.id)
-        socket.to(room.title).emit("dataRoom", room.players)
-        socket.leave(room.title)
-
-        if (0 == room.getCountPlayers()) {
-            roomManager.deleteRoom(room.title)
+class WrapSocket {
+    constructor(originalSocket=new Socket(), server=new Server()) {
+        this.socket = originalSocket
+        this.server = server
+        this.data = {
+            room: null,
+            username: "",
         }
 
-        delete mapSockets[socket.id]
+        const linkEvent = (event, func) => {
+            this.socket.on(event, func.bind(this))
+        }
+
+        linkEvent("createRoom", this.receiveCreateRoom)
+
+        linkEvent("pingRooms", this.receivePingRooms)
+        linkEvent("pongRooms", this.receivePongRooms)
+
+        linkEvent("pingGame", this.receivePingGame)
+
+        linkEvent("entryLobby", this.receiveEntryLobby)
+        linkEvent("leaveLobby", this.receiveLeaveLobby)
+
+        linkEvent("startGame", this.receiveStartGame)
+        linkEvent("game", this._useGame)
+
+        linkEvent("disconnecting", this.receiveLeaveLobby)
     }
 
-    const useGame = (command, options) => {
-        const {username, room} = mapSockets[socket.id]
+    // System methods
+    _useGame(command, options) {
+        const {username, room} = this.data
         const controller = new Controller(room.game)
         controller.execute(username, command, options)
-        updateGame(room)
+        this.sendUpdateGame()
     }
 
-    socket.on("pingGame", (titleRoom) => {
-        const room = roomManager.rooms[titleRoom]
-        if (room && room.game) {
-            const entry = Object.entries(mapSockets).find(entry => entry[1].timer)
-            if (entry) {
-                const [idSocket, objSocket] = entry
-                
-                delete mapSockets[idSocket]
-                socket.leave(idSocket)
-
-                clearTimeout(objSocket.timer)
-                delete objSocket.timer
-
-                mapSockets[socket.id] = objSocket
-                socket.join(titleRoom)
-
-                socket.emit("reconnect", objSocket.username)
-                useGame("message", {message: "reconnect"})
-            }
-
-            socket.emit("updateGame", room.game)
+    // Receives methods
+    receiveCreateRoom(title) {
+        const result = roomManager.createRoom(title)
+        const res = {
+            title,
+            status: result,
+            desc: result ? "Ok" : "There is already a room with that name"
         }
-    })
+        this.socket.emit("responseCreateRoom", res)
+        this.sendListRooms()
+    }
 
-    socket.on("register", (username, title) => {
-        const room = roomManager.rooms[title]
+    receivePingRooms() {
+        this.socket.join(FINDING_ROOMS)
+        this.sendListRooms()
+    }
+
+    receivePongRooms() {
+        this.socket.leave(FINDING_ROOMS)
+    }
+
+    receivePingGame() {
+        const { room, username } = this.data
+        if (room && room.game) {
+            let objPlayer = Object.values(room.players).find(player => !player.connect)
+            if (!objPlayer) return
+            clearTimeout(objPlayer.timerReconnect)
+            objPlayer.timerReconnect = null
+            objPlayer.idSocket = this.socket.id
+            this.socket.join(room.title)
+            this.socket.emit("reconnect", username)
+            this._useGame("message", {message: "reconnect"})
+        }
+    }
+
+    receiveEntryLobby(titleRoom, username) {
+        const room = roomManager.rooms[titleRoom]
         let status = false
         let desc = ""
-        if (room) {
-            [status, desc] = room.addPlayer(username, socket.id)
-        } else {
-            desc = "This room does not exist. Try connecting to another"
-        }
-        socket.emit("registerResponse", username, status, desc)
+        if (room) [status, desc] = room.addPlayer(username, this.socket.id)
+        else desc = "This room does not exist. Try connecting to another"
+        this.socket.emit("responseEntryLobby", {username, status, desc})
 
         if (status) {
-            mapSockets[socket.id] = {username, room}
-            socket.join(title)
-            serverSockets.to(title).emit("dataRoom", room.players)
+            this.socket.leave(FINDING_ROOMS)
+            this.sendListRooms()
+            this.data = { room, username }
+            this.socket.join(titleRoom)
+            this.server.to(titleRoom).emit("dataRoom", room.players)
         }
-        
-    })
+    }
 
-    socket.on("startGame", () => {
-        const {room} = mapSockets[socket.id]
-        room.startGame()
-        updateGame(room)
-    })
+    receiveLeaveLobby(options={}) {
+        if (!this.data.room) return
 
-    socket.on("game", useGame)
+        const leave = () => {
+            room.removePlayerById(this.socket.id)
+            this.socket.to(room.title).emit("dataRoom", room.players)
+            this.socket.leave(room.title)
+            if (0 == room.getCountPlayers()) roomManager.deleteRoom(room.title)
+            this.sendListRooms()
+        }
 
-    socket.on('disconnecting', () => {
-        if (!(socket.id in mapSockets)) return
+        const { room, username } = this.data
+        if (room.game) {
+            const mesGame = (message) => {
+                if (!options.noUpdate) this._useGame("message", {message})
+            }
 
-        const {room} = mapSockets[socket.id]
+            if (options.force) {
+                mesGame("leave game!")
+                if (!options.noUpdate) this._useGame("disconnect")
+                leave()
+            } else {
+                mesGame("connection lost. Trying to reconnect")
+                const player = room.players[username]
+                player.connect = false
+                player.timerReconnect = setTimeout(() => {
+                    if (!options.noUpdate) this._useGame("disconnect")
+                    leave()
+                }, (process.env.NODE_ENV == "test") ? 0 : 8000)
+            }
+            
+        } else leave()
+    }
 
-        const game = room.game
-        if (game) {
-            useGame("message", {message: "connection lost. Trying to reconnect"})
-            mapSockets[socket.id].timer = setTimeout(() => {
-                useGame("disconnect")
-                disconnectPlayer(room)
-            }, (process.env.NODE_ENV == "test") ? 0 : 8000)
+    receiveStartGame() {
+        this.data.room.startGame()
+        this.sendUpdateGame()
+    }
 
+    // Send signals methods
+    sendListRooms() {
+        const list = roomManager.getDataRooms()
+        const filteredList =  list.filter(room => room.count < LIMIT_ROOM && room.status == "lobby")
+        this.server.to(FINDING_ROOMS).emit("listRooms", filteredList)
+    }
 
-        } else disconnectPlayer(room)  
-    })
+    sendUpdateGame() {
+        const { title, game } = this.data.room
+        this.server.to(title).emit("updateGame", game)
+    }
+
 }
 
-
+module.exports = WrapSocket

@@ -19,8 +19,8 @@
 import WindowComponent from '@/components/common/WindowComponent.vue'
 import ButtonMain from '@/components/common/ButtonMain.vue'
 
-import { socket } from "@/socket"
 import { mapState } from "vuex"
+import { leave } from '@/socket';
 
 export default {
     name: "EndWindow",
@@ -35,7 +35,7 @@ export default {
 
     methods: {
         clickLeave() {
-            socket.disconnect()
+            leave({noUpdate: true})
             this.$router.push("/")
         }
     }

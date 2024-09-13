@@ -8,7 +8,7 @@
 
         <template v-slot:btns>
             <ButtonMain @click="clickBack">Back</ButtonMain>
-            <ButtonMain @click="clickCreate(title)">Create room</ButtonMain>
+            <ButtonMain @click="clickCreate">Create room</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -17,7 +17,8 @@
 import WindowComponent from '../components/common/WindowComponent.vue';
 import ButtonMain from '../components/common/ButtonMain.vue';
 
-import { createRoom } from "@/api/menu"
+import { socket } from '@/socket';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: "CreateRoom",
@@ -27,20 +28,21 @@ export default {
     },
     data() {
         return {
-            title: "",
-            warning: "",
+            title: ""
         }
     },
+    unmounted() {
+        this.setService({service: "create", value: ""})
+    },
+    computed: mapState({
+        warning: state => state.service.create
+    }),
     methods: {
-        async clickCreate(title) {
-            const {ok, desc} = await createRoom(title)
-            if (ok) {
-                this.$router.push({
-                    name: "game",
-                    params: {room: title}
-                })
-            }
-            else this.warning = desc
+        ...mapMutations(["setService"]),
+
+        clickCreate() {
+            if (this.title) socket.emit("createRoom", this.title)
+            else this.setService({service: "create", value: "Empty title"})
         },
 
         clickBack() {

@@ -1,219 +1,134 @@
 const { assert } = require("chai")
+const { createServer } = require("http")
 const { roomManager } = require("../rooms")
 const ioClient = require("socket.io-client")
 const ioServer = require("socket.io")
-const { createServer } = require("http")
-
-const handlerSocket = require("../socket")
+const WrapSocket = require("../socket")
 
 function wait(socket, event) {
     return new Promise((resolve) => {
-        socket.once(event, (...data) => resolve(data))
+        socket.once(event, data => resolve(data))
     })
-}
-
-function waitMany(socket, eventsList) {
-    const arrPromises = []
-    for (const event of eventsList) arrPromises.push(wait(socket, event))
-    return Promise.all(arrPromises)
 }
 
 describe("Socket", () => {
     let httpServer, io
     let urlConnect = ""
 
-    const registerSocket = (username, titleRoom) => {
-        let socket = ioClient.io(urlConnect)
-        socket.emit("register", username, titleRoom)
-        return socket
-    }
+    const titleRoom = "Hell"
+    const usernamePlayer = "Scorpion"
+    let socket = null
+
+    const createSocket = () => ioClient.io(urlConnect)
+
 
     before(done => {
-        httpServer = createServer();
-        io = new ioServer.Server(httpServer);
+        httpServer = createServer()
+        io = new ioServer.Server(httpServer)
         httpServer.listen(() => {
             const port = httpServer.address().port
             urlConnect = "http://127.0.0.1:" + port
-            io.on("connection", (socket) => handlerSocket(socket, io))
+            io.on("connection", socket => new WrapSocket(socket, io))
             done()
         })
     })
 
-    describe("register", () => {
-        let socketScorpion = null
-        const titleRoom = "Hell"
-
+    describe("createRoom", () => {
         before(() => {
-            socketScorpion = ioClient.io(urlConnect)
+            socket = createSocket()
+            socket.emit("createRoom", titleRoom)
+        })
+
+        it("response", async () => {
+            const { title, status } = await wait(socket, "responseCreateRoom")
+            assert.equal(title, titleRoom)
+            assert.isTrue(status)
+        })
+        it("room created", () => assert.include(Object.keys(roomManager.rooms), titleRoom))
+        
+        after(() => {
+            socket.close()
+            roomManager.deleteRoom(titleRoom)    
+        })
+    })
+
+    describe("pingRooms", () => {
+        before(() => {
+            socket = createSocket()
             roomManager.createRoom(titleRoom)
+            socket.emit("pingRooms")
         })
 
-        it("register non-exist room", async () => {
-            socketScorpion.emit("register", "Scorpion", "Heaven")
-            const [username, status, desc] = await wait(socketScorpion, "registerResponse")
-            assert.equal(username, "Scorpion")
-            assert.isFalse(status)
-            assert.equal(desc, "This room does not exist. Try connecting to another")
-        })
-
-        describe("register sucessfully", () => {
-            let res = []
-
-            before(async () => {
-                socketScorpion.emit("register", "Scorpion", titleRoom)
-                res = await waitMany(socketScorpion, ["registerResponse", "dataRoom"])
-            })
-
-            it("register response", () => {
-                const [username, status, desc] = res[0]
-                assert.equal(username, "Scorpion")
-                assert.isTrue(status)
-                assert.equal(desc, "Ok")
-            })
-
-            it("data room", () => {
-                const [dataRoom] = res[1]
-                assert.deepEqual(Object.keys(dataRoom), ["Scorpion"])
-                assert.isTrue(dataRoom["Scorpion"].host)
-            })
-        })
-
-        describe("second socket", () => {
-            let socketSubZero = null
-
-            before(() => {
-                socketSubZero = ioClient.io(urlConnect)
-            })
-          
-            it("Attempting to register an existing user", async () => {
-                socketSubZero.emit("register", "Scorpion", titleRoom)
-                const [username, status, desc] = await wait(socketSubZero, "registerResponse")
-                assert.equal(username, "Scorpion")
-                assert.isFalse(status)
-                assert.equal(desc, "Such a player already exists")
-            })
-
-            describe("Successfully registered", () => {
-                let res = []
-
-                before(async () => {
-                    socketSubZero.emit("register", "Sub Zero", titleRoom)
-                    res = await waitMany(socketSubZero, ["registerResponse", "dataRoom"])
-                })
-
-                it("register response", () => {
-                    const [username, status, desc] = res[0]
-                    assert.equal(username, "Sub Zero")
-                    assert.isTrue(status)
-                    assert.equal(desc, "Ok")
-                })
-
-                it("data room", () => {
-                    const [dataRoom] = res[1]
-                    assert.deepEqual(Object.keys(dataRoom), ["Scorpion", "Sub Zero"])
-                })
-            })
-
-            after(() => {
-                socketSubZero.close()
-            })
+        it("update list rooms", async () => {
+            const listRooms = await wait(socket, "listRooms")
+            assert.lengthOf(listRooms, 1)
+            assert.equal(listRooms[0].title, titleRoom)
         })
 
         after(() => {
-            socketScorpion.close()
+            socket.close()
             roomManager.deleteRoom(titleRoom)
         })
     })
 
-    describe("startGame", () => {
-        const titleRoom = "Arena"
-        let updateGame = null
+    describe("entry-leaveLobby", () => {
+        let res = null
+        let players = null
 
-        let socketSonyaBlade = null
-        let socketKitana = null
-        
-        before((done) => {
+        before(async () => {
+            socket = createSocket()
             roomManager.createRoom(titleRoom)
-            socketSonyaBlade = registerSocket("Sonya Blade", titleRoom)
-            socketKitana = registerSocket("Kitana", titleRoom)
-            
-            socketSonyaBlade.emit("startGame")
-            
-            socketSonyaBlade.once("updateGame", (game) => {
-                updateGame = game
-                done()
-            })
+            socket.emit("entryLobby", titleRoom, usernamePlayer)
+            res = await wait(socket, "responseEntryLobby")
+            players = await wait(socket, "dataRoom")
+            socket.emit("leaveLobby")
         })
 
-        it("update game", () => {
-            assert.isNotNull(updateGame)
+        it("response", () => {
+            const { username, status } = res
+            assert.equal(username, usernamePlayer)
+            assert.isTrue(status)
         })
+
+        it("data room", () => {
+            const arrPlayers = Object.keys(players)
+            assert.lengthOf(arrPlayers, 1)
+            const username = arrPlayers[0]
+            assert.equal(username, usernamePlayer)
+        })
+
+        it("leave room", () => assert.lengthOf(roomManager.getDataRooms(), 0))
 
         after(() => {
-            socketSonyaBlade.close()
-            socketKitana.close()
+            socket.close()
             roomManager.deleteRoom(titleRoom)
         })
     })
 
     describe("game", () => {
-        const titleRoom = "Dead forest"
-
-        let socketMelina = null
-        let socketJade = null
-
-        const waitGame = async (socket) => {
-            const [game] = await wait(socket, "updateGame")
-            return game
-        }
-        const getLastMes = (game) => game.logs[game.logs.length - 1]
+        let initGame = null
+        let pingGame = null
 
         before(async () => {
+            socket = createSocket()
             roomManager.createRoom(titleRoom)
-            socketMelina = registerSocket("Melina", titleRoom)
-            await wait(socketMelina, "registerResponse")
-            socketJade = registerSocket("Jade", titleRoom)
-            await wait(socketJade, "registerResponse")
-            socketMelina.emit("startGame")
-            await waitGame(socketMelina, "updateGame")
+            socket.emit("entryLobby", titleRoom, usernamePlayer)
+            socket.emit("startGame")
+            initGame = await wait(socket, "updateGame")
+            socket.emit("game", "ping")
+            pingGame = await wait(socket, "updateGame")
         })
 
-        describe("hadler game signals", () => {
-            let game = null
-            let gameJade = null
-
-            before(async () => {
-                socketMelina.emit("game", "ping")
-                game = await waitGame(socketMelina, "updateGame")
-                gameJade = await waitGame(socketJade, "updateGame")
-            })
-
-            it("game has been updated", () => assert.isNotNull(game))
-            it("another player updated their game", () => assert.isNotNull(gameJade))
-            it("game api worked", () => {
-                const objMes = getLastMes(game)
-                assert.equal(objMes.mes, "ping")
-                assert.equal(objMes.sender, "Melina")
-            })
+        it("game start", () => {
+            assert.isNotNull(initGame)
         })
 
-        describe("dev commands", () => {
-            let game = null
-
-            before(async () => {
-                socketMelina.emit("game", "command", {commandString: "money Jade 1000"})
-                game = await waitGame(socketMelina, "updateGame")
-            })
-
-            it("Money added", () => {
-                const money = game.players["Jade"].money
-                assert.equal(money, 2500)
-            })
+        it("use game", () => {
+            assert.equal(pingGame.logs[pingGame.logs.length - 1].mes, "ping")
         })
 
         after(() => {
-            socketMelina.close()
-            socketJade.close()
+            socket.close()
             roomManager.deleteRoom(titleRoom)
         })
     })

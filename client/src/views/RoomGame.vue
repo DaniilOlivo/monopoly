@@ -23,7 +23,6 @@ export default {
     },
 
     mounted() {
-        socket.connect()
         // We check if the game is already running, in case we reconnect
         socket.emit("pingGame", this.$router.currentRoute.value.params.room)
     },
@@ -38,7 +37,7 @@ export default {
                 "game": "GameCore",
                 "end": "EndWindow"
             }
-
+            console.log(this.stage)
             let currentComponent = mapStage[this.stage]
             if (!currentComponent) return "OopsWindow"
             

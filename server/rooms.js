@@ -27,7 +27,11 @@ class Room {
         if (username in this.players) return [false, "Such a player already exists"]
         
 
-        this.players[username] = {idSocket}
+        this.players[username] = {
+            idSocket,
+            connect: true,
+            timerReconnect: null
+        }
         this._setHost()
         return [true, "Ok"]
     }

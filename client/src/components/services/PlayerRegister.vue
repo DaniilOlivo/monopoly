@@ -39,7 +39,7 @@ export default {
     methods: {
         clickRegister() {
             const room = this.$router.currentRoute.value.params.room
-            socket.emit("register", this.username, room)
+            socket.emit("entryLobby", room, this.username)
         }
     }
 }

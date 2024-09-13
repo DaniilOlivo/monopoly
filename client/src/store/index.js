@@ -7,8 +7,10 @@ import field from './field'
 export default createStore({
   state: {
     connection: false,
+    listRooms: [],
     username: "",
     service: {
+      "create": "",
       "register": "",
       "waiting": null
     },
@@ -54,6 +56,10 @@ export default createStore({
   mutations: {
     setConnection(state, val) {
       state.connection = val
+    },
+
+    setListRooms(state, val) {
+      state.listRooms = val
     },
 
     setUsername(state, val) {

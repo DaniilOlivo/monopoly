@@ -5,7 +5,6 @@
 
         <template v-slot:btns>
             <ButtonMain @click="clickBack">Back</ButtonMain>
-            <ButtonMain @click="updateList">Update</ButtonMain>
         </template>
     </WindowComponent>
     
@@ -16,7 +15,8 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
 
-import { getListRooms } from "@/api/menu"
+import { socket } from '@/socket';
+import { mapState } from "vuex"
 
 export default {
     name: "ListRooms",
@@ -25,26 +25,27 @@ export default {
         ButtonMain,
         ListComponent
     },
-    data() {
-        return {
-            list: [],
-        }
-    },
     created() {
-        this.updateList()
+        socket.emit("pingRooms")
     },
-    methods: {
-        async updateList() {
-            const list = await getListRooms()
-            this.list = list.map(objRoom => {
+    unmounted() {
+        socket.emit("pongRooms")
+    },
+
+    computed: {
+        ...mapState(["listRooms"]),
+        list() {
+            return this.listRooms.map(objRoom => {
                 return {
                     label: objRoom.title,
                     detail: objRoom.count + "/" + "8",
                     click: () => this.selectRoom(objRoom.title)
                 }
             })
-        },
+        }
+    },
 
+    methods: {
         selectRoom(title) {
             this.$router.push({
                 name: "game",
