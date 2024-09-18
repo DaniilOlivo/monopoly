@@ -1,11 +1,11 @@
 <template>
-    <WindowComponent :title="titleWindow">
+    <WindowComponent :title="$t('game.card.' + card.typeDeck)">
         <p>{{ card.text }}</p>
         <p v-if="card.desc">{{ card.desc }}</p>
 
         <template v-slot:btns>
             <ButtonMain @click="clickBtn" :disable="disableBtn">
-                {{ cardPayble ? "Pay" : "Ok" }}
+                {{ $t("game.card." + (cardPayble ? "Pay" : "Ok")) }}
             </ButtonMain>
         </template>
     </WindowComponent>
@@ -31,11 +31,6 @@ export default {
 
         card() {
             return this.thisPlayer.service.card
-        },
-
-        titleWindow() {
-            if (this.card.typeDeck == "chance") return "Chance"
-            else return "Community chest"
         },
 
         cardPayble() {

@@ -1,12 +1,12 @@
 <template>
-    <WindowComponent title="Tax">
+    <WindowComponent :title="$t('game.tax.title')">
         <p>
-            Pay tax in the amount
+            {{ $t('game.tax.pay') }}
             <span class="tax-window__cost">{{ cost }}</span>
         </p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickPay" :disable="disableBtn">Pay</ButtonMain>
+            <ButtonMain @click="clickPay" :disable="disableBtn">{{ $t('game.tax.btn') }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>

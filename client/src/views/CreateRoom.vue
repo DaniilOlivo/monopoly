@@ -1,14 +1,14 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Create Room">
+    <WindowComponent :fullscreen="true" :title="$t('createRoom.title')">
         <div class="input-line">
-            <label>Title room:</label>
+            <label>{{ $t("createRoom.label") }}:</label>
             <input type="text" v-model="title">
         </div>
-        <p class="warning" v-show="warning">{{ warning }}</p>
+        <p class="warning" v-show="warning">{{ $t("createRoom.warnings." + warning) }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickBack">Back</ButtonMain>
-            <ButtonMain @click="clickCreate">Create room</ButtonMain>
+            <ButtonMain @click="clickBack">{{ $t("buttons.back") }}</ButtonMain>
+            <ButtonMain @click="clickCreate">{{ $t("createRoom.title") }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -42,7 +42,7 @@ export default {
 
         clickCreate() {
             if (this.title) socket.emit("createRoom", this.title)
-            else this.setService({service: "create", value: "Empty title"})
+            else this.setService({service: "create", value: "empty"})
         },
 
         clickBack() {

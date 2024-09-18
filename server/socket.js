@@ -48,7 +48,7 @@ class WrapSocket {
         const res = {
             title,
             status: result,
-            desc: result ? "Ok" : "There is already a room with that name"
+            desc: result ? "ok" : "existRoom"
         }
         this.socket.emit("responseCreateRoom", res)
         this.sendListRooms()
@@ -82,7 +82,7 @@ class WrapSocket {
         let status = false
         let desc = ""
         if (room) [status, desc] = room.addPlayer(username, this.socket.id)
-        else desc = "This room does not exist. Try connecting to another"
+        else desc = "nonExist"
         this.socket.emit("responseEntryLobby", {username, status, desc})
 
         if (status) {

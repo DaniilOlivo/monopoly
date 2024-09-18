@@ -1,12 +1,16 @@
 <template>
     <WindowComponent title="Player card">
         <p>
-            Cards jailbreaks: {{ thisPlayer.releasePrison }}
+            {{ $t("game.player.jailbreak") }}: {{ thisPlayer.releasePrison }}
         </p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickClose">Close</ButtonMain>
-            <ButtonMain @click="clickGiveUp">Give up</ButtonMain>
+            <ButtonMain @click="clickClose">
+                {{ $t("game.player.close") }}
+            </ButtonMain>
+            <ButtonMain @click="clickGiveUp">
+                {{ $t("game.player.giveUp") }}
+            </ButtonMain>
         </template>
     </WindowComponent>
 </template>

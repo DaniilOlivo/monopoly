@@ -1,26 +1,40 @@
 <template>
-    <WindowComponent title="Property management">
+    <WindowComponent :title="$t('game.own.title')">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
-            <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
+            <p class="info_warning" v-if="tile.pledge">
+                {{ $t("game.own.mortgaged") }}
+            </p>
         </div>
         <template v-slot:btns>
-            <ButtonMain @click="unselect">Close</ButtonMain>
-            <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">Sell</ButtonMain>
+            <ButtonMain @click="unselect">
+                {{ $t("game.own.close") }}
+            </ButtonMain>
+            
+            <ButtonMain @click="clickSell" :disable="disableBtns || anyBuilding">
+                {{ $t("game.own.sell") }}
+            </ButtonMain>
+            
             <ButtonMain
                 @click="clickRedeemPledge"
                 v-if="tile.pledge"
-                :disable="disableBtns || tile.price / 2 > thisPlayer.money">Redeem Pledge</ButtonMain>
-            <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">Put Pledge</ButtonMain>
+                :disable="disableBtns || tile.price / 2 > thisPlayer.money">
+                {{ $t("game.own.redeem") }}
+            </ButtonMain>
+            
+            <ButtonMain @click="clickPutPledge" v-else :disable="disableBtns">
+                {{ $t("game.own.put") }}
+            </ButtonMain>
+            
             <template v-if="monopoly">
                 <ButtonMain 
                     @click="clickAddBuilding"
                     :disable="disableBtns || tile.hotel || notEnoughMoney"
-                     >{{ (tile.building == 4) ? 'Buy hotel' : 'Buy building' }}</ButtonMain>
+                     >{{ $t("game.own.buyBuild." + (tile.building == 4 ? 'hotel' : 'build')) }}</ButtonMain>
                 <ButtonMain 
                     @click="clickRemoveBuilding"
                     :disable="disableBtns || tile.building == 0"
-                    >{{ (tile.hotel) ? 'Sell hotel' : 'Sell building' }}</ButtonMain>
+                    >{{ $t("game.own.buyBuild." + (tile.hotel ? 'hotel' : 'build')) }}</ButtonMain>
             </template>
         </template>
     </WindowComponent>

@@ -4,7 +4,7 @@
             <img :src="mapDices[dices[0]]" alt="dice" class="dice">
             <img :src="mapDices[dices[1]]" alt="dice" class="dice">
         </div>
-        <ButtonMain :disable="disable" @click="roll">Roll</ButtonMain>
+        <ButtonMain :disable="disable" @click="roll">{{ $t("game.panel.roll") }}</ButtonMain>
     </div>
 </template>
 

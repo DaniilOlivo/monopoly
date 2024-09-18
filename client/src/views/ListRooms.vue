@@ -1,10 +1,10 @@
 <template>
-    <WindowComponent :fullscreen="true" title="List room">
+    <WindowComponent :fullscreen="true" :title="$t('listRooms.title')">
         <ListComponent :elements="list" :clickable="true">
         </ListComponent>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickBack">Back</ButtonMain>
+            <ButtonMain @click="clickBack">{{ $t("buttons.back") }}</ButtonMain>
         </template>
     </WindowComponent>
     

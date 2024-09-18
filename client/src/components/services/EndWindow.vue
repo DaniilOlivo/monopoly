@@ -1,16 +1,16 @@
 <template>
     <WindowComponent :fullscreen="true">
         <h1>
-           Win
+           {{ $t("game.end.label") }}
            <span class="winner" :style="{color: winner.color.primary}">
                 {{ winner.username }}
             </span> 
         </h1>
 
-        <p>Congratulations! You won! They ruined all the players and turned out to be the most important asshole monopolist</p>
+        <p>{{ $t("game.end.desc") }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickLeave">Main Menu</ButtonMain>
+            <ButtonMain @click="clickLeave">{{ $t("buttons.mainMenu") }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>

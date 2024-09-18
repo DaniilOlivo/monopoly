@@ -4,7 +4,7 @@
             v-for="player in listPlayers"
             :key="player.username"
             v-bind="player"
-            :labelHover="player.username === username ? 'Open player info' : 'Offer a deal'"
+            :labelHover="$t('game.panel.playersList.' + (player.username === username ? 'info' : 'offer'))"
             @click="clickCard(player.username)" >
         </PlayerCard>
     </div>

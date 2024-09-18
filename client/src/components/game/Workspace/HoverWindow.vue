@@ -3,11 +3,11 @@
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
             <p v-if="tile.owner">
-                This tile belongs to 
+                 {{ $t("game.hover.owner") }}
                 <span class="hover-window__owner" :style="{color: colorOwner}">{{ tile.owner }}</span>
             </p>
-            <p v-if="monopoly">The player owns all the squares of that color</p>
-            <p class="info_warning" v-if="tile.pledge">Property is mortgaged</p>
+            <p v-if="monopoly">{{ $t("game.hover.monopoly") }}</p>
+            <p class="info_warning" v-if="tile.pledge">{{ $t("game.hover.mortgaged") }}</p>
         </div>
     </WindowComponent>
 </template>

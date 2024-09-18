@@ -27,7 +27,7 @@
             </div>
 
             <div class="tile-pledge" :style="{display: tile.pledge ? 'flex' : 'none'}">
-                Заложено
+                {{ $t("game.field.pledge") }}
                 <span class="tile-pledge__owner" :style="{color: colorPlayer}">{{ tile.owner }}</span> 
             </div>
         </div>

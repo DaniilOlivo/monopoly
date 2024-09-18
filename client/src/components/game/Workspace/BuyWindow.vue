@@ -1,13 +1,13 @@
 <template>
-    <WindowComponent title="Do you want to buy property?">
+    <WindowComponent :title="$t('game.buy.title') + '?'">
         <CardDispather :tile="tile"></CardDispather>
         <div class="info">
-            <p>Price: <span class="info__cost">{{ tile.price }} M</span></p>
-            <p>{{ desc }}</p>
+            <p>{{ $t("game.buy.price") }}: <span class="info__cost">{{ tile.price }} M</span></p>
+            <p>{{ $t("game.buy." + desc) }}</p>
         </div>
         <template v-slot:btns>
-            <ButtonMain @click="refuse">Refuse</ButtonMain>
-            <ButtonMain @click="buy" :disable="!canBuy">Buy</ButtonMain>
+            <ButtonMain @click="refuse">{{ $t("game.buy.refuse") }}</ButtonMain>
+            <ButtonMain @click="buy" :disable="!canBuy">{{ $t("game.buy.buy") }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>
@@ -39,8 +39,8 @@ export default {
         },
 
         desc() {
-            if (this.canBuy) return "This property is available for purchase"
-            else return "You don't have money to buy"
+            if (this.canBuy) return "canBuy"
+            else return "noMoney"
         }
     },
     methods: {

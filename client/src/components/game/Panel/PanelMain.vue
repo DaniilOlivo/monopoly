@@ -16,15 +16,6 @@ import PanelRoller from './PanelRoller.vue';
 
 import { mapState } from "vuex"
 
-const mapStatus = {
-    firstRoll: "Roll the dice to determine the order of the players",
-    waitPlayers: "Waiting for the other players",
-    waitMove: "It's your move, ",
-    waitOffer: " thinking about buying",
-    waitRent: " must pay rent",
-    waitDeal: "We are waiting for a decision ",
-}
-
 export default {
     name: "PanelMain",
     components: {
@@ -60,7 +51,7 @@ export default {
                 }
             }
 
-            let textStatus = mapStatus[keyStatus]
+            let textStatus = this.$t("game.panel.mapStatus." + keyStatus)
 
             if (keyStatus == "waitMove") textStatus += tracker.current
             if (keyStatus == "waitOffer" || keyStatus == "waitRent") textStatus = tracker.current + textStatus

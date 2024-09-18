@@ -1,0 +1,204 @@
+{
+  "menuStart": {
+    "create": "Create room",
+    "list": "List rooms"
+  },
+
+  "createRoom": {
+    "title": "Create room",
+    "label": "Title room",
+    "warnings": {
+      "existRoom": "There is already a room with that name",
+      "empty": "Empty title"
+    }
+  },
+
+  "listRooms": {
+    "title": "List room"
+  },
+
+  "playerRegister": {
+    "title": "Come up with username",
+    "label": "Username",
+    "join": "Join room",
+    "warnings": {
+      "nonExist": "This room does not exist. Try connecting to another",
+      "overflow": "Room overflow",
+      "existUsername": "Such a player already exists"
+    }
+  },
+
+  "waitingList": {
+    "title": "Lobby",
+    "minimum": "A minimum of two players are required to start the game",
+    "onlyHost": "We are waiting for the host of the room to start the game",
+    "startGame": "Start game"
+  },
+
+  "buttons": {
+    "back": "Back",
+    "mainMenu": "Main Menu",
+    "leave": "Leave"
+  },
+
+  "game": {
+    "field": {
+      "pledge": "Mortgaged"
+    },
+
+    "cardTile": {
+      "owner": "Owner card",
+      "costHouse": "Cost house",
+      "costHotel": "Cost hotel",
+      "mapRent": {
+        "rent": "Rent",
+        "rentFull": "Rent with full set",
+        "1house": "1 house",
+        "2house": "2 house",
+        "3house": "3 house",
+        "4house": "4 house",
+        "hotel": "Hotel"
+      },
+      "mapStations": {
+        "rent": "Rent",
+        "2stations": "2 stations",
+        "3stations": "3 stations",
+        "4stations": "4 stations"
+      }
+    },
+
+    "panel": {
+      "mapStatus": {
+        "firstRoll": "Roll the dice to determine the order of the players",
+        "waitPlayers": "Waiting for the other players",
+        "waitMove": "It's your move, ",
+        "waitOffer": " thinking about buying",
+        "waitRent": " must pay rent",
+        "waitDeal": "We are waiting for a decision "
+      },
+
+      "playersList": {
+        "info": "Open player info",
+        "offer": "Offer a deal"
+      },
+      
+      "roll": "Roll"
+    },
+
+    "playerTable": {
+      "message": "Message",
+      "memo": {
+        "title": "Your move",
+        "arrested": "You are under arrest!",
+        "titleList": "Here's what you can do",
+        "listArrested": {
+          "jailbreak": "Use your jailbreak (if you have one)",
+          "double": "Roll a double on the dice",
+          "wait": "If none of this works, then sit and wait" 
+        },
+        "listTurn": {
+          "offer": "Offer a deal to another player. (By clicking on his card on the right)",
+          "manage": "Manage your property (by clicking on one of your cells)",
+          "roll": "Roll the dice (after this your turn is over)"
+        },
+        "jailbreak": "Use Jailbreak"
+      }
+    },
+
+    "buy": {
+      "title": "Do you want to buy property",
+      "price": "Price",
+      "canBuy": "This property is available for purchase",
+      "noMoney": "You don't have money to buy",
+      "refuse": "Refuse",
+      "buy": "Buy"
+    },
+
+    "card": {
+      "pay": "Pay",
+      "ok": "Ok",
+      "chance": "Chance",
+      "chests": "Community chest"
+    },
+
+    "deal": {
+      "title": {
+        "income": " offers you a deal",
+        "outgoing": "Offer a deal "
+      },
+      "desc": {
+        "create": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them",
+        "income": "Another player wants to offer you a deal. You can refuse, agree or change the terms of the transaction by offering the amended agreement to the initiator of the transaction"
+      },
+      "money": {
+        "give": "Give money",
+        "get": "Get money"
+      },
+      "give": "give",
+      "you": "you",
+      "btns": {
+        "refuse": "Refuse",
+        "change": "Change deal",
+        "accept": "Accept",
+        "cancel": "Cancel",
+        "deal": "Offer deal"
+      }
+    },
+
+    "hover": {
+      "owner": "This tile belongs to",
+      "monopoly": "The player owns all the squares of that color",
+      "mortgaged": "Property is mortgaged"
+    },
+
+    "own": {
+      "title": "Property management",
+      "mortgaged": "Property is mortgaged",
+      "close": "Close",
+      "sell": "Sell",
+      "redeem": "Redeem pledge",
+      "put": "Put pledge",
+      "buyBuild": {
+        "hotel": "Buy hotel",
+        "build": "Buy building"
+      },
+      "sellBuild": {
+        "hotel": "Sell hotel",
+        "build": "Sell building"
+      }
+    },
+
+    "player": {
+      "jailbreak": "Cards jailbreaks",
+      "close": "Close",
+      "giveUp": "Give up"
+    },
+
+    "rent": {
+      "pay": "You have to pay",
+      "player": "player",
+      "title": "Rent"
+    },
+
+    "surrender": {
+      "title": "Do you really want to give up?",
+      "cancel": "Cancel",
+      "giveUp": "Give up"
+    },
+
+    "tax": {
+      "title": "Tax",
+      "pay": "Pay tax in the amount",
+      "btn": "Pay"
+    },
+
+    "end": {
+      "label": "Win",
+      "desc": "Congratulations! You won! They ruined all the players and turned out to be the most important asshole monopolist"
+    }
+  },
+
+  "other": {
+    "oops": "Oops. Something went wrong!"
+  }
+}

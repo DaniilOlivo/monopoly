@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Oops. Something went wrong!">
+    <WindowComponent :fullscreen="true" :title="$t('other.oops')">
         <div class="oops-window">
             <h1 class="oops-window__emotion">:(</h1>
             <p class="oops-window__message">

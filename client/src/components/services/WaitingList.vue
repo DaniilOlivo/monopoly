@@ -1,17 +1,17 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Lobby">
+    <WindowComponent :fullscreen="true" :title="$t('waitingList.title')">
         <ListComponent :elements="list">
         </ListComponent>
 
-        <p v-if="isPlayerHost && !activeButton">A minimum of two players are required to start the game.</p>
-        <p v-if="!isPlayerHost">We are waiting for the host of the room to start the game</p>
+        <p v-if="isPlayerHost && !activeButton">{{ $t("waitingList.minimum") }}</p>
+        <p v-if="!isPlayerHost">{{ $t("waitingList.onlyHost") }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickLeave">Leave</ButtonMain>
+            <ButtonMain @click="clickLeave">{{ $t("buttons.leave") }}</ButtonMain>
             <ButtonMain
                 v-if="isPlayerHost"
                 @click="clickStartGame"
-                :disable="!activeButton">Start game</ButtonMain>
+                :disable="!activeButton">{{ $t("waitingList.startGame") }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>

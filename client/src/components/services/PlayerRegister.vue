@@ -1,13 +1,13 @@
 <template>
-    <WindowComponent :fullscreen="true" title="Come up with username">
+    <WindowComponent :fullscreen="true" :title="$t('playerRegister.title')">
         <div class="input-line">
-            <label>Username:</label>
+            <label>{{ $t('playerRegister.label') }}:</label>
             <input type="text" v-model="username">
         </div>
-        <p class="warning" v-show="warning">{{ warning }}</p>
+        <p class="warning" v-show="warning">{{ $t("playerRegister.warnings." + warning) }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickRegister">Join room</ButtonMain>
+            <ButtonMain @click="clickRegister">{{ $t("playerRegister.join") }}</ButtonMain>
         </template>
     </WindowComponent>
 </template>

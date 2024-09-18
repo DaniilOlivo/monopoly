@@ -4,7 +4,7 @@
 
         <div class="rent-block">
             <div class="block-line" v-for="(rent, label) in mapRent" :key="label">
-                <span>{{ label }}</span>
+                <span>{{ $t("game.cardTile.mapStations." + label) }}</span>
                 <span class="block-line__money">M {{ rent }}</span>
             </div>
         </div>
@@ -25,10 +25,10 @@ export default {
     computed: {
         mapRent() {
             return {
-                "Rent": 25,
-                "2 stations": 50,
-                "3 stations": 100,
-                "4 stations": 200
+                "rent": 25,
+                "2stations": 50,
+                "3stations": 100,
+                "4stations": 200
             }
         }
     }

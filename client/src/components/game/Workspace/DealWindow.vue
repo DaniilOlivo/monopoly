@@ -1,24 +1,26 @@
 <template>
     <WindowComponent :title="titleWindow">
-        <p class="deal-window-desc">{{ descWindow }}</p>
+        <p class="deal-window-desc">
+            {{ $t("game.deal.desc." + (objDeal.initiator ? "income" : "create"))  }}
+        </p>
 
         <div class="deal-window-workspace">
             <div class="deal-col">
-                <h3>{{ objDeal.initiator ?? "You"  }} give:</h3>
+                <h3>{{ objDeal.initiator ?? $t("game.deal.you") }} {{ $t("game.deal.give") }}:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="incomeList"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>Give money:</label>
+                    <label>{{ $t("game.deal.money.give") }}:</label>
                     <input type="number" v-model.number="moneyIncome" :disabled="objDeal.initiator">
                 </div>
             </div>
             
             <div class="deal-col">
-                <h3>{{ (objDeal.initiator) ? "You" : objDeal.target }} give:</h3>
+                <h3>{{ (objDeal.initiator) ? $t("game.deal.you") : objDeal.target }} {{ $t("game.deal.give") }}:</h3>
                 <ListComponent :clickable="!objDeal.initiator" :elements="hostList"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>Get money:</label>
+                    <label>{{ $t("game.deal.money.get") }}:</label>
                     <input type="number" v-model.number="moneyHost" :disabled="objDeal.initiator">
                 </div>
             </div>
@@ -26,14 +28,14 @@
 
         <template v-slot:btns>
             <template v-if="objDeal.initiator">
-                <ButtonMain @click="refuse">Refuse</ButtonMain>
-                <ButtonMain @click="change">Change deal</ButtonMain>
-                <ButtonMain @click="accept">Accept</ButtonMain>
+                <ButtonMain @click="refuse">{{ $t("game.deal.btns.refuse") }}</ButtonMain>
+                <ButtonMain @click="change">{{ $t("game.deal.btns.change") }}</ButtonMain>
+                <ButtonMain @click="accept">{{ $t("game.deal.btns.accept") }}</ButtonMain>
             </template>
 
             <template v-else>
-                <ButtonMain @click="closeDeal">Cancel</ButtonMain>
-                <ButtonMain @click="dealSocket">Offer deal</ButtonMain>
+                <ButtonMain @click="closeDeal">{{ $t("game.deal.btns.cancel") }}</ButtonMain>
+                <ButtonMain @click="dealSocket">{{ $t("game.deal.btns.deal") }}</ButtonMain>
             </template>
         </template>
     </WindowComponent>
@@ -47,10 +49,6 @@ import ListComponent from '@/components/common/ListComponent.vue';
 import { mapMutations, mapState, mapGetters } from "vuex"
 import { gameApi } from "@/socket"
 
-const mapDesc = {
-    "create": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them",
-    "income": "Another player wants to offer you a deal. You can refuse, agree or change the terms of the transaction by offering the amended agreement to the initiator of the transaction",
-}
 
 export default {
     name: "DealWindow",
@@ -106,13 +104,8 @@ export default {
 
         titleWindow() {
             const target = this.objDeal.target
-            if (this.objDeal.initiator) return target + " offers you a deal"
-            else return "Offer a deal " + target
-        },
-
-        descWindow() {
-            if (this.objDeal.initiator) return mapDesc["income"]
-            else return mapDesc["create"]
+            if (this.objDeal.initiator) return target + this.$t("game.deal.title.income")
+            else return this.$t("game.deal.title.outgoing") + target
         }
     },
     methods: {

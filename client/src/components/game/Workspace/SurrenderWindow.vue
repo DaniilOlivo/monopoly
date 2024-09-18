@@ -1,8 +1,12 @@
 <template>
-    <WindowComponent title="Do you really want to give up?">
+    <WindowComponent :title="$t('game.surrender.title')">
         <template v-slot:btns>
-            <ButtonMain @click="clickCancel">Cancel</ButtonMain>
-            <ButtonMain @click="clickGiveUp">Give Up</ButtonMain>
+            <ButtonMain @click="clickCancel">
+                {{ $t('game.surrender.cancel') }}
+            </ButtonMain>
+            <ButtonMain @click="clickGiveUp">
+                {{ $t('game.surrender.giveUp') }}
+            </ButtonMain>
         </template>
     </WindowComponent>
 </template>

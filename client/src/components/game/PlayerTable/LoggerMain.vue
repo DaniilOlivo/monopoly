@@ -8,7 +8,7 @@
 
     <div class="log-input">
         <input type="text" class="log-input__input" v-model="mes" @keyup.enter="sendMes">
-        <ButtonMain @click="sendMes" :disable="!mes">Message</ButtonMain>
+        <ButtonMain @click="sendMes" :disable="!mes">{{ $t("game.playerTable.message") }}</ButtonMain>
     </div>
 </template>
 

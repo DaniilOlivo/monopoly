@@ -2,25 +2,25 @@
     <div class="player-memo-container">
         <div :class="['player-memo', {'player-memo_active': thisPlayerTurn}]">
             <div :class="['player-memo-content', {'player-memo-content_hidden': !display}]">
-                <h1 class="player-memo-content__title">Your move</h1>
+                <h1 class="player-memo-content__title">{{ getT("title") }}</h1>
 
                 <div class="player-memo-content-text">
-                    <p v-if="arrested">You are under arrest!</p>
-                    <p>Here's what you can do:</p>
+                    <p v-if="arrested">{{ getT("arrested") }}</p>
+                    <p>{{ getT("titleList") }}:</p>
 
                     <ul v-if="arrested" class="player-memo-content-text__list">
-                        <li>Use your jailbreak (if you have one)</li>
-                        <li>Roll a double on the dice</li>
-                        <li>If none of this works, then sit and wait</li>
+                        <li>{{ getT("listArrested.jailbreak") }}</li>
+                        <li>{{ getT("listArrested.double") }}</li>
+                        <li>{{ getT("listArrested.wait") }}</li>
                     </ul>
                     <ul v-else class="player-memo-content-text__list">
-                        <li>Offer a deal to another player. (By clicking on his card on the right)</li>
-                        <li>Manage your property (by clicking on one of your cells)</li>
-                        <li>Roll the dice (after this your turn is over)</li>
+                        <li>{{ getT("listTurn.offer") }}</li>
+                        <li>{{ getT("listTurn.manage") }}</li>
+                        <li>{{ getT("listTurn.roll") }}</li>
                     </ul>
                 </div>
 
-                <ButtonMain v-if="arrested" @click="clickJailbreak" :disable="thisPlayer.releasePrison == 0">Use Jailbreak</ButtonMain>
+                <ButtonMain v-if="arrested" @click="clickJailbreak" :disable="thisPlayer.releasePrison == 0">{{ getT("jailbreak") }}</ButtonMain>
             </div>
         </div>
     </div>
@@ -66,6 +66,10 @@ export default {
     },
 
     methods: {
+        getT(key) {
+            return this.$t("game.playerTable.memo." + key)
+        },
+
         clickJailbreak() {
             gameApi("jailbreak")
         }
