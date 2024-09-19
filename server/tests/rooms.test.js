@@ -26,7 +26,7 @@ describe("Rooms logic", () => {
             it("add exist player", () => {
                 const [status, desc] = room.addPlayer("Scorpion", "345")
                 assert.isFalse(status)
-                assert.equal(desc, "Such a player already exists")
+                assert.equal(desc, "existUsername")
                 assert.equal(room.getCountPlayers(), 1)
             })
 
@@ -46,7 +46,7 @@ describe("Rooms logic", () => {
                 const [status, desc] = room.addPlayer("Jade", "123")
                 assert.equal(room.getCountPlayers(), 8)
                 assert.isFalse(status)
-                assert.equal(desc, "Room overflow")
+                assert.equal(desc, "overflow")
             })
         })
 
