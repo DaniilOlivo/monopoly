@@ -8,12 +8,14 @@
         </template>
     </WindowComponent>
     
+    <AsidePanel></AsidePanel>
 </template>
 
 <script>
 import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
+import AsidePanel from '@/components/other/AsidePanel.vue';
 
 import { socket } from '@/socket';
 import { mapState } from "vuex"
@@ -23,7 +25,8 @@ export default {
     components: {
         WindowComponent,
         ButtonMain,
-        ListComponent
+        ListComponent,
+        AsidePanel
     },
     created() {
         socket.emit("pingRooms")

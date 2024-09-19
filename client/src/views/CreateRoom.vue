@@ -11,11 +11,14 @@
             <ButtonMain @click="clickCreate">{{ $t("createRoom.title") }}</ButtonMain>
         </template>
     </WindowComponent>
+
+    <AsidePanel></AsidePanel>
 </template>
 
 <script>
 import WindowComponent from '../components/common/WindowComponent.vue';
 import ButtonMain from '../components/common/ButtonMain.vue';
+import AsidePanel from '@/components/other/AsidePanel.vue';
 
 import { socket } from '@/socket';
 import { mapState, mapMutations } from 'vuex';
@@ -25,6 +28,7 @@ export default {
     components: {
         WindowComponent,
         ButtonMain,
+        AsidePanel
     },
     data() {
         return {
