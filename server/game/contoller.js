@@ -31,8 +31,8 @@ class Controller {
             if (!this.catchErrors) throw error
             if (error.name == "ErrorGame") {
                 const { message, detail } = error.objLog
-                this.core.pushError(message, detail)
-            } else this.core.pushError(error.message)
+                this.core.pushLog("error", message, "system", detail)
+            } else this.core.pushLog("error", error.message)
         }
     }
 }

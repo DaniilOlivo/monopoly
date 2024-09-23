@@ -171,12 +171,8 @@ class Game {
         return true
     }
 
-    pushLog(mes, sender="system", bold=null) {
-        this.logs.push({sender, mes, bold}) 
-    }
-
-    pushError(mes, bold=null) {
-        this.pushLog(mes, "error", bold)
+    pushLog(type, mes, sender="system", bold=null) {
+        this.logs.push({sender, type, mes, bold}) 
     }
 }
 

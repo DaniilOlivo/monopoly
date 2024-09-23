@@ -23,12 +23,12 @@ export default {
             type: String,
             required: true
         },
-        flagError: Boolean,
+        fillAllColor: Boolean,
     },
     computed: {
         style() {
             return {
-                color: this.flagError ? "darkred" : "white"
+                color: this.fillAllColor ? this.color : "white"
             }
         }
     }

@@ -34,20 +34,24 @@ export default {
             const game = this.$store.state.game
             const {logs, players} = game
             
-            let count = 0
-            logs.forEach((objLog) => {
-                objLog.id = count
-                let color = "white"
-                const sender = objLog.sender
-                if (sender in players) color = players[sender].color.primary
-                if (sender === "system") color = "darkblue"
-                if (sender === "error") color = "red"
-                objLog.color = color
-                objLog.flagError = sender === "error"
-                count++
-            })
+            const arrLines = []
 
-            return logs
+            for (let objLog of logs) {
+                const logLine = Object.assign(objLog)
+                let color = "white"
+                if (logLine.sender in players) color = players[logLine.sender].color.primary
+                if (logLine.type === "error") {
+                    color = "darkred"
+                    logLine.fillAllColor = true
+                }
+                logLine.color = color
+
+                if (logLine.type == "event") logLine.mes = this.$t("game.mes." + logLine.mes)
+
+                arrLines.push(logLine)
+            }
+
+            return arrLines
         }
     },
     methods: {

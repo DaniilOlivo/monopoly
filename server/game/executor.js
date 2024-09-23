@@ -9,8 +9,9 @@ class Executor {
         this.validator = validator
     }
 
-    _log(message, detail=null) {
-        this.core.pushLog(message, this.username, detail)
+    _log(message, detail=null, username=null) {
+        const sender = username ?? this.username
+        this.core.pushLog("event", message, sender, detail)
     }
 
     _getPlayer(username=null) {
@@ -25,7 +26,7 @@ class Executor {
     _passNewLap(boolNewLap) {
         if (!boolNewLap) return
         const lapMoney = settings["lapMoney"]
-        this._log("passes tile 'Go' and receives", lapMoney + 'M.')
+        this._log("passLap", lapMoney + 'M.')
         this._getPlayer().money += lapMoney
     }
 
@@ -34,7 +35,7 @@ class Executor {
         const capital = this.core.getCapital(this.username)
 
         if (capital < mustPay) {
-            this._log("becomes bankrupt and drops out of the game")
+            this._log("bankrupt")
             this.core.disablePlayer(this.username)
         }
     }
@@ -48,11 +49,11 @@ class Executor {
     }
 
     message({ message }) {
-        this._log(message)
+        this.core.pushLog("message", message, this.username)
     }
 
     roll({ dices }) {
-        this._log("roll dices with meaning", dices.toString())
+        this._log("roll", dices.toString())
         
         if (this.core.stage == "start") {
             const result = this.core.tracker.setDiceValue(this.username, dices)
@@ -72,13 +73,13 @@ class Executor {
         
         if (val1 == val2 && player.arrested > 0) {
             player.arrested = 0
-            this._log("throws a double and escapes from prison")
+            this._log("escapeDouble")
         }
 
         if (player.arrested > 0) {
             player.arrested -= 1
             this.core.next()
-            this._log("are still in prison.", player.arrested + " moves left")
+            this._log("stillPrison", player.arrested + " moves left")
             return
         }
 
@@ -86,7 +87,7 @@ class Executor {
         this._passNewLap(newLapBool)
 
         const tile = this.core.field.findPlayer(this.username)
-        this._log("ends up on the", tile.title)
+        this._log("end", tile.title)
 
         this._dispathTile(tile)
     }
@@ -100,7 +101,7 @@ class Executor {
         player.clearService("offer")
 
         if (options.refuse) {
-            this._log("refused buy", tile.title)
+            this._log("refuseBuy", tile.title)
             this._next(options)
             return
         }
@@ -122,7 +123,7 @@ class Executor {
 
         player.money -= price
         player.addOwn(tile)
-        this._log("buys", tile.title)
+        this._log("buy", tile.title)
         this._next(options)
     }
 
@@ -142,7 +143,7 @@ class Executor {
             )
             tile.pledge = true
             playerOwner.money += free ? 0 : tile.price / 2
-            this._log("put pledges", tile.title)
+            this._log("put", tile.title)
         }
         else if (type == "redeem") {
             const cost = free ? 0 : tile.price / 2
@@ -154,7 +155,7 @@ class Executor {
             this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.pledge = false
-            this._log("redeem pledge", tile.title)
+            this._log("redeem", tile.title)
         }
         else this.validator.throwError("Invalid type pledge", type)
     }
@@ -182,12 +183,12 @@ class Executor {
             this.validator.checkMoney(cost, playerOwner.money)
             playerOwner.money -= cost
             tile.addBuilding()
-            this._log(`built ${tile.hotel ? "hotel" : "building"}`, tile.title)
+            this._log("build." + (tile.hotel ? "hotel" : "house"), tile.title)
         }
         else if (type == "remove") {
             playerOwner.money += free ? 0 : tile.priceBuilding / 2
             tile.removeBuilding()
-            this._log(`removed ${tile.hotel ? "hotel" : "building"}`, tile.title)
+            this._log("remove." + (tile.hotel ? "hotel" : "house"), tile.title)
         }
         else this.validator.throwError("Invalid type build", type)
     }
@@ -213,7 +214,7 @@ class Executor {
         player.money -= price
         ownerPlayer.money += price
         player.clearService("rent")
-        this._log("paid rent", price + "M.")
+        this._log("rent", price + "M.")
         this._next(options)
     }
 
@@ -240,7 +241,7 @@ class Executor {
 
         player.money -= cost
         player.clearService("tax")
-        this._log("paid tax", cost + "M.")
+        this._log("tax", cost + "M.")
         this._next(options)
     }
 
@@ -250,7 +251,7 @@ class Executor {
         this.validator.checkObjDeal(objDeal)
         const player = this._getPlayer(objDeal.target)
         player.setService("deal", objDeal)
-        this._log("proposed a deal", objDeal.target)
+        this._log("deal", objDeal.target)
     }
 
     trade(options={}) {
@@ -258,9 +259,9 @@ class Executor {
         const targetPlayer = this._getPlayer()
         const objDeal = targetPlayer.service.deal
         targetPlayer.clearService("deal")
-        if (refuse) return this._log("refused the deal with the player", objDeal.initiator)
+        if (refuse) return this._log("refuseDeal", objDeal.initiator)
         const initiatorPlayer = this._getPlayer(objDeal.initiator)
-        this._log("made a deal with the player", objDeal.initiator)
+        this._log("madeDeal", objDeal.initiator)
 
         const swapMoney = (fromPlayer, toPlayer, value) => {
             this.validator.checkMoney(value, fromPlayer.money)
@@ -272,7 +273,7 @@ class Executor {
             for (const idTile of arrTiles) {
                 const tile = this._getTile(idTile)
                 fromPlayer.transfer(tile, toPlayer)
-                this.core.pushLog("receives property", toPlayer.username, tile.title)
+                this._log("swapProperty", tile.title, toPlayer.username)
             }
         }
 
@@ -285,9 +286,9 @@ class Executor {
         swapMoney(targetPlayer, initiatorPlayer, moneyHost)
 
         if (objDeal.moneyHost > 0)
-            this.core.pushLog("receives money", objDeal.initiator, moneyHost + " M.")
+            this._log("swapMoney", moneyHost + " M.", objDeal.initiator)
         if (objDeal.moneyIncome > 0)
-            this.core.pushLog("receives money", this.username, moneyIncome + " M.")
+            this._log("swapMoney", moneyIncome + " M.", this.username)
     }
 
     card(options={}) {
@@ -301,34 +302,31 @@ class Executor {
                 const newBoolLap = this.core.field.moveById(this.username, card.location)
                 this._passNewLap(newBoolLap)
                 const newTile = this._getTile(card.location)
-                this._log("goes on tile", newTile.title)
+                this._log("goTo", newTile.title)
                 this._dispathTile(newTile)
             },
             release: () => {
                 player.releasePrison += 1
-                this._log("got released from prison")
+                this._log("release")
             },
             money: () => {
                 player.money += card.amount
-                this._log(
-                    `${card.amount >= 0 ? "receives" : "spends"} money`,
-                    card.amount + " M."
-                )
+                this._log("money." + (card.amount >= 0 ? "receive" : "spend", card.amount + " M."))
             },
             goToBack: () => {
                 this.core.field.move(this.username, -card.amount)
                 const newTile = this.core.field.findPlayer(this.username)
-                this._log("goes on tile", newTile.title)
+                this._log("goTo", newTile.title)
                 this._dispathTile(newTile)
             },
             repairBuilding: () => {
                 const cost = this.core.getRepairBuilding(player, card)
                 player.money -= cost
-                this._log("pays for his buildings", cost + " M.")
+                this._log("repairBuilding", cost + " M.")
             },
             arrest: () => {
                 this.core.arrest(this.username)
-                this._log("arrested!")
+                this._log("arrest")
             },
             happyBirthday: () => {
                 const amount = card.amount
@@ -344,7 +342,7 @@ class Executor {
                     player.money -= amount
                     birthdayBoy.money += amount
                 }
-                this._log("player's birthday! Everyone chips in", amount + " M.")
+                this._log("happyBirthday", amount + " M.")
             }
         }
 
@@ -355,12 +353,12 @@ class Executor {
     }
 
     surrender() {
-        this._log("gave up!")
+        this._log("surrender")
         this.core.disablePlayer(this.username)
     }
 
     jailbreak() {
-        this._log("uses jailbreak")
+        this._log("jailbreak")
         const player = this._getPlayer()
         player.arrested = 0
     }

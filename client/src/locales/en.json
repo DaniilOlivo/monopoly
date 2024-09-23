@@ -192,6 +192,46 @@
       "btn": "Pay"
     },
 
+    "mes": {
+      "passLap": "passes tile 'Go' and receives",
+      "bankrupt": "becomes bankrupt and drops out of the game",
+      "roll": "roll dices with meaning",
+      "escapeDouble": "throws a double and escapes from prison",
+      "stillPrison": "are still in prison",
+      "end": "ends up on the",
+      "refuseBuy": "refused buy",
+      "buy": "buys",
+      "put": "put pledges",
+      "redeem": "redeem pledge",
+      "build": {
+        "hotel": "built hotel",
+        "house": "built building"
+      },
+      "remove": {
+        "hotel": "removed hotel",
+        "house": "removed building"
+      },
+      "rent": "paid rent",
+      "tax": "paid tax",
+      "deal": "proposed a deal",
+      "refuseDeal": "refused the deal with the player",
+      "madeDeal": "made a deal with the player",
+      "swapProperty": "receives property",
+      "swapMoney": "receives money",
+      "goTo": "goes on tile",
+      "release": "got released from prison",
+      "money": {
+        "receive": "receives money",
+        "spend": "spends money"
+      },
+      "repairBuilding": "pays for his buildings",
+      "arrest": "arrested!",
+      "happyBirthday": "player's birthday! Everyone chips in",
+      "surrender": "gave up!",
+      "jailbreak": "uses jailbreak",
+      "disconnect": "disconnect"
+    },
+
     "end": {
       "label": "Win",
       "desc": "Congratulations! You won! They ruined all the players and turned out to be the most important asshole monopolist"
