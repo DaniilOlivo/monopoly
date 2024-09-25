@@ -169,6 +169,7 @@
     },
 
     "player": {
+      "title": "Player info",
       "jailbreak": "Cards jailbreaks",
       "close": "Close",
       "giveUp": "Give up"

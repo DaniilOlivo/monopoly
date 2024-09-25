@@ -1,5 +1,5 @@
 <template>
-    <WindowComponent title="Player card">
+    <WindowComponent :title="$t('game.player.title')">
         <p>
             {{ $t("game.player.jailbreak") }}: {{ thisPlayer.releasePrison }}
         </p>
