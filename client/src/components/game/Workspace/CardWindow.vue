@@ -5,7 +5,7 @@
 
         <template v-slot:btns>
             <ButtonMain @click="clickBtn" :disable="disableBtn">
-                {{ $t("game.card." + (cardPayble ? "Pay" : "Ok")) }}
+                {{ $t("game.card." + (cardPayble ? "pay" : "ok")) }}
             </ButtonMain>
         </template>
     </WindowComponent>

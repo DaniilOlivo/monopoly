@@ -311,7 +311,7 @@ class Executor {
             },
             money: () => {
                 player.money += card.amount
-                this._log("money." + (card.amount >= 0 ? "receive" : "spend", card.amount + " M."))
+                this._log("money." + (card.amount >= 0 ? "receive" : "spend"), card.amount + " M.")
             },
             goToBack: () => {
                 this.core.field.move(this.username, -card.amount)
