@@ -360,6 +360,8 @@ class Executor {
     jailbreak() {
         this._log("jailbreak")
         const player = this._getPlayer()
+        this.validator.check(player.releasePrison > 0, "No releases from prison")
+        player.releasePrison -= 1
         player.arrested = 0
     }
 
