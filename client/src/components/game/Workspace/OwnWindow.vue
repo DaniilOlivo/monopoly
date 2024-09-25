@@ -34,7 +34,7 @@
                 <ButtonMain 
                     @click="clickRemoveBuilding"
                     :disable="disableBtns || tile.building == 0"
-                    >{{ $t("game.own.buyBuild." + (tile.hotel ? 'hotel' : 'build')) }}</ButtonMain>
+                    >{{ $t("game.own.sellBuild." + (tile.hotel ? 'hotel' : 'build')) }}</ButtonMain>
             </template>
         </template>
     </WindowComponent>
