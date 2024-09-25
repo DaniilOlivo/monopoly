@@ -8,13 +8,13 @@ const Cards = require("./components/cards")
 const COLORS = settings["colors"]
 
 class Game {
-    constructor(usernames) {
+    constructor(usernames, lang="en") {
         this.stage = "start"
         this.winner = null
         this.players = {}
 
         this.tracker = new Tracker(usernames.length)
-        this.field = new Field(usernames)
+        this.field = new Field(usernames, lang)
 
         for (let i = 0; i < usernames.length; i++) {
             const username = usernames[i]
@@ -32,8 +32,8 @@ class Game {
         // Required for dice throwing animation
         this.lastAction = ""
 
-        this.chests = new Cards(getConfig("chest.json"), "chests")
-        this.chance = new Cards(getConfig("chance.json"), "chance")
+        this.chests = new Cards(getConfig("chest.json"), "chests", lang)
+        this.chance = new Cards(getConfig("chance.json"), "chance", lang)
     }
 
     getRent(idTile) {

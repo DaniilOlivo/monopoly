@@ -51,5 +51,6 @@
 
     "startMoney": 1500,
     "countCards": 48,
-    "lapMoney": 200
+    "lapMoney": 200,
+    "defaultLang": "en"
 }

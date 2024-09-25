@@ -1,8 +1,9 @@
-const { getConfig } = require("../utils")
+const { getConfig, getConfigLang } = require("../utils")
 
 class Tile {
-    constructor(tileConfig) {
-        const {areaDetail, desc} = getConfig("tiles.json")
+    constructor(tileConfig, lang) {
+        const { areaDetail } = getConfig("tiles.json")
+        const { tiles, desc } = getConfigLang(lang)
 
         Object.assign(this, tileConfig)
         const type = tileConfig.type
@@ -14,8 +15,11 @@ class Tile {
             this.hotel = false
         }
         if (type == "communal") this.desc = desc.communal
-        if (type == "chance") this.title = "Chance"
-        if (type == "community_chest") this.title = "Community chest"
+        
+        let key = this.id
+        if (this.type == "community_chest") key = "community_chest"
+        if (this.type == "chance") key = "chance"
+        this.title = tiles[key]
 
         this.players = []
         this.owner = null

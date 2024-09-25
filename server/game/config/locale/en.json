@@ -1,0 +1,219 @@
+{
+    "desc": {
+        "communal": [
+            "If the player owns one type of utility company, then the rent is equal to the sum of the points rolled multiplied by 4",
+            "If a player owns two types of utilities, then the rent is equal to the sum of the points rolled multiplied by 10"
+        ]
+    },
+
+    "tiles": {
+        "community_chest": "Community chest",
+        "chance": "Chance",
+
+        "income_tax": "Income Tax",
+        "super_tax": "Super tax",
+
+        "start": "Go",
+        "jail": "Jail",
+        "parking": "Free Parking",
+        "cops": "Go to Jail",
+
+        "electric_compamy": "Electric Company",
+        "water_company": "Water Works",
+
+        "station_1": "Kings Cross Station",
+        "station_2": "Marylebone Station",
+        "station_3": "Fenchurch St. Station",
+        "station_4": "Liverpool St. Station",
+
+        "brown_1": "Old Kent Road",
+        "brown_2": "Whitechapel Road",
+
+        "cyan_1": "The Angel, Islington",
+        "cyan_2": "Euston Road",
+        "cyan_3": "Pentonville Road",
+
+        "violet_1": "Pall Mall",
+        "violet_2": "Whitehall",
+        "violet_3": "Northumrl'd Avenue",
+
+        "orange_1": "Bow Street",
+        "orange_2": "Marlborough Street",
+        "orange_3": "Vine Street",
+
+        "red_1": "Strand",
+        "red_2": "Fleet Street",
+        "red_3": "Trafalgar Square",
+
+        "yellow_1": "Leicester Square",
+        "yellow_2": "Coventry Street",
+        "yellow_3": "Piccadilly",
+
+        "green_1": "Regent Street",
+        "green_2": "Oxford Street",
+        "green_3": "Bond Street",
+
+        "blue_1": "Park Lane",
+        "blue_2": "Mayfajr"
+    },
+    
+    "chance": {
+        "go_blue": {
+            "text": "Go to Mayfajr"
+        },
+
+        "go_start": {
+            "text": "Go to Start"
+        },
+
+        "release": {
+            "text": "Release from prison",
+            "desc": "The card can be used later or sold"
+        },
+
+        "repair_building": {
+            "text": "Collection for street repairs",
+            "desc": "40 M. for each house. 115 M. for each hotel"
+        },
+
+        "go_red": {
+            "text": "Go to Strand",
+            "desc": "If you pass the start, you will receive 200 M."
+        },
+
+        "fine": {
+            "text": "Speeding fine",
+            "desc": "Pay 15 M."
+        },
+
+        "credit": {
+            "text": "Loan repayment",
+            "desc": "Get 150 M."
+        },
+
+        "arrest": {
+            "text": "You were arrested!",
+            "desc": "Go to jail"
+        },
+
+        "renovation": {
+            "text": "Major renovation",
+            "desc":"25 M. for each house. 100 M. for each hotel"
+        },
+
+        "go_station": {
+            "text": "Go to Fenchurch St. Station",
+            "desc": "If you pass the start, you will receive 200 M."
+        },
+
+        "dividends": {
+            "text": "Bank dividends",
+            "desc": "Get 50 M."
+        },
+
+        "drink": {
+            "text": "Drunk driving",
+            "desc": "Pay 20 M."
+        },
+
+        "course": {
+            "text": "Payment for driver courses",
+            "desc": "Pay 150 M."
+        },
+
+        "championship": {
+            "text": "You won the chess championship",
+            "desc": "Get 100 M."
+        },
+
+        "go_cyan": {
+            "text": "Go to The Angel, Islington",
+            "desc": "If you pass the start, you will receive 200 M."
+        },
+
+        "back_three": {
+            "text": "Go back three squares"
+        }
+    },
+
+    "chests": {
+        "error": {
+            "text": "Banking error in your favor",
+            "desc": "Get 200 M."
+        },
+
+        "sale_shares": {
+            "text": "Profitable sale of shares",
+            "desc": "Get 25 M."
+        },
+
+        "release": {
+            "text": "Release from prison",
+            "desc": "The card can be used later or sold"
+        },
+
+        "casino": {
+            "text": "You won at the casino",
+            "desc": "Get 150 M."
+        },
+
+        "inheritance": {
+            "text": "You received an inheritance",
+            "desc": "Get 100 M."
+        },
+
+        "refund": {
+            "text": "Tax refund",
+            "desc":"Get 25 M."
+        },
+
+        "arrest": {
+            "text": "You were arrested",
+            "desc": "Go to jail"
+        },
+
+        "insurance": {
+            "text": "Payment for insurance",
+            "desc": "Pay 50 M."
+        },
+
+        "beauty_contest": {
+            "text": "You took second place in a beauty contest",
+            "desc": "Get 10 M."
+        },
+
+        "sale_bonds": {
+            "text": "Profitable sale of bonds",
+            "desc": "Get 50 M."
+        },
+
+        "treatment": {
+            "text": "Payment for treatment",
+            "desc": "Pay 100 M."
+        },
+
+        "go_brown": {
+            "text": "Return to Old Kent Road"
+        },
+
+        "rent": {
+            "text": "Rent collection",
+            "desc":"Get 100 M."
+        },
+
+        "birthday": {
+            "text": "Happy birthday!",
+            "desc": "Get 10 M. from each player"
+        },
+
+        "fine": {
+            "text": "Pay the fine",
+            "desc": "Pay 10 M."
+        },
+
+        "doctor": {
+            "text": "Payment for doctor's services",
+            "desc": "Pay 50 M."
+        }
+    }
+}

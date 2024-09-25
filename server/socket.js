@@ -128,8 +128,8 @@ class WrapSocket {
         } else leave()
     }
 
-    receiveStartGame(options) {
-        this.data.room.startGame()
+    receiveStartGame(options={}) {
+        this.data.room.startGame(options)
         this.sendUpdateGame()
     }
 

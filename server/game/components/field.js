@@ -4,11 +4,11 @@ const Tile = require("./tile")
 const COUNT_TILES = 40
 
 class Field {
-    constructor(listPlayers) {
-        const {tiles} = getConfig("tiles.json")
+    constructor(listPlayers, lang) {
+        const { tiles } = getConfig("tiles.json")
+
         // Check valid json
         if (tiles.length != COUNT_TILES) throw new Error("Tiles are not 40. JSON is incorrect")
-
 
         // Generating an id for cells where it is not explicitly specified
         // A certain parameter (color or type) is taken and a number is added to it
@@ -28,8 +28,8 @@ class Field {
         this.tiles = []
 
         for (const tileConfig of tiles) {
-            const tile = new Tile(tileConfig)
-            if (!tile.id) tile.id = genId(tile)
+            if (!tileConfig.id) tileConfig.id = genId(tileConfig)
+            const tile = new Tile(tileConfig, lang)
             if (tile.id === "start") Object.assign(tile.players, listPlayers) 
             this.tiles.push(tile)
         }

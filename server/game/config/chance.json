@@ -1,109 +1,96 @@
 [
     {
-        "text": "Go to Mayfajr",
+        "id": "go_blue",
         "type": "goTo",
         "location": "blue_2"
     },
 
     {
-        "text": "Go to Start",
+        "id": "go_start",
         "type": "goTo",
         "location": "start"
     },
 
     {
-        "text": "Release from prison",
-        "desc": "The card can be used later or sold",
+        "id": "release",
         "type": "release"
     },
 
     {
-        "text": "Collection for street repairs",
-        "desc": "40 M. for each house. 115 M. for each hotel",
+        "id": "repair_building",
         "type": "repairBuilding",
         "amount": 40,
         "amountHotel": 115
     },
 
     {
-        "text": "Go to Strand",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "id": "go_red",
         "type": "goTo",
         "location": "red_1"
     },
 
     {
-        "text": "Speeding fine",
-        "desc": "Pay 15 M.",
+        "id": "fine",
         "type": "money",
         "amount": -15
     },
 
     {
-        "text": "Loan repayment",
-        "desc": "Get 150 M.",
+        "id": "credit",
         "type": "money",
         "amount": 150
     },
 
     {
-        "text": "You were arrested",
-        "desc": "Go to jail",
+        "id": "arrest",
         "type": "arrest"
     },
 
     {
-        "text": "Major renovation",
-        "desc":"25 M. for each house. 100 M. for each hotel",
+        "id": "renovation",
         "type": "repairBuilding",
         "amount": 25,
         "amountHotel": 100
     },
 
     {
-        "text": "Go to Fenchurch St. Station",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "id": "go_station",
         "type": "goTo",
         "location": "station_3"
     },
 
     {
-        "text": "Bank dividends",
-        "desc": "Get 50 M.",
+        "id": "dividends",
         "type": "money",
         "amount": 50
     },
 
     {
-        "text": "Drunk driving",
-        "desc": "Pay 20 M.",
+        "id": "drink",
         "type": "money",
         "amount": -20
     },
 
     {
-        "text": "Payment for driver courses",
-        "desc": "Pay 150 M.",
+        "id": "course",
         "type": "money",
         "amount": -150
     },
 
     {
-        "text": "You won the chess championship",
-        "desc": "Get 100 M.",
+        "id": "championship",
         "type": "money",
         "amount": 100
     },
 
     {
-        "text": "Go to The Angel, Islington",
-        "desc": "If you pass the start, you will receive 200 M.",
+        "id": "go_cyan",
         "type": "goTo",
         "location": "cyan_1"
     },
 
     {
-        "text": "Go back three squares",
+        "id": "back_three",
         "type": "goToBack",
         "amount": 3
     }

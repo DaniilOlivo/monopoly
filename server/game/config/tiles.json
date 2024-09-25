@@ -34,24 +34,15 @@
         }
     },
 
-    "desc": {
-        "communal": [
-            "If the player owns one type of utility company, then the rent is equal to the sum of the points rolled multiplied by 4",
-            "If a player owns two types of utilities, then the rent is equal to the sum of the points rolled multiplied by 10"
-        ]
-    },
-
     "tiles": [
         {
             "id": "start",
-            "title": "Go",
             "type": "special"
         },
 
         {
             "type": "standard",
             "color": "brown",
-            "title": "Old Kent Road",
             "price": 60,
             "rent_basic": 2,
             "rent_1_house": 10,
@@ -66,7 +57,6 @@
         {   
             "type": "standard",
             "color": "brown",
-            "title": "Whitechapel Road",
             "price": 60,
             "rent_basic": 4,
             "rent_1_house": 20,
@@ -78,21 +68,18 @@
 
         {   
             "id": "income_tax",
-            "title": "Income Tax",
             "type": "tax",
             "cost": 200
         },
         
         {   
             "type": "station",
-            "title": "Kings Cross Station",
             "price": 200
         },
         
         {   
             "type": "standard",
             "color": "cyan",
-            "title": "The Angel, Islington",
             "price": 100,
             "rent_basic": 6,
             "rent_1_house": 30,
@@ -107,7 +94,6 @@
         {   
             "type": "standard",
             "color": "cyan",
-            "title": "Euston Road",
             "price": 100,
             "rent_basic": 6,
             "rent_1_house": 30,
@@ -120,7 +106,6 @@
         {   
             "type": "standard",
             "color": "cyan",
-            "title": "Pentonville Road",
             "price": 120,
             "rent_basic": 8,
             "rent_1_house": 40,
@@ -133,14 +118,12 @@
         {
             "id": "jail",
             "prisoners": {},
-            "title": "Jail",
             "type": "special"
         },
 
         {   
             "type": "standard",
             "color": "violet",
-            "title": "Pall Mall",
             "price": 140,
             "rent_basic": 10,
             "rent_1_house": 50,
@@ -152,7 +135,6 @@
 
         {   
             "id": "electric_compamy",
-            "title": "Electric Company",
             "type": "communal",
             "price": 150
         },
@@ -160,7 +142,6 @@
         {   
             "type": "standard",
             "color": "violet",
-            "title": "Whitehall",
             "price": 140,
             "rent_basic": 10,
             "rent_1_house": 50,
@@ -173,7 +154,6 @@
         {   
             "type": "standard",
             "color": "violet",
-            "title": "Northumrl'd Avenue",
             "price": 160,
             "rent_basic": 12,
             "rent_1_house": 60,
@@ -185,14 +165,12 @@
          
         {
             "type": "station",
-            "title": "Marylebone Station",
             "price": 200
         },
 
         {   
             "type": "standard",
             "color": "orange",
-            "title": "Bow Street",
             "price": 180,
             "rent_basic": 14,
             "rent_1_house": 70,
@@ -209,7 +187,6 @@
         {   
             "type": "standard",
             "color": "orange",
-            "title": "Marlborough Street",
             "price": 180,
             "rent_basic": 14,
             "rent_1_house": 70,
@@ -222,7 +199,6 @@
         {   
             "type": "standard",
             "color": "orange",
-            "title": "Vine Street",
             "price": 200,
             "rent_basic": 16,
             "rent_1_house": 80,
@@ -234,14 +210,12 @@
 
         {
             "id": "parking",
-            "title": "Free Parking",
             "type": "special"
         },
 
         {   
             "type": "standard",
             "color": "red",
-            "title": "Strand",
             "price": 220,
             "rent_basic": 18,
             "rent_1_house": 90,
@@ -258,7 +232,6 @@
         {   
             "type": "standard",
             "color": "red",
-            "title": "Fleet Street",
             "price": 220,
             "rent_basic": 18,
             "rent_1_house": 90,
@@ -271,7 +244,6 @@
         {   
             "type": "standard",
             "color": "red",
-            "title": "Trafalgar Square",
             "price": 240,
             "rent_basic": 20,
             "rent_1_house": 100,
@@ -283,14 +255,12 @@
 
         {
             "type": "station",
-            "title": "Fenchurch St. Station",
             "price": 200
         },
 
         {   
             "type": "standard",
             "color": "yellow",
-            "title": "Leicester Square",
             "price": 260,
             "rent_basic": 22,
             "rent_1_house": 110,
@@ -303,7 +273,6 @@
         {   
             "type": "standard",
             "color": "yellow",
-            "title": "Coventry Street",
             "price": 260,
             "rent_basic": 22,
             "rent_1_house": 110,
@@ -315,7 +284,6 @@
 
         {
             "id": "water_company",
-            "title": "Water Works",
             "type": "communal",
             "price": 150
         },
@@ -323,7 +291,6 @@
         {   
             "type": "standard",
             "color": "yellow",
-            "title": "Piccadilly",
             "price": 280,
             "rent_basic": 24,
             "rent_1_house": 120,
@@ -335,14 +302,12 @@
 
         {
             "id": "cops",
-            "title": "Go to Jail",
             "type": "special"
         },
 
         {   
             "type": "standard",
             "color": "green",
-            "title": "Regent Street",
             "price": 300,
             "rent_basic": 26,
             "rent_1_house": 130,
@@ -355,7 +320,6 @@
         {   
             "type": "standard",
             "color": "green",
-            "title": "Oxford Street",
             "price": 300,
             "rent_basic": 26,
             "rent_1_house": 130,
@@ -372,7 +336,6 @@
         {   
             "type": "standard",
             "color": "green",
-            "title": "Bond Street",
             "price": 320,
             "rent_basic": 28,
             "rent_1_house": 150,
@@ -384,7 +347,6 @@
 
         {
             "type": "station",
-            "title": "Liverpool St. Station",
             "price": 200
         },
 
@@ -395,7 +357,6 @@
         {   
             "type": "standard",
             "color": "blue",
-            "title": "Park Lane",
             "price": 350,
             "rent_basic": 35,
             "rent_1_house": 175,
@@ -407,7 +368,6 @@
 
         {
             "id": "super_tax",
-            "title": "Super tax",
             "type": "tax",
             "cost": 100
         },
@@ -415,7 +375,6 @@
         {   
             "type": "standard",
             "color": "blue",
-            "title": "Mayfajr",
             "price": 400,
             "rent_basic": 50,
             "rent_1_house": 200,

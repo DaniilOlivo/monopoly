@@ -5,9 +5,9 @@ const Field = require("../components/field")
 describe("Component Field", () => {
     const listPlayers = ["Scorpion", "SubZero", "Sonya Blade", "Kitana"]
     const usernameTest = "Scorpion"
-    let field = new Field(listPlayers)
+    let field = new Field(listPlayers, "en")
 
-    const resetField = () => field = new Field(listPlayers)
+    const resetField = () => field = new Field(listPlayers, "en")
 
     const getIndexTile = () => {
         const tile = field.findPlayer(usernameTest)

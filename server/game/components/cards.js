@@ -1,9 +1,12 @@
-const { settings } = require("../utils")
+const { settings, getConfigLang } = require("../utils")
 
 const COUNT_CARDS = settings["countCards"]
 
 class Cards {
-    constructor(arrCardsSource, type) {
+    constructor(arrCardsSource, type, lang) {
+        const locale = getConfigLang(lang)
+        const textCards = locale[type]
+
         const len = arrCardsSource.length
         this.list = []
 
@@ -11,6 +14,7 @@ class Cards {
         for (let i = 0; i < COUNT_CARDS; i++) {
             const objCard = Object.assign({}, arrCardsSource[count])
             objCard.typeDeck = type
+            Object.assign(objCard, textCards[objCard.id])
             this.list.push(objCard)
             count++
             if (count == len) count = 0

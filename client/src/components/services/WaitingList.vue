@@ -61,7 +61,7 @@ export default {
         },
 
         clickStartGame() {
-            socket.emit("startGame")
+            socket.emit("startGame", {lang: this.$i18n.locale})
         },
     }
 }

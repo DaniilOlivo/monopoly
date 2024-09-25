@@ -50,8 +50,8 @@ class Room {
         } 
     }
 
-    startGame() {
-        this.game = new Game(Object.keys(this.players))
+    startGame(optionsGame) {
+        this.game = new Game(Object.keys(this.players), optionsGame.lang)
         return this.game
     }
 }
