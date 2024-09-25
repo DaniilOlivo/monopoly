@@ -30,5 +30,6 @@ export default {
 .card-communal__desc {
     flex-grow: 1;
     text-align: center;
+    font-size: 16px;
 }
 </style>
