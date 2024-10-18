@@ -122,20 +122,26 @@
     },
 
     "deal": {
-      "title": {
-        "income": " offers you a deal",
-        "outgoing": "Offer a deal "
+      "create": {
+        "title": "Offer a deal {username}",
+        "desc": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them"
       },
-      "desc": {
-        "create": "Specify the terms of the transaction. Click on the cells of the field that you want to receive. To remove them from your deal list, simply click on them",
-        "income": "Another player wants to offer you a deal. You can refuse, agree or change the terms of the transaction by offering the amended agreement to the initiator of the transaction"
+
+      "income": {
+        "title": "{username} offers you a deal",
+        "desc": "Another player wants to offer you a deal. You can refuse, agree or change the terms of the transaction by offering the amended agreement to the initiator of the transaction"
       },
-      "money": {
-        "give": "Give money",
-        "get": "Get money"
+
+      "leftCol": {
+        "title": "You give away",
+        "money": "Give money"
       },
-      "give": "give",
-      "you": "you",
+
+      "rightCol": {
+        "title": " gives away",
+        "money": "Get money"
+      },
+
       "btns": {
         "refuse": "Refuse",
         "change": "Change deal",

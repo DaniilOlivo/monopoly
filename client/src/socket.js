@@ -51,7 +51,7 @@ socket.on("updateGame", (game) => {
     store.commit("setGame", game)
     if (store.getters.stage == "game") {
         const objDeal = store.getters.thisPlayer.service.deal
-        if (objDeal) store.commit("deal/setDeal", objDeal)
+        if (objDeal) store.dispatch("deal/setDeal", {obj: objDeal, mode: "income"})
     }
 })
 

@@ -45,7 +45,7 @@ export default {
             let target = ""
             for (const { service } of Object.values(players)) {
                 if (service.deal) {
-                    target = service.deal.target
+                    target = service.deal.target.username
                     keyStatus = "waitDeal"
                     break
                 }

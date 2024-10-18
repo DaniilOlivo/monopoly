@@ -247,26 +247,29 @@ class Executor {
 
     deal(options={}) {
         const { objDeal } = options
-        objDeal.initiator = this.username
         this.validator.checkObjDeal(objDeal)
-        const player = this._getPlayer(objDeal.target)
+        const player = this._getPlayer(objDeal.target.username)
+        if (player.service.deal) return
         player.setService("deal", objDeal)
-        this._log("deal", objDeal.target)
+        this._log("deal", objDeal.target.username)
     }
 
     trade(options={}) {
         const { refuse } = options
         const targetPlayer = this._getPlayer()
         const objDeal = targetPlayer.service.deal
+        const {initiator, target} = objDeal
         targetPlayer.clearService("deal")
-        if (refuse) return this._log("refuseDeal", objDeal.initiator)
-        const initiatorPlayer = this._getPlayer(objDeal.initiator)
-        this._log("madeDeal", objDeal.initiator)
+        if (refuse) return this._log("refuseDeal", initiator.username)
+        const initiatorPlayer = this._getPlayer(initiator.username)
+        this._log("madeDeal", initiator.username)
 
         const swapMoney = (fromPlayer, toPlayer, value) => {
             this.validator.checkMoney(value, fromPlayer.money)
             fromPlayer.money -= value
             toPlayer.money += value
+            if (value > 0)
+                this._log("swapMoney", value + "M.", toPlayer.username)
         }
 
         const swapTiles = (fromPlayer, toPlayer, arrTiles) => {
@@ -277,18 +280,11 @@ class Executor {
             }
         }
 
-        swapTiles(initiatorPlayer, targetPlayer, objDeal.income)
-        swapTiles(targetPlayer, initiatorPlayer, objDeal.host)
+        swapTiles(initiatorPlayer, targetPlayer, initiator.property)
+        swapTiles(targetPlayer, initiatorPlayer, target.property)
 
-        const { moneyHost, moneyIncome } = objDeal
-
-        swapMoney(initiatorPlayer, targetPlayer, moneyIncome)
-        swapMoney(targetPlayer, initiatorPlayer, moneyHost)
-
-        if (objDeal.moneyHost > 0)
-            this._log("swapMoney", moneyHost + " M.", objDeal.initiator)
-        if (objDeal.moneyIncome > 0)
-            this._log("swapMoney", moneyIncome + " M.", this.username)
+        swapMoney(initiatorPlayer, targetPlayer, initiator.money)
+        swapMoney(targetPlayer, initiatorPlayer, target.money)
     }
 
     card(options={}) {

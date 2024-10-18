@@ -1,33 +1,40 @@
 <template>
     <WindowComponent :title="titleWindow">
         <p class="deal-window-desc">
-            {{ $t("game.deal.desc." + (objDeal.initiator ? "income" : "create"))  }}
+            {{ $t(`game.deal.${mode}.desc`) }}
         </p>
 
         <div class="deal-window-workspace">
             <div class="deal-col">
-                <h3>{{ objDeal.initiator ?? $t("game.deal.you") }} {{ $t("game.deal.give") }}:</h3>
-                <ListComponent :clickable="!objDeal.initiator" :elements="incomeList"></ListComponent>
+                <h3>{{ $t("game.deal.leftCol.title") }}:</h3>
+                <ListComponent 
+                    :clickable="editable"
+                    :elements="getList(sideLeft)"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>{{ $t("game.deal.money.give") }}:</label>
-                    <input type="number" v-model.number="moneyIncome" :disabled="objDeal.initiator">
+                    <label>{{ $t("game.deal.leftCol.money") }}:</label>
+                    <input type="number" v-model.number="valMoneyLeft" :disabled="!editable">
                 </div>
             </div>
             
             <div class="deal-col">
-                <h3>{{ (objDeal.initiator) ? $t("game.deal.you") : objDeal.target }} {{ $t("game.deal.give") }}:</h3>
-                <ListComponent :clickable="!objDeal.initiator" :elements="hostList"></ListComponent>
+                <h3>
+                    {{ objDeal[sideRight].username }}
+                    {{ $t("game.deal.rightCol.title") }}:
+                </h3>
+                <ListComponent
+                    :clickable="editable"
+                    :elements="getList(sideRight)"></ListComponent>
                 
                 <div class="deal-col__panel">
-                    <label>{{ $t("game.deal.money.get") }}:</label>
-                    <input type="number" v-model.number="moneyHost" :disabled="objDeal.initiator">
+                    <label>{{ $t("game.deal.rightCol.money") }}:</label>
+                    <input type="number" v-model.number="valMoneyRight" :disabled="!editable">
                 </div>
             </div>
         </div>
 
         <template v-slot:btns>
-            <template v-if="objDeal.initiator">
+            <template v-if="mode == 'income'">
                 <ButtonMain @click="refuse">{{ $t("game.deal.btns.refuse") }}</ButtonMain>
                 <ButtonMain @click="change">{{ $t("game.deal.btns.change") }}</ButtonMain>
                 <ButtonMain @click="accept">{{ $t("game.deal.btns.accept") }}</ButtonMain>
@@ -46,7 +53,7 @@ import WindowComponent from '@/components/common/WindowComponent.vue';
 import ButtonMain from '@/components/common/ButtonMain.vue';
 import ListComponent from '@/components/common/ListComponent.vue';
 
-import { mapMutations, mapState, mapGetters } from "vuex"
+import { mapMutations, mapActions, mapState, mapGetters } from "vuex"
 import { gameApi } from "@/socket"
 
 
@@ -57,62 +64,86 @@ export default {
         ButtonMain,
         ListComponent
     },
+
+    data() {
+        return {
+            valMoneyLeft: 0,
+            valMoneyRight: 0
+        }
+    },
+
+    created() {
+        this.valMoneyLeft = this.objDeal[this.sideLeft].money
+        this.valMoneyRight = this.objDeal[this.sideRight].money
+    },
+
     computed: {
         ...mapState([
             "game",
         ]),
 
-        ...mapState("deal", {objDeal: "localObjectDeal"}),
+        ...mapState("deal", {
+            objDeal: "localObjectDeal",
+            activeDeal: "active",
+            mode: "mode"
+        }),
 
-        ...mapGetters(["thisPlayer", "tilesMonopoly", "monopolyAnyBuilding"]),
+        ...mapGetters([
+            "thisPlayer",
+            "tilesMonopoly",
+            "monopolyAnyBuilding"
+        ]),
 
-        moneyIncome: {
-            get() {
-                return this.objDeal.moneyIncome
-            },
-
-            set(value) {
-                const moneyThisPlayer = this.thisPlayer.money
-                this.setMoney({
-                    side: "income",
-                    amount: moneyThisPlayer < value ? moneyThisPlayer : value
-                })
-            }
+        sideLeft() {
+            return (this.mode == "create") ? "initiator" : "target"
         },
 
-        moneyHost: {
-            get() {
-                return this.objDeal.moneyHost
-            },
-
-            set(value) {
-                const moneyPlayerTarget = this.game.players[this.objDeal.target].money
-                this.setMoney({
-                    side: "host",
-                    amount: moneyPlayerTarget < value ? moneyPlayerTarget : value
-                })
-            }
+        sideRight() {
+            return (this.mode == "create") ? "target" : "initiator"
         },
-
-        incomeList() {
-            return this.getList("income")
-        },
-
-        hostList() {
-            return this.getList("host")
-        },
-
+ 
         titleWindow() {
-            const target = this.objDeal.target
-            if (this.objDeal.initiator) return target + this.$t("game.deal.title.income")
-            else return this.$t("game.deal.title.outgoing") + target
+            const username =
+                (this.mode == "create") ?
+                this.objDeal.target.username :
+                this.objDeal.initiator.username
+            
+            return this.$t(`game.deal.${this.mode}.title`, {username})
+        },
+
+        editable() {
+            return this.mode == "create"
         }
     },
+
+    watch: {
+        valMoneyLeft(newValue) {
+            const moneyThisPlayer = this.thisPlayer.money
+            if (newValue) {
+                if (newValue < 0) this.valMoneyLeft = 0
+                else this.valMoneyLeft = Math.min(newValue, moneyThisPlayer)
+            }
+        },
+
+        valMoneyRight(newValue) {
+            const targetUsername = this.objDeal.target.username
+            const moneyPlayerTarget = this.game.players[targetUsername].money
+            if (newValue) {
+                if (newValue < 0) this.valMoneyRight = 0
+                else this.valMoneyRight = Math.min(newValue, moneyPlayerTarget)
+            }
+        }
+    },
+
     methods: {
         ...mapMutations("deal", [
             "dealDeleteTile",
-            "closeDeal",
             "setMoney",
+            "setMode"
+        ]),
+
+        ...mapActions("deal", [
+            "closeDeal",
             "setDeal"
         ]),
 
@@ -122,14 +153,13 @@ export default {
 
         getList(side) {
             const listObjs = []
-            const sourceList = this.objDeal[side]
-            const editable = !this.objDeal.initiator
+            const sourceList = this.objDeal[side].property
 
             for (let i = 0; i < sourceList.length; i++) {
                 const tile = this.getTile(sourceList[i])
                 if (!tile) continue
                 const obj = {label: tile.title}
-                if (editable) obj.click = () => this.removeElList(tile, side, i)
+                if (this.editable) obj.click = () => this.removeElList(tile, side, i)
                 listObjs.push(obj)
             }
 
@@ -137,10 +167,11 @@ export default {
         },
 
         removeElList(tile, side, index) {
-            if (tile.color && this.monopolyAnyBuilding) {
-                const tiles = this.tilesMonopoly(tile.color)
+            const color = tile.color
+            if (color && this.monopolyAnyBuilding(color)) {
+                const tiles = this.tilesMonopoly(color)
                 for (const t of tiles) {
-                    const i = this.objDeal[side].indexOf(t.id)
+                    const i = this.objDeal[side].property.indexOf(t.id)
                     if (i == -1) continue
                     this.dealDeleteTile({side, index: i})
                 }
@@ -148,6 +179,8 @@ export default {
         },
 
         dealSocket() {
+            this.setMoney({side: "initiator", amount: this.valMoneyLeft ?? 0})
+            this.setMoney({side: "target", amount: this.valMoneyRight ?? 0})
             gameApi("deal", {objDeal: this.objDeal})
             this.closeDeal()
         },
@@ -163,21 +196,14 @@ export default {
         },
 
         change() {
-            const objDeal = this.objDeal
+            const newObjDeal = structuredClone(this.objDeal)
             this.refuse()
 
-            objDeal.target = objDeal.initiator
-            objDeal.initiator = ""
+            const temp = newObjDeal.initiator
+            newObjDeal.initiator = newObjDeal.target
+            newObjDeal.target = temp
 
-            const income = objDeal.income
-            objDeal.income = objDeal.host
-            objDeal.host = income
-
-            const money = objDeal.moneyIncome
-            objDeal.moneyIncome = objDeal.moneyHost
-            objDeal.moneyHost = money
-
-            this.setDeal(objDeal)
+            this.setDeal({obj: newObjDeal, mode: "create"})
         }
     }
 }

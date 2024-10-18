@@ -13,7 +13,7 @@
 <script>
 import PlayerCard from './PlayerCard.vue';
 
-import { mapState, mapMutations } from "vuex"
+import { mapState, mapMutations, mapActions } from "vuex"
 
 export default {
     name: "PanelPlayerList",
@@ -45,7 +45,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations("deal", ["openDeal"]),
+        ...mapActions("deal", ["openDeal"]),
         ...mapMutations("workspace", ["showDialog"]),
 
         clickCard(username) {

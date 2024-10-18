@@ -1,65 +1,88 @@
 function getEmptyObjectDeal() {
     return {
-      active: false,
-      initiator: null,
-      target: null,
-      income: [],
-      host: [],
-      moneyIncome: 0,
-      moneyHost: 0
+      initiator: {
+        username: null,
+        property: [],
+        money: 0
+      },
+      target: {
+        username: null,
+        property: [],
+        money: 0
+      },
     }
   }
 
 export default {
     namespaced: true,
     state: {
+        active: false,
+        mode: "create",
         localObjectDeal: getEmptyObjectDeal(),
     },
 
-    getters: {
-        activeDeal(state) {
-            return state.localObjectDeal.active
-        }
-    },
-
     mutations: {
-        openDeal(state, usernameTarget) {
-            state.localObjectDeal.active = true
-            state.localObjectDeal.target = usernameTarget
+        setActive(state, value) {
+            state.active = value
         },
 
-        closeDeal(state) {
-            state.localObjectDeal = getEmptyObjectDeal()
+        setMode(state, mode) {
+            if (mode == "create" || mode == "income") state.mode = mode
         },
 
-        setDeal(state, objDeal) {
-            if (state.localObjectDeal.active) return
-            state.localObjectDeal = objDeal
+        setUsername(state, {side, username}) {
+            state.localObjectDeal[side].username = username
+        },
+
+        setObjDeal(state, obj) {
+            state.localObjectDeal = obj
         },
 
         dealAddTile(state, { side, idTile }) {
-            const listOwn = state.localObjectDeal[side]
+            const listOwn = state.localObjectDeal[side].property
             if (listOwn.includes(idTile)) return
             listOwn.push(idTile)
         },
 
         dealDeleteTile(state, { side, index }) {
-            state.localObjectDeal[side].splice(index, 1)
+            state.localObjectDeal[side].property.splice(index, 1)
         },
 
         setMoney(state, {side, amount}) {
-            const keySide = "money" + side[0].toUpperCase() + side.slice(1)
-            state.localObjectDeal[keySide] = amount
+            state.localObjectDeal[side].money = amount
         }
     },
     actions: {
+        openDeal({ commit, rootState }, usernameTarget) {
+            commit("setActive", true)
+            commit("setMode", "create")
+            commit("setUsername", {
+                side: "initiator",
+                username: rootState.username
+            })
+            commit("setUsername", {
+                side: "target",
+                username: usernameTarget
+            })
+        },
+
+        closeDeal({ commit }) {
+            commit("setActive", false)
+            commit("setObjDeal", getEmptyObjectDeal())
+        },
+
+        setDeal({ commit }, {obj, mode}) {
+            commit("setActive", true)
+            commit("setMode", mode)
+            commit("setObjDeal", obj)
+        },
+
         addTile({ commit, state, rootState }, { owner, id }) {
-            const { initiator, target } = state.localObjectDeal
-            if (initiator) return
-            if (owner === target) commit(
-                "dealAddTile", {side: "host", idTile: id})
+            if (state.mode == "income") return
+            if (owner === state.localObjectDeal.target.username) commit(
+                "dealAddTile", {side: "target", idTile: id})
             if (owner === rootState.username) commit(
-                "dealAddTile", {side: "income", idTile: id})
+                "dealAddTile", {side: "initiator", idTile: id})
         }
     }
 }

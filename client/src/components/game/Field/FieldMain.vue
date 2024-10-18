@@ -50,7 +50,7 @@ export default {
         ...mapState("field", ["color", "startPos", "endPos"]),
         ...mapGetters("field", ["readyMove"]),
 
-        ...mapGetters("deal", ["activeDeal"]),
+        ...mapState("deal", {activeDeal: "active"}),
 
         tiles() {
             const { field, players } = this.game

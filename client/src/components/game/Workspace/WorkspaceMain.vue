@@ -33,12 +33,12 @@ export default {
     computed: {
         ...mapGetters(["thisPlayer"]),
 
-        ...mapGetters("deal", ["activeDeal"]),
-
         ...mapGetters("workspace", [
             "selectOwn",
             "cardHover",
         ]),
+
+        ...mapState("deal", ["active"]),
 
         ...mapState("workspace", ["dialogWindow"]),
 
@@ -46,7 +46,7 @@ export default {
             const listWindows = [
                 [this.dialogWindow, this.dialogWindow],
                 ["OwnWindow", this.selectThisPlayerOwn],
-                ["DealWindow", this.activeDeal],
+                ["DealWindow", this.active],
                 ["BuyWindow", this.thisPlayer.service.offer],
                 ["RentWindow", this.thisPlayer.service.rent],
                 ["TaxWindow", this.thisPlayer.service.tax],

@@ -213,11 +213,17 @@ describe("Executor methods", () => {
             tile = getTile("brown_1")
             simpleBuy("Scorpion", tile)
             objDeal = {
-                target: "Sub Zero",
-                income: ["brown_1",],
-                host: [],
-                moneyIncome: 0,
-                moneyHost: 100,
+                initiator: {
+                    username: "Scorpion",
+                    property: ["brown_1",],
+                    money: 0,
+                },
+
+                target: {
+                    username: "Sub Zero",
+                    property: [],
+                    money: 100,
+                }
             }
             controller.execute("Scorpion", "deal", {objDeal})
             controller.execute("Sub Zero", "trade")

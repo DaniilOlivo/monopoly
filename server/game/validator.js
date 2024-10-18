@@ -49,17 +49,17 @@ class Validator {
     }
 
     checkObjDeal(obj) {
-        const { initiator, target, income, host, moneyIncome, moneyHost } = obj
+        const { initiator, target } = obj
 
-        this.checkUsername(initiator)
-        this.checkUsername(target)
+        this.checkUsername(initiator.username)
+        this.checkUsername(target.username)
 
         this.check(
             (
-                income &&
-                host &&
-                moneyIncome >= 0 &&
-                moneyHost >= 0
+                initiator.property &&
+                target.property &&
+                initiator.money >= 0 &&
+                target.money >= 0
             ),
             "Invalid object deal",
             JSON.stringify(obj)
