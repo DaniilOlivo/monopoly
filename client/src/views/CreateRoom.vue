@@ -8,7 +8,7 @@
 
         <template v-slot:btns>
             <ButtonMain @click="clickBack">{{ $t("buttons.back") }}</ButtonMain>
-            <ButtonMain @click="clickCreate">{{ $t("createRoom.title") }}</ButtonMain>
+            <ButtonMain @click="clickCreate" :disable="!title">{{ $t("createRoom.title") }}</ButtonMain>
         </template>
     </WindowComponent>
 
@@ -45,8 +45,7 @@ export default {
         ...mapMutations(["setService"]),
 
         clickCreate() {
-            if (this.title) socket.emit("createRoom", this.title)
-            else this.setService({service: "create", value: "empty"})
+            socket.emit("createRoom", this.title)
         },
 
         clickBack() {

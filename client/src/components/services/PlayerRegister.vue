@@ -7,7 +7,9 @@
         <p class="warning" v-show="warning">{{ $t("playerRegister.warnings." + warning) }}</p>
 
         <template v-slot:btns>
-            <ButtonMain @click="clickRegister">{{ $t("playerRegister.join") }}</ButtonMain>
+            <ButtonMain @click="clickRegister" :disable="!username">
+                {{ $t("playerRegister.join") }}
+            </ButtonMain>
         </template>
     </WindowComponent>
 </template>
