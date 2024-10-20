@@ -16,7 +16,6 @@ export default createStore({
     },
     game: null,
     previousGame: null,
-    consoleDevOpen: false,
   },
   getters: {
     stage(state) {
@@ -73,10 +72,6 @@ export default createStore({
     setGame(state, game) {
       state.previousGame = state.game
       state.game = game
-    },
-
-    setConsole(state, isOpen) {
-      state.consoleDevOpen = isOpen
     }
   },
   actions: {

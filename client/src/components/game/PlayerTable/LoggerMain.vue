@@ -56,8 +56,7 @@ export default {
     },
     methods: {
         sendMes() {
-            if (this.mes == "console_active") this.$store.commit("setConsole", true)
-            else gameApi("message", {message: this.mes})
+            gameApi("message", {message: this.mes})
             this.mes = ""
         },
 
