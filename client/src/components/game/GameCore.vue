@@ -6,7 +6,6 @@
         </FieldMain>
         <PanelMain></PanelMain>
         <ConsoleDev v-show="showConsole"></ConsoleDev>
-        <StatusConnection></StatusConnection>
     </div>
 </template>
 

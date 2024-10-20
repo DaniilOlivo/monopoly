@@ -4,7 +4,7 @@
             <label>{{ $t("createRoom.label") }}:</label>
             <input type="text" v-model="title">
         </div>
-        <p class="warning" v-show="warning">{{ $t("createRoom.warnings." + warning) }}</p>
+        <p class="warning" v-if="warning">{{ $t("createRoom.warnings." + warning) }}</p>
 
         <template v-slot:btns>
             <ButtonMain @click="clickBack">{{ $t("buttons.back") }}</ButtonMain>

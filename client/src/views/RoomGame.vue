@@ -37,7 +37,6 @@ export default {
                 "game": "GameCore",
                 "end": "EndWindow"
             }
-            console.log(this.stage)
             let currentComponent = mapStage[this.stage]
             if (!currentComponent) return "OopsWindow"
             

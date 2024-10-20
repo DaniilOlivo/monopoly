@@ -4,7 +4,7 @@
             <label>{{ $t('playerRegister.label') }}:</label>
             <input type="text" v-model="username">
         </div>
-        <p class="warning" v-show="warning">{{ $t("playerRegister.warnings." + warning) }}</p>
+        <p class="warning" v-if="warning">{{ $t("playerRegister.warnings." + warning) }}</p>
 
         <template v-slot:btns>
             <ButtonMain @click="clickRegister" :disable="!username">
